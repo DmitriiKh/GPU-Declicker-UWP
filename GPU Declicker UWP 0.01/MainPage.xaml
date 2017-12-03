@@ -1,0 +1,113 @@
+﻿<Page
+    x:Class="GPU_Declicker_UWP_0._01.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:GPU_Declicker_UWP_0._01"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    SizeChanged="Page_SizeChanged">
+
+    <Grid Name="mainGrid" 
+          Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="15*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" Name="topGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Grid.Column="0" Name="leftButtonsGroup">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Viewbox  Grid.Row="0" Stretch="Fill">
+                    <Button Name="GoLeftBigStep" Click="GoLeftBigStep_Click" Content="&lt;&lt;"/>
+                </Viewbox>
+                <Viewbox Grid.Row="1" Stretch="Fill">
+                    <Button Name="GoLeftSmallStep" Click="GoLeftSmallStep_Click" Content="&lt;"/>
+                </Viewbox>
+            </Grid>
+
+            <local:AudioViewer Grid.Column="1" 
+                               x:Name="audioViewer"/>
+            
+            <Grid Grid.Column="2" Name="rightButtonsGroup">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Viewbox Grid.Row="0" Stretch="Fill">
+                    <Button Name="GoRightBigStep" Click="GoRightBigStep_Click" Content="&gt;&gt;"/>
+                </Viewbox>
+                <Viewbox Grid.Row="1" Stretch="Fill">
+                    <Button Name="GoRightSmallStep" Click="GoRightSmallStep_Click" Content="&gt;"/>
+                </Viewbox>
+            </Grid>
+            <Grid Grid.Column="3" Name="specialButtonsGroup">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Viewbox Grid.Row="0" Stretch="Fill">
+                    <Button Content="Mag+" Click="MagnMore"/>
+                </Viewbox>
+                <Viewbox Grid.Row="1" Stretch="Fill">
+                    <Button Content="Mag-" Click="MagnLess"/>
+                </Viewbox>
+            </Grid>
+        </Grid>
+        <Grid Name="Buttons" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" 
+                    Name="OpenButton"
+                    Content="Open" 
+                    Click="OpenAudioFile" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center"/>
+            <Button Grid.Column="1" 
+                    Name="ScanButton"
+                    Content="Scan" 
+                    Click="Scan_ClickAsync" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center"
+                    IsEnabled="False"/>
+            <Button Grid.Column="2" 
+                    Name="SaveButton"
+                    Content="Save" 
+                    Click="SaveAudioFile" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center"
+                    IsEnabled="False"/>
+            <Button Grid.Column="3" 
+                    Name="AboutButton"
+                    Content="About" 
+                    Click="AboutDialogClick" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center"/>
+        </Grid>
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <Grid Name="ClickWindowsGrid"/>
+        </ScrollViewer>
+        <Grid Grid.Row="3" Name="BottomGrid" VerticalAlignment="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Name="Status" HorizontalAlignment="Left"/>
+            <ProgressBar Grid.Column="1" Name="ProgressBar" Value="0" Maximum="100" Width="Auto" HorizontalAlignment="Stretch"/>
+        </Grid>
+    </Grid>
+</Page>
