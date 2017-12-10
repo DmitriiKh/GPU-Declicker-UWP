@@ -261,7 +261,6 @@ namespace GPU_Declicker_UWP_0._01
                 OffsetPosition = 0;
             }
             FillWaveForm();
-            // ggggg
         }
 
         /// <summary>

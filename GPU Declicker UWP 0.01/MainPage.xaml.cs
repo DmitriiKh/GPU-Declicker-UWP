@@ -72,6 +72,10 @@ namespace GPU_Declicker_UWP_0._01
                 else
                     audioViewer.Fill(audioInputOutput.GetAudioData());
             }
+            else
+            {
+                return;
+            }
             
             // enable Scan button but not Save
             ScanButton.IsEnabled = true;
