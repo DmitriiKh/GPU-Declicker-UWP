@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Windows.UI.Xaml.Shapes;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=2minMovement42minMovement6
 
@@ -21,7 +13,7 @@ namespace GPU_Declicker_UWP_0._01
 {
     public sealed partial class ClickWindow : UserControl
     {
-        AudioClick audioClickBinded;
+        private AudioClick audioClickBinded;
         private bool IsPointerPressedInTheMidle;
         private Point pointerLastPosition;
         private Point pointPointerPressedInTheMidle;
@@ -34,7 +26,15 @@ namespace GPU_Declicker_UWP_0._01
         {
             this.InitializeComponent();
             audioClickBinded = audioClick;
-            Threshold_level_detected.Text = audioClick.Threshold_level_detected.ToString("00.0");
+            Threshold_level_detected.Text = audioClick.Threshold_level_detected.ToString("0.0");
+            /*Binding binding = new Binding
+            {
+                Source = audioClickBinded.Position.ToString("0.0"),
+                Path = new PropertyPath("Content")
+            };
+            BindingOperations.SetBinding(Threshold_level_detected, ContentControl.ContentProperty, binding);
+                */
+            Position.Text = audioClick.Lenght.ToString("0");
             SetBorderColour();
             SetPolylines();
         }
@@ -54,8 +54,8 @@ namespace GPU_Declicker_UWP_0._01
             Output.Points.Clear();
             // calculate position in audio track to show click in this CW
             int cwStartPos = (int)(
-                audioClickBinded.Pos + 
-                audioClickBinded.Len / 2 - 
+                audioClickBinded.Position + 
+                audioClickBinded.Lenght / 2 - 
                 MainGrid.Width / 2);
             // set Input polylyne
             for (int i = 0; i < MainGrid.Width; i++)
@@ -65,8 +65,8 @@ namespace GPU_Declicker_UWP_0._01
                 Input.Points.Add(new Point((double)i, y));
             }
             // set Output polyline
-            for (int i = audioClickBinded.Pos - cwStartPos - 5; 
-                i < audioClickBinded.Pos - cwStartPos + audioClickBinded.Len + 5; 
+            for (int i = audioClickBinded.Position - cwStartPos; // - 5; 
+                i <= audioClickBinded.Position - cwStartPos + audioClickBinded.Lenght; // + 5; 
                 i++)
             {
                 float s = audioClickBinded.GetOutputSample(cwStartPos + i);
@@ -92,12 +92,14 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // expand marked damaged sample sequence to left
                 audioClickBinded.ExpandLeft();
+                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                 SetPolylines();
             }
             if (areaPressed == Area.LeftShrink)
             {
                 // shrink marked damaged sample sequence on left
                 audioClickBinded.ShrinkLeft();
+                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                 SetPolylines();
             }
             if (areaPressed == Area.Midle)
@@ -111,6 +113,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on right
                 audioClickBinded.ShrinkRight();
+                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                 SetPolylines();
             }
             if (areaPressed == Area.RightExpand)
@@ -196,12 +199,14 @@ namespace GPU_Declicker_UWP_0._01
                 {
                     // expand marked damaged sample sequence to right
                     audioClickBinded.ExpandRight();
+                    Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                     changed = true;
                 }
                 if (point.X - pointerLastPosition.X < -minMovement)
                 {
                     // expand marked damaged sample sequence to right
                     audioClickBinded.ExpandLeft();
+                    Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                     changed = true;
                 }
             }
@@ -212,6 +217,7 @@ namespace GPU_Declicker_UWP_0._01
                 {
                     // shrink marked damaged sample sequence on right
                     audioClickBinded.ShrinkRight();
+                    Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                     changed = true;
                 }
             }
@@ -222,6 +228,7 @@ namespace GPU_Declicker_UWP_0._01
                 {
                     // shrink marked damaged sample sequence on right
                     audioClickBinded.ShrinkLeft();
+                    Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                     changed = true;
                 }
             }
@@ -264,6 +271,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // expand marked damaged sample sequence to right
                 audioClickBinded.ExpandRight();
+                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                 SetPolylines();
             }
 
@@ -273,6 +281,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // expand marked damaged sample sequence to right
                 audioClickBinded.ExpandLeft();
+                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
                 SetPolylines();
             }
 

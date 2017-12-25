@@ -1,22 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Windows.Foundation;
 using Windows.Media.Audio;
 using Windows.Storage;
 using Windows.Storage.Pickers;
-using Windows.UI.Input;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Input;
 
 namespace GPU_Declicker_UWP_0._01
 {
     public sealed partial class MainPage : Page
     {
-        private StorageFile mediaInputFile;
-        private StorageFile mediaOutputFile;
+        private StorageFile audioInputFile;
+        private StorageFile audioOutputFile;
 
         AudioInputOutput audioInputOutput;
 
@@ -30,8 +27,8 @@ namespace GPU_Declicker_UWP_0._01
             this.InitializeComponent();
             
             audioInputOutput = new AudioInputOutput();
-
-            // variables for subclasses to report progress and status
+            
+            // initialize variables for subclasses to report progress and status 
             taskProgress = new Progress<double>(
                 (p) => { ProgressBar.Value = p; }
                 );
@@ -40,44 +37,56 @@ namespace GPU_Declicker_UWP_0._01
                 );
         }
     
-        private async void OpenAudioFile(object sender, RoutedEventArgs e)
+        private async void OpenAudioFile_Click(object sender, RoutedEventArgs e)
         {
-            CreateAudioGraphResult result1 = 
+
+            ClickWindowsGrid.Children.Clear();
+
+            CreateAudioGraphResult init_result = 
                 await audioInputOutput.Init(taskProgress);
             
-            if (result1.Status != AudioGraphCreationStatus.Success)
+            if (init_result.Status != AudioGraphCreationStatus.Success)
             {
                 ShowErrorMessage(
                     "AudioGraph creation error: " 
-                    + result1.Status.ToString()
+                    + init_result.Status.ToString()
                     );
+                return;
             }
 
-            FileOpenPicker filePicker = new FileOpenPicker();
-            filePicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+            FileOpenPicker filePicker = new FileOpenPicker
+            {
+                SuggestedStartLocation = PickerLocationId.MusicLibrary
+            };
             filePicker.FileTypeFilter.Add(".mp3");
             filePicker.FileTypeFilter.Add(".wav");
             filePicker.FileTypeFilter.Add(".wma");
             filePicker.FileTypeFilter.Add(".m4a");
             filePicker.ViewMode = PickerViewMode.Thumbnail;
-            mediaInputFile = await filePicker.PickSingleFileAsync();
 
-            if (mediaInputFile != null)
+            audioInputFile = await filePicker.PickSingleFileAsync();
+
+            // if file picked
+            if (audioInputFile != null)
             {
-                CreateAudioFileInputNodeResult result2 = 
-                    await audioInputOutput.LoadAudioFromFile(mediaInputFile, taskProgress, taskStatus);
+                CreateAudioFileInputNodeResult load_audio_result = 
+                    await audioInputOutput.LoadAudioFromFile(audioInputFile, taskProgress, taskStatus);
 
-                if (result2.Status != AudioFileNodeCreationStatus.Success)
-                    ShowErrorMessage(result2.Status.ToString());
+                if (load_audio_result.Status != AudioFileNodeCreationStatus.Success)
+                {
+                    ShowErrorMessage(load_audio_result.Status.ToString());
+                    return;
+                }
                 else
                     audioViewer.Fill(audioInputOutput.GetAudioData());
             }
+            // if no file picked
             else
             {
                 return;
             }
             
-            // enable Scan button but not Save
+            // enable Scan button but not Save button yet
             ScanButton.IsEnabled = true;
             SaveButton.IsEnabled = false;
         }
@@ -100,10 +109,10 @@ namespace GPU_Declicker_UWP_0._01
         private void GoRightSmallStep_Click(object sender, RoutedEventArgs e) 
             => audioViewer.GoNextSmalStep();
 
-        private void MagnLess(object sender, RoutedEventArgs e) 
+        private void MagnifyLess_Click(object sender, RoutedEventArgs e) 
             => audioViewer.MagnifyLess();
 
-        private void MagnMore(object sender, RoutedEventArgs e) 
+        private void MagnifyMore_Click(object sender, RoutedEventArgs e) 
             => audioViewer.MagnifyMore();
         
         
@@ -115,9 +124,10 @@ namespace GPU_Declicker_UWP_0._01
             OpenButton.IsEnabled = false;
             ScanButton.IsEnabled = false;
             SaveButton.IsEnabled = false;
-
-            await Task.Run(() => AudioProcessing.ProcessAudioAsync(audioData, 512, 4, 3, taskProgress, taskStatus));
-
+            
+            await Task.Run(() => AudioProcessing.ProcessAudioAsync(
+                audioData, 128, 4, 3, taskProgress, taskStatus));
+        
             // enable Save and Open buttons
             OpenButton.IsEnabled = true;
             SaveButton.IsEnabled = true;
@@ -130,18 +140,21 @@ namespace GPU_Declicker_UWP_0._01
             AudioDataClass audioData = audioInputOutput.GetAudioData();
             if (audioData == null)
                 return;
-            // clear Grid
+
+            // clear ClickWindowsGrid before adding new ClickWindows
             ClickWindowsGrid.Children.Clear();
-            // set initial offsets
+            // initialize offsets 
             double cwOffsetX = 0;
             double cwOffsetY = 0;
             
             if (audioData.IsStereo)
             {
-                // add text notation on top of the Grid 
+                // add text notation on top of the ClickWindowsGrid 
                 // before inserting clicks
-                TextBlock textBlock_LeftChannel = new TextBlock();
-                textBlock_LeftChannel.Text = "Left Channel Clicks";
+                TextBlock textBlock_LeftChannel = new TextBlock
+                {
+                    Text = "Left Channel Clicks"
+                };
                 ClickWindowsGrid.Children.Add(textBlock_LeftChannel);
                 cwOffsetY += textBlock_LeftChannel.FontSize * 2;
 
@@ -149,10 +162,13 @@ namespace GPU_Declicker_UWP_0._01
                 audioData.CurrentChannel = Channel.Left;
                 DisplayClicks_ForChannel(audioData, ref cwOffsetX, ref cwOffsetY);
 
-                // add text notation to the Grid
+                // add text notation to the ClickWindowsGrid
                 cwOffsetX = 0;
-                TextBlock textBlock_RightChannel = new TextBlock();
-                textBlock_RightChannel.Text = "Right Channel Clicks";
+                TextBlock textBlock_RightChannel = new TextBlock
+                {
+                    Text = "Right Channel Clicks"
+                };
+                // using margin to position textBlock_RightChannel
                 Thickness margin = textBlock_RightChannel.Margin;
                 margin.Left = 0;
                 margin.Top = cwOffsetY;
@@ -164,6 +180,7 @@ namespace GPU_Declicker_UWP_0._01
                 audioData.CurrentChannel = Channel.Right;
                 DisplayClicks_ForChannel(audioData, ref cwOffsetX, ref cwOffsetY);
             }
+            // for mono
             else
             {
                 // insert clicks
@@ -171,25 +188,30 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        private void DisplayClicks_ForChannel(AudioDataClass audioData, ref double cwOffsetX, ref double cwOffsetY)
+        private void DisplayClicks_ForChannel(
+            AudioDataClass audioData, 
+            ref double cwOffsetX, 
+            ref double cwOffsetY)
         {
             // for every click in channel
-            for (int k = 0; k < audioData.GetNumberOfClicks(); k++)
+            for (int clicks_index = 0; 
+                clicks_index < audioData.GetNumberOfClicks(); 
+                clicks_index++)
             {
                 // make new ClickWindow for a click
-                AudioClick c = audioData.GetClick(k);
-                ClickWindow cw = new ClickWindow(c);
+                AudioClick click = audioData.GetClick(clicks_index);
+                ClickWindow clickWindow = new ClickWindow(click);
 
-                // set ClickWindow margin
-                Thickness margin = cw.Margin;
+                // set ClickWindow margin to position ClickWindow
+                Thickness margin = clickWindow.Margin;
                 margin.Left = cwOffsetX;
                 margin.Top = cwOffsetY;
-                cw.Margin = margin;
+                clickWindow.Margin = margin;
 
-                // insert the ClickWindow to the Grid
-                ClickWindowsGrid.Children.Add(cw);
+                // insert the ClickWindow to ClickWindowsGrid
+                ClickWindowsGrid.Children.Add(clickWindow);
                 
-                // set offsets for new ClickWindow
+                // set offsets for next ClickWindow
                 if (cwOffsetX + 210 + 200 < ClickWindowsGrid.ActualWidth)
                 {
                     cwOffsetX += 210;
@@ -204,43 +226,44 @@ namespace GPU_Declicker_UWP_0._01
             cwOffsetY += 110;
         }
 
-        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        private void Page_SizeChanged_EventHandler(object sender, SizeChangedEventArgs e)
         {
             audioViewer.AudioViewerSizeChanged();
             DisplayClicks();
         }
 
-        private async void SaveAudioFile(object sender, RoutedEventArgs e)
+        private async void SaveAudioFile_Click(object sender, RoutedEventArgs e)
         {
-            CreateAudioGraphResult result1 =
+            CreateAudioGraphResult IO_init_result =
                 await audioInputOutput.Init(taskProgress);
 
-            if (result1.Status != AudioGraphCreationStatus.Success)
+            if (IO_init_result.Status != AudioGraphCreationStatus.Success)
             {
                 ShowErrorMessage(
                     "AudioGraph creation error: "
-                    + result1.Status.ToString()
+                    + IO_init_result.Status.ToString()
                     );
+                return;
             }
 
             FileSavePicker filePicker = new FileSavePicker();
             filePicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
             filePicker.FileTypeChoices.Add("Audio file", new List<string>() { ".mp3", ".wav", ".wma", ".m4a" });
-            filePicker.SuggestedFileName = mediaInputFile.Name;
+            filePicker.SuggestedFileName = audioInputFile.Name;
 
-            mediaOutputFile = await filePicker.PickSaveFileAsync();
+            audioOutputFile = await filePicker.PickSaveFileAsync();
 
-            if (mediaOutputFile != null)
+            if (audioOutputFile != null)
             {
-                CreateAudioFileOutputNodeResult result2 =
-                    await audioInputOutput.SaveAudioToFile(mediaOutputFile, taskProgress, taskStatus);
+                CreateAudioFileOutputNodeResult save_audio_result =
+                    await audioInputOutput.SaveAudioToFile(audioOutputFile, taskProgress, taskStatus);
 
-                if (result2.Status != AudioFileNodeCreationStatus.Success)
-                    ShowErrorMessage(result2.Status.ToString());
+                if (save_audio_result.Status != AudioFileNodeCreationStatus.Success)
+                    ShowErrorMessage(save_audio_result.Status.ToString());
             }
         }
 
-        private async void AboutDialogClick(object sender, RoutedEventArgs e)
+        private async void AboutDialog_Click(object sender, RoutedEventArgs e)
         {
             AboutDialog aboutDialog = new AboutDialog();
             await aboutDialog.ShowAsync();

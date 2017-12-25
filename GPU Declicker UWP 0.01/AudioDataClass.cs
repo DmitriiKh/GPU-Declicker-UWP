@@ -20,62 +20,117 @@ namespace GPU_Declicker_UWP_0._01
         private float[] RightChannelAudioInput = null;
         private float[] LeftChannelAudioOutput = null;
         private float[] RightChannelAudioOutput = null;
-        public int Length { get; set; }
-        private byte[] LeftChannelMarks = null;
-        private byte[] RightChannelMarks = null;
+        private float[] LeftChannel_a_average = null;
+        private float[] RightChannel_a_average = null;
+        public int Length_samples { get; set; }
+        //private byte[] LeftChannelMarks = null;
+        //private byte[] RightChannelMarks = null;
         private float[] LeftChannelPredictionErr = null;
         private float[] RightChannelPredictionErr = null;
 
         private List<AudioClick> Clicks_LeftChannel = new List<AudioClick>();
         private List<AudioClick> Clicks_RightChannel = new List<AudioClick>();
 
-        public AudioDataClass(float[] leftChannel, float[] rightChannel)
+        // Constractor for stereo
+        public AudioDataClass(float[] leftChannelSamples, float[] rightChannelSamples)
         {
             IsStereo = true;
             CurrentChannel = Channel.Left;
-            Length = leftChannel.Length;
-            LeftChannelAudioInput = leftChannel;
-            RightChannelAudioInput = rightChannel;
-            LeftChannelAudioOutput = new float[Length];
-            RightChannelAudioOutput = new float[Length];
-            LeftChannelMarks = new byte[Length];
-            RightChannelMarks = new byte[Length];
-            LeftChannelPredictionErr = new float[Length];
-            RightChannelPredictionErr = new float[Length];
+            Length_samples = leftChannelSamples.Length;
+            LeftChannelAudioInput = leftChannelSamples;
+            RightChannelAudioInput = rightChannelSamples;
+            LeftChannelAudioOutput = new float[Length_samples];
+            RightChannelAudioOutput = new float[Length_samples];
+            //LeftChannelMarks = new byte[Length];
+            //RightChannelMarks = new byte[Length];
+            LeftChannelPredictionErr = new float[Length_samples];
+            RightChannelPredictionErr = new float[Length_samples];
+            LeftChannel_a_average = new float[Length_samples];
+            RightChannel_a_average = new float[Length_samples];
         }
 
-        internal void Recalculate(int pos, int len)
-        {
-            float prediction;
-
-            for (int i = pos; i < pos + len; i++)
-            {
-                prediction = AudioProcessing.Calc_burg_pred(this, i, 512, 16);
-
-                SetPredictionErr( i, 0);
-                SetOutputSample( i, prediction);
-            }
-        }
-
+        // Constructor for mono
         public AudioDataClass(float[] monoChannel)
         {
             IsStereo = false;
-            Length = monoChannel.Length;
+            Length_samples = monoChannel.Length;
             LeftChannelAudioInput = monoChannel;
-            LeftChannelAudioOutput = new float[Length];
-            LeftChannelMarks = new byte[Length];
-            LeftChannelPredictionErr = new float[Length];
+            LeftChannelAudioOutput = new float[Length_samples];
+            //LeftChannelMarks = new byte[Length];
+            LeftChannelPredictionErr = new float[Length_samples];
+            LeftChannel_a_average = new float[Length_samples];
         }
 
-        public void AddClick(int pos, int len, float threshold_level_detected)
+        /// <summary>
+        /// Replace output sample at position with prediction and 
+        /// sets prediction error sample to zero
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="lenght"></param>
+        internal float Repair(int position, int lenght, Channel channel)
+        {
+            CurrentChannel = channel;
+
+            for (int i = position; i < position + lenght; i++)
+            {
+                SetPredictionErr( i, 0);
+                SetOutputSample( 
+                    i,
+                    AudioProcessing.Calc_burg_pred(this, i, 128, 4)
+                    );
+            }
+
+            for (int i = position - 16; i < position + lenght + 16; i++)
+                //(int i = position + lenght; i < position + lenght + 16; i++)
+            {
+                SetPredictionErr(
+                    i,
+                    AudioProcessing.Calc_burg_pred(this, i, 16, 2) -
+                    GetOutputSample(i)  //GetInputSample(i)
+                    );
+            }
+
+            AudioProcessing.Calculate_a_average_CPU(this, position - 512, position + lenght + 512);
+
+            return AudioProcessing.Calc_detectoin_level(this, position);
+        }
+
+        public void RestoreInitState(int position, int lenght, Channel channel)
+        {
+            CurrentChannel = channel;
+
+            for (int i = position; i < position + lenght; i++)
+            {
+                SetOutputSample(i, GetInputSample(i));
+            }
+
+            for (int i = position - 16; i < position + lenght + 16; i++)
+            {
+                SetPredictionErr(
+                    i,
+                    AudioProcessing.Calc_burg_pred(this, i, 256, 4) -
+                    GetInputSample(i)
+                    );
+            }
+
+            AudioProcessing.Calculate_a_average_CPU(this, position - 512, position + lenght + 512);
+        }
+
+        /// <summary>
+        /// Adds a click to the list and stores threshold_level_detected
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="lenght"></param>
+        /// <param name="threshold_level_detected"></param>
+        public void AddClick(int position, int lenght, float threshold_level_detected)
         {
             if (IsStereo)
                 if (CurrentChannel == Channel.Left)
-                    Clicks_LeftChannel.Add(new AudioClick(pos, len, threshold_level_detected, this));
+                    Clicks_LeftChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, Channel.Left));
                 else
-                    Clicks_RightChannel.Add(new AudioClick(pos, len, threshold_level_detected, this));
+                    Clicks_RightChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, Channel.Right));
             else
-                Clicks_LeftChannel.Add(new AudioClick(pos, len, threshold_level_detected, this));
+                Clicks_LeftChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, Channel.Left));
         }
 
         public int GetNumberOfClicks()
@@ -113,7 +168,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public float GetInputSample(int position)
         {
-            if (position >= Length || position < 0 )
+            if (position >= Length_samples || position < 0 )
                 return 0;
 
             if (IsStereo)
@@ -127,7 +182,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public void SetInputSample(int position, float sample)
         {
-            if (position >= Length || position < 0)
+            if (position >= Length_samples || position < 0)
                 return;
 
             if (IsStereo)
@@ -143,7 +198,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public float GetOutputSample(int position)
         {
-            if (position >= Length || position < 0)
+            if (position >= Length_samples || position < 0)
                 return 0;
 
             if (IsStereo)
@@ -157,7 +212,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public void SetOutputSample(int position, float sample)
         {
-            if (position >= Length || position < 0)
+            if (position >= Length_samples || position < 0)
                 return;
 
             if (IsStereo)
@@ -171,7 +226,7 @@ namespace GPU_Declicker_UWP_0._01
             return;
         }
 
-        public byte GetMark(int position)
+        /*public byte GetMark(int position)
         {
             if (position >= Length || position < 0)
                 return 0;
@@ -199,11 +254,11 @@ namespace GPU_Declicker_UWP_0._01
                 LeftChannelMarks[position] = mark; // mono
 
             return;
-        }
+        }*/
 
         public float GetPredictionErr(int position)
         {
-            if (position >= Length || position < 0)
+            if (position >= Length_samples || position < 0)
                 return 0;
 
             if (IsStereo)
@@ -217,7 +272,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public void SetPredictionErr(int position, float prediction)
         {
-            if (position >= Length || position < 0)
+            if (position >= Length_samples || position < 0)
                 return;
 
             if (IsStereo)
@@ -231,14 +286,42 @@ namespace GPU_Declicker_UWP_0._01
             return;
         }
 
+        public float Get_a_average(int position)
+        {
+            if (position >= Length_samples || position < 0)
+                return 0;
+
+            if (IsStereo)
+                if (CurrentChannel == Channel.Left)
+                    return LeftChannel_a_average[position];
+                else
+                    return RightChannel_a_average[position];
+            else
+                return LeftChannel_a_average[position]; // mono
+        }
+
+        public void Set_a_average(int position, float a_average)
+        {
+            if (position >= Length_samples || position < 0)
+                return;
+
+            if (IsStereo)
+                if (CurrentChannel == Channel.Left)
+                    LeftChannel_a_average[position] = a_average;
+                else
+                    RightChannel_a_average[position] = a_average;
+            else
+                LeftChannel_a_average[position] = a_average; // mono
+
+            return;
+        }
+
         internal void SortClicks()
         {
             Clicks_LeftChannel.Sort();
             
             if (IsStereo)
-            {
                 Clicks_RightChannel.Sort();
-            }
         }
     }
 }

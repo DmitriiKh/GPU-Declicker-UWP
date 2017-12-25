@@ -25,10 +25,16 @@
             Foreground="Blue"
             FontWeight="Bold"/>
         <TextBlock 
+            Name="Position"
+            Foreground="Black"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Left"/>
+        <TextBlock 
             Name="Threshold_level_detected"
             Foreground="Black"
             VerticalAlignment="Bottom"
-            HorizontalAlignment="Left"/>
+            HorizontalAlignment="Left"
+            />
         <Rectangle 
             Name="Border"
             Fill="Transparent" 
