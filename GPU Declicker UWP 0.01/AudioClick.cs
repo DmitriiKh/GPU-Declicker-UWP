@@ -12,6 +12,7 @@ namespace GPU_Declicker_UWP_0._01
         public float Threshold_level_detected;
         public bool Aproved;
         public AudioDataClass audioDataBinded;
+        public AudioProcessing audioProcessingBinded;
         private Channel channelBinded;
 
         public AudioClick(
@@ -19,6 +20,7 @@ namespace GPU_Declicker_UWP_0._01
             int lenght, 
             float threshold_level_detected, 
             AudioDataClass audioData,
+            AudioProcessing audioProcessing,
             Channel channel)
         {
             Position = position;
@@ -27,6 +29,7 @@ namespace GPU_Declicker_UWP_0._01
             // new click is always aproved initially
             Aproved = true;
             audioDataBinded = audioData;
+            audioProcessingBinded = audioProcessing;
             channelBinded = channel;
         }
 
@@ -62,7 +65,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             Position--;
             Lenght++;
-            Threshold_level_detected = audioDataBinded.Repair(Position, Lenght, channelBinded);
+            Threshold_level_detected = audioProcessingBinded.Repair(audioDataBinded, Position, Lenght);
         }
 
         internal void ShrinkLeft()
@@ -70,20 +73,20 @@ namespace GPU_Declicker_UWP_0._01
             audioDataBinded.SetOutputSample(Position, audioDataBinded.GetInputSample(Position));
             Position++;
             Lenght--;
-            Threshold_level_detected = audioDataBinded.Repair(Position, Lenght, channelBinded);
+            Threshold_level_detected = audioProcessingBinded.Repair(audioDataBinded, Position, Lenght);
         }
 
         internal void ShrinkRight()
         {
             audioDataBinded.SetOutputSample(Position + Lenght, audioDataBinded.GetInputSample(Position + Lenght));
             Lenght--;
-            Threshold_level_detected = audioDataBinded.Repair(Position, Lenght, channelBinded);
+            Threshold_level_detected = audioProcessingBinded.Repair(audioDataBinded, Position, Lenght);
         }
 
         internal void ExpandRight()
         {
             Lenght++;
-            Threshold_level_detected = audioDataBinded.Repair(Position, Lenght, channelBinded);
+            Threshold_level_detected = audioProcessingBinded.Repair(audioDataBinded, Position, Lenght);
         }
     }
 }

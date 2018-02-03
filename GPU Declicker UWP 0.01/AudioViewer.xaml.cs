@@ -104,6 +104,9 @@ namespace GPU_Declicker_UWP_0._01
         // move OffsetPositionX to the right for one waveForm length 
         public void GoPrevBigStep()
         {
+            if (audioData == null)
+                return;
+
             int deltaX = (int)waveFormLeftChannel.ActualWidth;
             GoPrevX(deltaX);
         }
@@ -111,6 +114,9 @@ namespace GPU_Declicker_UWP_0._01
         // move OffsetPositionX to the right for one tenth of waveForm length 
         public void GoPrevSmalStep()
         {
+            if (audioData == null)
+                return;
+
             int deltaX = (int)waveFormLeftChannel.ActualWidth / 10;
             GoPrevX(deltaX);
         }
@@ -206,6 +212,9 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         public void MagnifyMore()
         {
+            if (audioData == null)
+                return;
+
             if (audioDataToWaveFormRatio >= 2)
                 audioDataToWaveFormRatio /= 2;
             else
@@ -219,6 +228,9 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         public void MagnifyLess()
         {
+            if (audioData == null)
+                return;
+
             if (waveFormLeftChannel.ActualWidth * audioDataToWaveFormRatio * 2
                 < audioData.Length_samples)
                 audioDataToWaveFormRatio *= 2;

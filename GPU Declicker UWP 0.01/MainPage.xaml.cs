@@ -16,17 +16,18 @@ namespace GPU_Declicker_UWP_0._01
         private StorageFile audioOutputFile;
 
         AudioInputOutput audioInputOutput;
+        AudioProcessing audioProcessing;
 
         // variables for subclasses to report progress and status
         Progress<double> taskProgress;
         Progress<string> taskStatus;
-        
 
         public MainPage()
         {
             this.InitializeComponent();
-            
+
             audioInputOutput = new AudioInputOutput();
+            audioProcessing = new AudioProcessing(512, 4, 7F);
             
             // initialize variables for subclasses to report progress and status 
             taskProgress = new Progress<double>(
@@ -39,7 +40,6 @@ namespace GPU_Declicker_UWP_0._01
     
         private async void OpenAudioFile_Click(object sender, RoutedEventArgs e)
         {
-
             ClickWindowsGrid.Children.Clear();
 
             CreateAudioGraphResult init_result = 
@@ -125,8 +125,8 @@ namespace GPU_Declicker_UWP_0._01
             ScanButton.IsEnabled = false;
             SaveButton.IsEnabled = false;
             
-            await Task.Run(() => AudioProcessing.ProcessAudioAsync(
-                audioData, 128, 4, 3, taskProgress, taskStatus));
+            await Task.Run(() => audioProcessing.ProcessAudioAsync(
+                audioData, taskProgress, taskStatus));
         
             // enable Save and Open buttons
             OpenButton.IsEnabled = true;
@@ -267,6 +267,24 @@ namespace GPU_Declicker_UWP_0._01
         {
             AboutDialog aboutDialog = new AboutDialog();
             await aboutDialog.ShowAsync();
+        }
+
+        private async void SaveClicks_Click(object sender, RoutedEventArgs e)
+        {
+            FileSavePicker filePicker = new FileSavePicker();
+            filePicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+            filePicker.FileTypeChoices.Add("Text file", new List<string>() { ".txt" });
+            filePicker.SuggestedFileName = audioInputFile.Name + ".txt";
+
+            StorageFile txtOutputFile = await filePicker.PickSaveFileAsync();
+
+            if (txtOutputFile != null)
+            {
+                await FileIO.WriteTextAsync(txtOutputFile, "");
+                await FileIO.AppendTextAsync(txtOutputFile, "fffff");
+                await FileIO.AppendTextAsync(txtOutputFile, "\r\n");
+                await FileIO.AppendTextAsync(txtOutputFile, "nnnnn");
+            }
         }
     }
 }

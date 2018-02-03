@@ -34,7 +34,7 @@ namespace GPU_Declicker_UWP_0._01
             };
             BindingOperations.SetBinding(Threshold_level_detected, ContentControl.ContentProperty, binding);
                 */
-            Position.Text = audioClick.Lenght.ToString("0");
+            Position.Text = audioClick.Position.ToString("0");
             SetBorderColour();
             SetPolylines();
         }

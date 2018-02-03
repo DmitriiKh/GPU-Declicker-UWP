@@ -70,6 +70,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <!--<ColumnDefinition Width="*"/> -->
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" 
                     Name="OpenButton"
@@ -97,6 +98,13 @@
                     Click="AboutDialog_Click" 
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"/>
+            <!--<Button Grid.Column="4" 
+                    Name="SaveClicksButton"
+                    Content="Save Clicks" 
+                    Click="SaveClicks_Click" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center"
+                    IsEnabled="True"/> -->
         </Grid>
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <Grid Name="ClickWindowsGrid"/>

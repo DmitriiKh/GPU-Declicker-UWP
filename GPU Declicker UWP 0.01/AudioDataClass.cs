@@ -62,75 +62,20 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         /// <summary>
-        /// Replace output sample at position with prediction and 
-        /// sets prediction error sample to zero
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="lenght"></param>
-        internal float Repair(int position, int lenght, Channel channel)
-        {
-            CurrentChannel = channel;
-
-            for (int i = position; i < position + lenght; i++)
-            {
-                SetPredictionErr( i, 0);
-                SetOutputSample( 
-                    i,
-                    AudioProcessing.Calc_burg_pred(this, i, 128, 4)
-                    );
-            }
-
-            for (int i = position - 16; i < position + lenght + 16; i++)
-                //(int i = position + lenght; i < position + lenght + 16; i++)
-            {
-                SetPredictionErr(
-                    i,
-                    AudioProcessing.Calc_burg_pred(this, i, 16, 2) -
-                    GetOutputSample(i)  //GetInputSample(i)
-                    );
-            }
-
-            AudioProcessing.Calculate_a_average_CPU(this, position - 512, position + lenght + 512);
-
-            return AudioProcessing.Calc_detectoin_level(this, position);
-        }
-
-        public void RestoreInitState(int position, int lenght, Channel channel)
-        {
-            CurrentChannel = channel;
-
-            for (int i = position; i < position + lenght; i++)
-            {
-                SetOutputSample(i, GetInputSample(i));
-            }
-
-            for (int i = position - 16; i < position + lenght + 16; i++)
-            {
-                SetPredictionErr(
-                    i,
-                    AudioProcessing.Calc_burg_pred(this, i, 256, 4) -
-                    GetInputSample(i)
-                    );
-            }
-
-            AudioProcessing.Calculate_a_average_CPU(this, position - 512, position + lenght + 512);
-        }
-
-        /// <summary>
         /// Adds a click to the list and stores threshold_level_detected
         /// </summary>
         /// <param name="position"></param>
         /// <param name="lenght"></param>
         /// <param name="threshold_level_detected"></param>
-        public void AddClick(int position, int lenght, float threshold_level_detected)
+        public void AddClick(int position, int lenght, float threshold_level_detected, AudioProcessing audioProcessing)
         {
             if (IsStereo)
                 if (CurrentChannel == Channel.Left)
-                    Clicks_LeftChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, Channel.Left));
+                    Clicks_LeftChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, audioProcessing, Channel.Left));
                 else
-                    Clicks_RightChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, Channel.Right));
+                    Clicks_RightChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, audioProcessing, Channel.Right));
             else
-                Clicks_LeftChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, Channel.Left));
+                Clicks_LeftChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, audioProcessing, Channel.Left));
         }
 
         public int GetNumberOfClicks()
@@ -164,6 +109,46 @@ namespace GPU_Declicker_UWP_0._01
                     return Clicks_RightChannel[index];
             else
                 return Clicks_LeftChannel[index];
+        }
+
+        public AudioClick GetLastClick()
+        {
+            if (IsStereo)
+            {
+                if (CurrentChannel == Channel.Left)
+                {
+                    if (Clicks_LeftChannel.Count > 0)
+                    {
+                        return Clicks_LeftChannel.Last();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+                else
+                {
+                    if (Clicks_RightChannel.Count > 0)
+                    {
+                        return Clicks_RightChannel.Last();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            else
+            {
+                if (Clicks_LeftChannel.Count > 0)
+                {
+                    return Clicks_LeftChannel.Last();
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
 
         public float GetInputSample(int position)
