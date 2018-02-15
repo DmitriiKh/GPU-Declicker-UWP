@@ -19,7 +19,7 @@ namespace GPU_Declicker_UWP_0._01
         /// <summary>
         /// audio samples to view
         /// </summary>
-        private AudioDataClass audioData = null;
+        private AudioData audioData = null;
 
         /// <summary>
         /// offset from beginning of audioData to beginning waveForm
@@ -48,12 +48,12 @@ namespace GPU_Declicker_UWP_0._01
         /// Fills this with AudioData, sets Ratio and OffsetPosition
         /// </summary>
         /// <param name="audioDataInput"></param>
-        public void Fill(AudioDataClass audioDataInput)
+        public void Fill(AudioData audioDataInput)
         {
             OffsetPosition = 0;
             // Sets Ratio to show whole audio track
             audioDataToWaveFormRatio =
-                audioDataInput.Length_samples / waveFormLeftChannel.ActualWidth;
+                audioDataInput.LengthSamples() / waveFormLeftChannel.ActualWidth;
             audioData = audioDataInput;
 
             DrawWaveForm();
@@ -91,11 +91,11 @@ namespace GPU_Declicker_UWP_0._01
                 * audioDataToWaveFormRatio
                 );
             // if there is enough room on the right than shift offsetPosition
-            if (OffsetPosition + shift + samplesOnScrean < audioData.Length_samples)
+            if (OffsetPosition + shift + samplesOnScrean < audioData.LengthSamples())
                 OffsetPosition += shift;
             else
                 // set OffsetPosition to show the end of audioData
-                OffsetPosition = audioData.Length_samples - samplesOnScrean - 1
+                OffsetPosition = audioData.LengthSamples() - samplesOnScrean - 1
                     - (int)audioDataToWaveFormRatio;
 
             DrawWaveForm();
@@ -149,12 +149,12 @@ namespace GPU_Declicker_UWP_0._01
             // for every x-axis position of waveForm
             for (int x = 0; x < waveFormsGroup.ActualWidth; x++)
             {
-                audioData.CurrentChannel = Channel.Left;
+                audioData.SetCurrentChannelType(ChannelType.Left);
                 AddPointToWaveform(waveFormLeftChannel, x);
 
                 if (audioData.IsStereo)
                 {
-                    audioData.CurrentChannel = Channel.Right;
+                    audioData.SetCurrentChannelType(ChannelType.Right);
                     AddPointToWaveform(waveFormRightCnannel, x);
                 }
             }
@@ -167,7 +167,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             int offsetY = (int)waveFormLeftChannel.ActualHeight / 2;
             int start = OffsetPosition + (int)(x * audioDataToWaveFormRatio);
-            if (start >= audioData.Length_samples)
+            if (start >= audioData.LengthSamples())
             {
                 return;
             }
@@ -198,7 +198,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             min = audioData.GetInputSample(start);
             max = audioData.GetInputSample(start);
-            for (int j = 0; j < length && start + j < audioData.Length_samples; j++)
+            for (int j = 0; j < length && start + j < audioData.LengthSamples(); j++)
             {
                 if (audioData.GetInputSample(start + j) < min)
                     min = audioData.GetInputSample(start + j);
@@ -232,11 +232,11 @@ namespace GPU_Declicker_UWP_0._01
                 return;
 
             if (waveFormLeftChannel.ActualWidth * audioDataToWaveFormRatio * 2
-                < audioData.Length_samples)
+                < audioData.LengthSamples())
                 audioDataToWaveFormRatio *= 2;
             else
                 audioDataToWaveFormRatio =
-                audioData.Length_samples / waveFormLeftChannel.ActualWidth;
+                audioData.LengthSamples() / waveFormLeftChannel.ActualWidth;
 
             DrawWaveForm();
         }
@@ -247,7 +247,7 @@ namespace GPU_Declicker_UWP_0._01
             // Sets Ratio to show whole audio track
             if (audioData != null)
                 audioDataToWaveFormRatio =
-                    audioData.Length_samples / waveFormsGroup.ActualWidth;
+                    audioData.LengthSamples() / waveFormsGroup.ActualWidth;
 
             DrawWaveForm();
         }

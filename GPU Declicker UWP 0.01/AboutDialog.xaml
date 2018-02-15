@@ -10,7 +10,6 @@
 
     <Grid>
         <TextBlock TextWrapping="Wrap">
-            
             This app is freeware that automaticaly repair damaged samples
             (clicks) in audio files. <LineBreak/>
             Here is a short tutorial on how to  

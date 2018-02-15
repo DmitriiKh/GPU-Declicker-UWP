@@ -1,312 +1,289 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GPU_Declicker_UWP_0._01
 {
-    public enum Channel { Left, Right};
+    public enum ChannelType { Left, Right };
 
-    /// <summary>
-    /// Represents stereo or mono audio samples and includes information 
-    /// about damaged samples
-    /// </summary>
-    public class AudioDataClass
+    public class AudioChannel
     {
-        public Boolean IsStereo = true;
-        public Channel CurrentChannel { get; set; }
-        private float[] LeftChannelAudioInput = null;
-        private float[] RightChannelAudioInput = null;
-        private float[] LeftChannelAudioOutput = null;
-        private float[] RightChannelAudioOutput = null;
-        private float[] LeftChannel_a_average = null;
-        private float[] RightChannel_a_average = null;
-        public int Length_samples { get; set; }
-        //private byte[] LeftChannelMarks = null;
-        //private byte[] RightChannelMarks = null;
-        private float[] LeftChannelPredictionErr = null;
-        private float[] RightChannelPredictionErr = null;
+        private readonly float[] input;
+        private readonly float[] output;
+        private readonly float[] predictionErrAverage;
+        private readonly float[] predictionErr;
+        private readonly float[] predictionErrBackup;
+        private readonly List<AudioClick> ClicksList = new List<AudioClick>();
+        public bool ChannelIsPreprocessed { get; set; }
 
-        private List<AudioClick> Clicks_LeftChannel = new List<AudioClick>();
-        private List<AudioClick> Clicks_RightChannel = new List<AudioClick>();
-
-        // Constractor for stereo
-        public AudioDataClass(float[] leftChannelSamples, float[] rightChannelSamples)
+        public AudioChannel(float[] inputSamples)
         {
-            IsStereo = true;
-            CurrentChannel = Channel.Left;
-            Length_samples = leftChannelSamples.Length;
-            LeftChannelAudioInput = leftChannelSamples;
-            RightChannelAudioInput = rightChannelSamples;
-            LeftChannelAudioOutput = new float[Length_samples];
-            RightChannelAudioOutput = new float[Length_samples];
-            //LeftChannelMarks = new byte[Length];
-            //RightChannelMarks = new byte[Length];
-            LeftChannelPredictionErr = new float[Length_samples];
-            RightChannelPredictionErr = new float[Length_samples];
-            LeftChannel_a_average = new float[Length_samples];
-            RightChannel_a_average = new float[Length_samples];
+            ChannelIsPreprocessed = false;
+            int length = inputSamples.Length;
+            input = inputSamples;
+            output = new float[length];
+            predictionErr = new float[length];
+            predictionErrBackup = new float[length];
+            predictionErrAverage = new float[length];
         }
 
-        // Constructor for mono
-        public AudioDataClass(float[] monoChannel)
+        public int LengthSamples() => 
+            input.Length; 
+
+        public float GetInputSample(int position) => input[position];
+        public void SetInputSample(int position, float value) =>
+            input[position] = value;
+
+        public float GetOutputSample(int position) => output[position];
+        public void SetOutputSample(int position, float value) =>
+            output[position] = value;
+
+        public float GetPredictionErr(int position) => predictionErr[position];
+        public void SetPredictionErr(int position, float value) =>
+            predictionErr[position] = value;
+
+        public float GetPredictionErrBackup(int position) =>
+            predictionErrBackup[position];
+        public void SetPredictionErrBackup(int position, float value) =>
+            predictionErrBackup[position] = value;
+
+        public float GetPredictionErrAverage(int position) => predictionErrAverage[position];
+        public void SetPredictionErrAverage(int position, float value) =>
+            predictionErrAverage[position] = value;
+
+        public void AddClickToList(
+            int position,
+            int lenght,
+            float threshold_level_detected,
+            AudioData audioData,
+            AudioProcessing audioProcessing,
+            ChannelType channel)
         {
-            IsStereo = false;
-            Length_samples = monoChannel.Length;
-            LeftChannelAudioInput = monoChannel;
-            LeftChannelAudioOutput = new float[Length_samples];
-            //LeftChannelMarks = new byte[Length];
-            LeftChannelPredictionErr = new float[Length_samples];
-            LeftChannel_a_average = new float[Length_samples];
+            ClicksList.Add(new AudioClick(
+                position,
+                lenght,
+                threshold_level_detected,
+                audioData,
+                audioProcessing,
+                channel));
         }
 
-        /// <summary>
-        /// Adds a click to the list and stores threshold_level_detected
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="lenght"></param>
-        /// <param name="threshold_level_detected"></param>
-        public void AddClick(int position, int lenght, float threshold_level_detected, AudioProcessing audioProcessing)
+        public int GetNumberOfClicks() =>
+            ClicksList.Count;
+
+        internal void RestoreInitState(int position, int lenght)
         {
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    Clicks_LeftChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, audioProcessing, Channel.Left));
-                else
-                    Clicks_RightChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, audioProcessing, Channel.Right));
-            else
-                Clicks_LeftChannel.Add(new AudioClick(position, lenght, threshold_level_detected, this, audioProcessing, Channel.Left));
+            for (int index = position; index < position + lenght; index++)
+            {
+                output[index] = input[index];
+                predictionErr[index] = predictionErrBackup[index];
+            }
         }
 
-        public int GetNumberOfClicks()
-        {
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    return Clicks_LeftChannel.Count;
-                else
-                    return Clicks_RightChannel.Count;
-            else
-                return Clicks_LeftChannel.Count;
-        }
+        public void ChangeClickAproved(int index) =>
+            ClicksList[index].ChangeAproved();
 
-        public void ChangeClickAproved(int index)
-        {
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    Clicks_LeftChannel[index].ChangeAproved();
-                else
-                    Clicks_RightChannel[index].ChangeAproved();
-            else
-                Clicks_LeftChannel[index].ChangeAproved();
-        }
-
-        public AudioClick GetClick(int index)
-        {
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    return Clicks_LeftChannel[index];
-                else
-                    return Clicks_RightChannel[index];
-            else
-                return Clicks_LeftChannel[index];
-        }
+        public AudioClick GetClick(int index) =>
+            ClicksList[index];
 
         public AudioClick GetLastClick()
         {
-            if (IsStereo)
+            if (ClicksList.Count > 0)
             {
-                if (CurrentChannel == Channel.Left)
-                {
-                    if (Clicks_LeftChannel.Count > 0)
-                    {
-                        return Clicks_LeftChannel.Last();
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    if (Clicks_RightChannel.Count > 0)
-                    {
-                        return Clicks_RightChannel.Last();
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
+                return ClicksList.Last();
             }
             else
             {
-                if (Clicks_LeftChannel.Count > 0)
-                {
-                    return Clicks_LeftChannel.Last();
-                }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
         }
 
-        public float GetInputSample(int position)
-        {
-            if (position >= Length_samples || position < 0 )
-                return 0;
+        internal void ClearAllClicks() =>
+            ClicksList.Clear();
 
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    return LeftChannelAudioInput[position];
-                else
-                    return RightChannelAudioInput[position];
-            else
-                return LeftChannelAudioInput[position]; // mono
+        internal void SortClicks() =>
+            ClicksList.Sort();
+    }
+
+    public abstract class AudioData
+    {
+
+        internal bool IsStereo;
+        internal AudioChannel currentAudioChannel;
+
+        public abstract ChannelType GetCurrentChannelType();
+        public abstract void SetCurrentChannelType(ChannelType channelType);
+        public abstract void ClearAllClicks();
+        public abstract void SortClicks();
+
+        public int LengthSamples() =>
+            currentAudioChannel.LengthSamples();
+
+        /// <summary>
+        /// Restores initial prediction errors from buckup and 
+        /// output samples from input samples 
+        /// </summary>
+        /// <param name="position">start position</param>
+        /// <param name="lenght">length</param>
+        public void CurrentChannelRestoreInitState(int position, int lenght) =>
+            currentAudioChannel.RestoreInitState(position, lenght);
+
+        public float GetPredictionErrBackup(int position) =>
+            currentAudioChannel.GetPredictionErrBackup(position);
+
+        public void SetCurrentChannelIsPreprocessed() =>
+            currentAudioChannel.ChannelIsPreprocessed = true;
+
+        public bool CurrentChannelIsPreprocessed() =>
+            currentAudioChannel.ChannelIsPreprocessed;
+
+        /// <summary>
+        /// Backup prediction errors data for current channel
+        /// </summary>
+        public void BackupCurrentChannelPredErrors()
+        {
+            for (int index = 0;
+                index < currentAudioChannel.LengthSamples();
+                index++)
+            {
+                currentAudioChannel.SetPredictionErrBackup(
+                    index,
+                    currentAudioChannel.GetPredictionErr(index));
+            }
         }
 
-        public void SetInputSample(int position, float sample)
+        /// <summary>
+        /// Restore prediction errors data for current channel
+        /// </summary>
+        public void RestoreCurrentChannelPredErrors()
         {
-            if (position >= Length_samples || position < 0)
-                return;
-
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    LeftChannelAudioInput[position] = sample;
-                else
-                    RightChannelAudioInput[position] = sample;
-            else
-                LeftChannelAudioInput[position] = sample; // mono
-
-            return;
+            for (int index = 0;
+                index < currentAudioChannel.LengthSamples();
+                index++)
+            {
+                currentAudioChannel.SetPredictionErr(
+                    index,
+                    currentAudioChannel.GetPredictionErrBackup(index));
+            }
         }
 
-        public float GetOutputSample(int position)
-        {
-            if (position >= Length_samples || position < 0)
-                return 0;
+        public void AddClickToList(
+            int position,
+            int lenght,
+            float threshold_level_detected,
+            AudioProcessing audioProcessing) =>
 
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    return LeftChannelAudioOutput[position];
-                else
-                    return RightChannelAudioOutput[position];
-            else
-                return LeftChannelAudioOutput[position]; // mono
+                currentAudioChannel.AddClickToList(
+                    position, lenght,
+                    threshold_level_detected,
+                    this,
+                    audioProcessing,
+                    GetCurrentChannelType());
+
+        public int CurrentChannelGetNumberOfClicks() =>
+            currentAudioChannel.GetNumberOfClicks();
+
+        public void ChangeClickAproved(int index) =>
+            currentAudioChannel.ChangeClickAproved(index);
+
+        public AudioClick GetClick(int index) =>
+            currentAudioChannel.GetClick(index);
+
+        public AudioClick GetLastClick() =>
+            currentAudioChannel.GetLastClick();
+
+        public float GetInputSample(int position) =>
+            currentAudioChannel.GetInputSample(position);
+
+        public void SetInputSample(int position, float sample) =>
+            currentAudioChannel.SetInputSample(position, sample);
+
+        public float GetOutputSample(int position) =>
+            currentAudioChannel.GetOutputSample(position);
+
+        public void SetOutputSample(int position, float sample) =>
+            currentAudioChannel.SetOutputSample(position, sample);
+
+        public float GetPredictionErr(int position) =>
+            currentAudioChannel.GetPredictionErr(position);
+
+        public void SetPredictionErr(int position, float prediction) =>
+            currentAudioChannel.SetPredictionErr(position, prediction);
+
+        public float Get_a_average(int position) =>
+            currentAudioChannel.GetPredictionErrAverage(position);
+
+        public void Set_a_average(int position, float a_average) =>
+            currentAudioChannel.SetPredictionErrAverage(position, a_average);
+    }
+
+    /// <summary>
+    /// Represents stereo audio samples and includes information 
+    /// about damaged samples
+    /// </summary>
+    public class AudioDataStereo : AudioData
+    {
+        private ChannelType currentChannelType;
+        private readonly AudioChannel leftChannel;
+        private readonly AudioChannel rightChannel;
+
+        public AudioDataStereo(float[] leftChannelSamples, float[] rightChannelSamples)
+        {
+            IsStereo = true;
+            currentChannelType = ChannelType.Left;
+            leftChannel = new AudioChannel(leftChannelSamples);
+            rightChannel = new AudioChannel(rightChannelSamples);
+            currentAudioChannel = leftChannel;
         }
 
-        public void SetOutputSample(int position, float sample)
+        public override ChannelType GetCurrentChannelType() =>
+            currentChannelType;
+
+        public override void SetCurrentChannelType(ChannelType channelType)
         {
-            if (position >= Length_samples || position < 0)
-                return;
-
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    LeftChannelAudioOutput[position] = sample;
-                else
-                    RightChannelAudioOutput[position] = sample;
+            currentChannelType = channelType;
+            if (channelType == ChannelType.Left)
+                currentAudioChannel = leftChannel;
             else
-                LeftChannelAudioOutput[position] = sample; // mono
-
-            return;
+                currentAudioChannel = rightChannel;
         }
 
-        /*public byte GetMark(int position)
+        public override void ClearAllClicks()
         {
-            if (position >= Length || position < 0)
-                return 0;
-
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    return LeftChannelMarks[position];
-                else
-                    return RightChannelMarks[position];
-            else
-                return LeftChannelMarks[position]; // mono
+            leftChannel.ClearAllClicks();
+            rightChannel.ClearAllClicks();
         }
 
-        public void SetMark(int position, byte mark)
+        public override void SortClicks()
         {
-            if (position >= Length || position < 0)
-                return;
+            leftChannel.SortClicks();
+            rightChannel.SortClicks();
+        }
+    }
 
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    LeftChannelMarks[position] = mark;
-                else
-                    RightChannelMarks[position] = mark;
-            else
-                LeftChannelMarks[position] = mark; // mono
+    public class AudioDataMono : AudioData
+    {
+        private readonly AudioChannel monoChannel;
 
-            return;
-        }*/
-
-        public float GetPredictionErr(int position)
+        public AudioDataMono(float[] leftChannelSamples)
         {
-            if (position >= Length_samples || position < 0)
-                return 0;
-
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    return LeftChannelPredictionErr[position];
-                else
-                    return RightChannelPredictionErr[position];
-            else
-                return LeftChannelPredictionErr[position]; // mono
+            IsStereo = false;
+            monoChannel = new AudioChannel(leftChannelSamples);
+            currentAudioChannel = monoChannel;
         }
 
-        public void SetPredictionErr(int position, float prediction)
+        public override ChannelType GetCurrentChannelType() =>
+            // always answer Left for mono
+            ChannelType.Left;
+
+        public override void SetCurrentChannelType(ChannelType channelType)
         {
-            if (position >= Length_samples || position < 0)
-                return;
-
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    LeftChannelPredictionErr[position] = prediction;
-                else
-                    RightChannelPredictionErr[position] = prediction;
-            else
-                LeftChannelPredictionErr[position] = prediction; // mono
-
-            return;
+            // doing nothing because it's mono
         }
-
-        public float Get_a_average(int position)
-        {
-            if (position >= Length_samples || position < 0)
-                return 0;
-
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    return LeftChannel_a_average[position];
-                else
-                    return RightChannel_a_average[position];
-            else
-                return LeftChannel_a_average[position]; // mono
-        }
-
-        public void Set_a_average(int position, float a_average)
-        {
-            if (position >= Length_samples || position < 0)
-                return;
-
-            if (IsStereo)
-                if (CurrentChannel == Channel.Left)
-                    LeftChannel_a_average[position] = a_average;
-                else
-                    RightChannel_a_average[position] = a_average;
-            else
-                LeftChannel_a_average[position] = a_average; // mono
-
-            return;
-        }
-
-        internal void SortClicks()
-        {
-            Clicks_LeftChannel.Sort();
             
-            if (IsStereo)
-                Clicks_RightChannel.Sort();
-        }
+        public override void ClearAllClicks() =>
+            monoChannel.ClearAllClicks();
+
+        public override void SortClicks() =>
+            monoChannel.SortClicks();
     }
 }

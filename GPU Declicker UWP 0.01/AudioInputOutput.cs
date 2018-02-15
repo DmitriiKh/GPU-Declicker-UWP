@@ -25,24 +25,24 @@ namespace GPU_Declicker_UWP_0._01
     /// This class uses AudioGraph API to transfer audio from file to 
     /// float array or back
     /// </summary>
-    class AudioInputOutput
+    public class AudioInputOutput
     {
-        private bool Finished; // { get; private set; }
-        private IProgress<double> io_progress; // = new Progress<double>();
+        private bool Finished; 
+        private IProgress<double> io_progress; 
         private AudioFileInputNode fileInputNode;
         private AudioEncodingProperties audioEncodingProperties;
         private AudioFrameOutputNode frameOutputNode;
-        private AudioDataClass audioData;
+        private AudioData audioData;
         private int audioDataCurrentPosition = 0;
         private AudioGraph audioGraph;
         private AudioFileOutputNode fileOutputNode;
         private AudioFrameInputNode frameInputNode;
         private MediaEncodingProfile mediaEncodingProfile;
 
-        public AudioDataClass GetAudioData()
+        public AudioData GetAudioData()
             => audioData;
 
-        public void SetAudioData(AudioDataClass value)
+        public void SetAudioData(AudioData value)
             => audioData = value;
 
         /// <summary>
@@ -59,8 +59,6 @@ namespace GPU_Declicker_UWP_0._01
                 new AudioGraphSettings(
                     Windows.Media.Render.AudioRenderCategory.Media
                     );
-
-            //settings.DesiredSamplesPerQuantum = 448*2;
 
             // if audioGraph was previously created
             if (audioGraph != null)
@@ -90,9 +88,6 @@ namespace GPU_Declicker_UWP_0._01
             Finished = false;
             status.Report("Reading audio file");
 
-            // read audio file profile
-            //mediaEncodingProfile = await MediaEncodingProfile.CreateFromFileAsync(file);
-
             // Initialize FileInputNode
             CreateAudioFileInputNodeResult inputNodeCreation_result =
                 await audioGraph.CreateFileInputNodeAsync(file);
@@ -101,6 +96,7 @@ namespace GPU_Declicker_UWP_0._01
                 return inputNodeCreation_result;
 
             fileInputNode = inputNodeCreation_result.FileInputNode;
+
 
             // Read audio file encoding properties to pass them 
             //to FrameOutputNode creator
@@ -111,6 +107,7 @@ namespace GPU_Declicker_UWP_0._01
             frameOutputNode = audioGraph.CreateFrameOutputNode(
                 audioEncodingProperties
                 );
+            frameOutputNode.Stop();
             fileInputNode.AddOutgoingConnection(frameOutputNode);
 
             // Add a handler for achiving the end of a file
@@ -125,9 +122,10 @@ namespace GPU_Declicker_UWP_0._01
                 * fileInputNode.EncodingProperties.SampleRate
                 );
             if (audioEncodingProperties.ChannelCount == 1)
-                SetAudioData(new AudioDataClass(new float[numOfSamples]));
+                SetAudioData(new AudioDataMono(new float[numOfSamples]));
             else
-                SetAudioData(new AudioDataClass(new float[numOfSamples], new float[numOfSamples]));
+                SetAudioData(new AudioDataStereo(new float[numOfSamples], 
+                    new float[numOfSamples]));
 
             audioDataCurrentPosition = 0;
 
@@ -151,6 +149,7 @@ namespace GPU_Declicker_UWP_0._01
         private void FileInput_FileCompleted(AudioFileInputNode sender, object args)
         {
             audioGraph.Stop();
+            frameOutputNode?.Stop();
             audioGraph.Dispose();
             audioGraph = null;
             Finished = true;
@@ -177,8 +176,20 @@ namespace GPU_Declicker_UWP_0._01
                 io_progress?.Report(dProgress);
             }
 
+            if (audioDataCurrentPosition == 0)
+            {
+                // now we are ready to start frameOutputNode
+                frameOutputNode.Start();
+            }
+
             AudioFrame frame = frameOutputNode.GetFrame();
             ProcessInputFrame(frame);
+
+            if (Finished)
+            {
+                frameOutputNode?.Stop();
+                audioGraph?.Stop();
+            }
         }
 
         /// <summary>
@@ -186,6 +197,7 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         unsafe private void ProcessInputFrame(AudioFrame frame)
         {
+            
             using (AudioBuffer buffer =
                 frame.LockBuffer(AudioBufferAccessMode.Read))
             using (IMemoryBufferReference reference =
@@ -206,9 +218,9 @@ namespace GPU_Declicker_UWP_0._01
                 // Transfer audio samples from buffer into audioData
                 for (uint i = 0; i < capacityInFloat; i += channelCount)
                 {
-                    if (audioDataCurrentPosition < GetAudioData().Length_samples)
+                    if (audioDataCurrentPosition < GetAudioData().LengthSamples())
                     {
-                        GetAudioData().CurrentChannel = Channel.Left;
+                        GetAudioData().SetCurrentChannelType(ChannelType.Left);
                         GetAudioData().SetInputSample(
                             audioDataCurrentPosition,
                             dataInFloat[i]
@@ -216,7 +228,7 @@ namespace GPU_Declicker_UWP_0._01
                         // if it's stereo
                         if (channelCount == 2)
                         {
-                            GetAudioData().CurrentChannel = Channel.Right;
+                            GetAudioData().SetCurrentChannelType(ChannelType.Right);
                             GetAudioData().SetInputSample(
                                 audioDataCurrentPosition,
                                 dataInFloat[i + 1]
@@ -250,7 +262,7 @@ namespace GPU_Declicker_UWP_0._01
                 return result;
 
             fileOutputNode = result.FileOutputNode;
-            fileOutputNode.Stop();
+            fileOutputNode.Stop(); 
 
             // Initialize FrameInputNode and connect it to fileOutputNode
             frameInputNode = audioGraph.CreateFrameInputNode(
@@ -271,7 +283,7 @@ namespace GPU_Declicker_UWP_0._01
             // and will generated events QuantumStarted 
             audioGraph.Start();
             // don't start fileOutputNode yet because it will record zeros
-            //fileOutputNode.Start();
+            
             // because we initialised frameInputNode in Stop mode we need to start it
             frameInputNode.Start();
 
@@ -280,10 +292,8 @@ namespace GPU_Declicker_UWP_0._01
                 await Task.Delay(50);
 
             // when audioData samples ended and audioGraph already stoped
-            //audioGraph.Stop();
-            TranscodeFailureReason finalizeResult = await fileOutputNode.FinalizeAsync();
+            await fileOutputNode.FinalizeAsync();
             
-
             // clean status and progress 
             status.Report("");
             io_progress.Report(0);
@@ -293,10 +303,10 @@ namespace GPU_Declicker_UWP_0._01
 
        
 
-        private void FrameInputNode_QuantumStarted(AudioFrameInputNode sender, FrameInputNodeQuantumStartedEventArgs args)
+        private void FrameInputNode_QuantumStarted(
+            AudioFrameInputNode sender, 
+            FrameInputNodeQuantumStartedEventArgs args)
         {            
-            uint numSamplesNeeded = (uint)args.RequiredSamples;
-
             if (audioDataCurrentPosition == 0)
             {
                 // now we are ready to start fileOutputNode
@@ -312,15 +322,16 @@ namespace GPU_Declicker_UWP_0._01
                 fileOutputNode?.Stop();
                 audioGraph?.Stop();
             }
-            
+
             // to not report too many times
+            if (audioGraph == null)
+                return;
             if (audioGraph.CompletedQuantumCount % 100 == 0)
             {
                 double dProgress =
-                    100 *
-                    audioDataCurrentPosition
-                    /
-                    audioData.Length_samples;
+                    (double)100 *
+                    audioDataCurrentPosition /
+                    audioData.LengthSamples();
                 io_progress?.Report(dProgress);
             }
         }
@@ -336,7 +347,7 @@ namespace GPU_Declicker_UWP_0._01
                 case ".wav":
                     return MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
                 default:
-                    throw new ArgumentException();
+                    throw new ArgumentException("Can't create MediaEncodingProfile for this file extention");
             }
         }
 
@@ -368,9 +379,9 @@ namespace GPU_Declicker_UWP_0._01
                 
                 for (uint i = 0; i < capacityInFloat; i += channelCount)
                 {
-                    if (audioDataCurrentPosition < audioData.Length_samples)
+                    if (audioDataCurrentPosition < audioData.LengthSamples())
                     {
-                        GetAudioData().CurrentChannel = Channel.Left;
+                        GetAudioData().SetCurrentChannelType(ChannelType.Left);
                         dataInFloat[i] = audioData.GetOutputSample(
                             audioDataCurrentPosition);
                     }
@@ -380,7 +391,7 @@ namespace GPU_Declicker_UWP_0._01
                         // if processed audio is sretero
                         if (audioData.IsStereo == true)
                         {
-                            GetAudioData().CurrentChannel = Channel.Right;
+                            GetAudioData().SetCurrentChannelType(ChannelType.Right);
                             dataInFloat[i + 1] = audioData.GetOutputSample(
                                 audioDataCurrentPosition);
                         }
@@ -394,9 +405,9 @@ namespace GPU_Declicker_UWP_0._01
                 }
             }
 
-            if (audioDataCurrentPosition >= audioData.Length_samples)
+            if (audioDataCurrentPosition >= audioData.LengthSamples())
             {
-                // last frame may not be full
+                // last frame may be not full
                 Finished = true;
             }
 

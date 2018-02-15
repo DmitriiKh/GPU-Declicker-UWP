@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    SizeChanged="Page_SizeChanged_EventHandler">
+    SizeChanged="PageSizeChangedEventHandler">
 
     <Grid Name="mainGrid" 
           Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -64,13 +64,15 @@
                 </Viewbox>
             </Grid>
         </Grid>
-        <Grid Name="Buttons" Grid.Row="1">
+        <Grid Name="ButtonsGrid" Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
-                <!--<ColumnDefinition Width="*"/> -->
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" 
                     Name="OpenButton"
@@ -78,21 +80,70 @@
                     Click="OpenAudioFile_Click" 
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"/>
-            <Button Grid.Column="1" 
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                    Text="Detection level"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"/>
+                <Slider Grid.Row="1"
+                        Name="Threshold_Slider"
+                        Value="10"
+                        Minimum="1"
+                        Maximum="50"
+                        StepFrequency="0.1"
+                        SmallChange="0.1"
+                        VerticalAlignment="Bottom"/>
+                <TextBlock Grid.Row="0"
+                    Name="Threshold_val"
+                    Text="{Binding ElementName=Threshold_Slider,
+                        Path=Value, 
+                        Mode=TwoWay}"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"/>
+            </Grid>
+            <Grid Grid.Column="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0"
+                    Text="Max length"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Left"/>
+                <Slider Grid.Row="1"
+                    Name="Max_length_Slider"
+                    Value="250"
+                    Minimum="1"
+                    Maximum="500"
+                    StepFrequency="1"
+                    SmallChange="1"
+                    VerticalAlignment="Bottom"/>
+                <TextBlock Grid.Row="0"
+                    Name="Max_length_val"
+                    Text="{Binding ElementName=Max_length_Slider, 
+                    Path=Value}"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"/>
+            </Grid>
+            <Button Grid.Column="4" 
                     Name="ScanButton"
                     Content="Scan" 
                     Click="Scan_ClickAsync" 
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"
                     IsEnabled="False"/>
-            <Button Grid.Column="2" 
+            <Button Grid.Column="5" 
                     Name="SaveButton"
                     Content="Save" 
                     Click="SaveAudioFile_Click" 
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"
                     IsEnabled="False"/>
-            <Button Grid.Column="3" 
+            <Button Grid.Column="6" 
                     Name="AboutButton"
                     Content="About" 
                     Click="AboutDialog_Click" 
