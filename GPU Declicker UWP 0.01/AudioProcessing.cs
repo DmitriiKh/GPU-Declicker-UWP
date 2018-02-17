@@ -324,9 +324,9 @@ namespace GPU_Declicker_UWP_0._01
                 int segment_start = cpu_core * segment_lenght;
                 int segment_end = segment_start + segment_lenght;
                 if (cpu_core == 0)
-                    segment_start += history_length_samples;
+                    segment_start += history_length_samples + 16;
                 if (cpu_core == cpu_core_number - 1)
-                    segment_end -= history_length_samples;
+                    segment_end -= history_length_samples + max_lenghth_correction;
                 int index = cpu_core;
                 tasks[cpu_core] = Task.Factory.StartNew(() =>
                     ScanSegment(
