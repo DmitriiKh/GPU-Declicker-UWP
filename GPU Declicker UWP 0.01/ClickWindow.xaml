@@ -27,8 +27,8 @@
         <TextBlock 
             Name="Position"
             Foreground="Black"
-            VerticalAlignment="Top"
-            HorizontalAlignment="Left"/>
+            VerticalAlignment="Bottom"
+            HorizontalAlignment="Right"/>
         <TextBlock 
             Name="Threshold_level_detected"
             Foreground="Black"

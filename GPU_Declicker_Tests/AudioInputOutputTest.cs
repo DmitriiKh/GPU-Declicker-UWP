@@ -1,12 +1,10 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using GPU_Declicker_UWP_0._01;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Windows.Media.Audio;
 using Windows.Storage;
-using Windows.Storage.Pickers;
 
 namespace GPU_Declicker_Tests
 {
@@ -22,9 +20,7 @@ namespace GPU_Declicker_Tests
             AudioInputOutput audioInputOutput =
                 new AudioInputOutput();
 
-            CreateAudioGraphResult IO_init_result =
-                await 
-                audioInputOutput.Init(taskProgress);
+            await audioInputOutput.Init(taskProgress);
 
             int audioLength = 44100;
             float[] input_audio = new float[audioLength];
@@ -51,8 +47,7 @@ namespace GPU_Declicker_Tests
 
             if (audioOutputFile != null)
             {
-                CreateAudioFileOutputNodeResult save_audio_result =
-                    await audioInputOutput.SaveAudioToFile(audioOutputFile, taskProgress, taskStatus);
+                await audioInputOutput.SaveAudioToFile(audioOutputFile, taskProgress, taskStatus);
             }
 
             //Assert.AreEqual(5, 1000);

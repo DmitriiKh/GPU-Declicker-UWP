@@ -260,6 +260,10 @@ namespace GPU_Declicker_UWP_0._01
         }
     }
 
+    /// <summary>
+    /// Represents mono audio samples and includes information 
+    /// about damaged samples
+    /// </summary>
     public class AudioDataMono : AudioData
     {
         private readonly AudioChannel monoChannel;

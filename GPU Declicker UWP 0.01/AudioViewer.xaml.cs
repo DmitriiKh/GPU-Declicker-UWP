@@ -24,7 +24,7 @@ namespace GPU_Declicker_UWP_0._01
         /// <summary>
         /// offset from beginning of audioData to beginning waveForm
         /// </summary>
-        private int OffsetPosition = 0;
+        private int OffsetPosition;
 
         /// <summary>
         /// magnification ratio
@@ -297,7 +297,7 @@ namespace GPU_Declicker_UWP_0._01
 
         private void WaveFormsGroup_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            PointerPoint pointer = e.GetCurrentPoint(this); // waveFormsGroup);
+            PointerPoint pointer = e.GetCurrentPoint(this); 
             this.PointerLastPosition = pointer.Position;
             this.IsMovingByMouse = true;
         }
@@ -311,8 +311,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             if (this.IsMovingByMouse)
             {
-                PointerPoint pointer = e.GetCurrentPoint(this); // waveFormsGroup);
-                //PointerPointProperties pointerProperties = pointer.Properties;
+                PointerPoint pointer = e.GetCurrentPoint(this); 
                 int shiftX = (int)(this.PointerLastPosition.X - pointer.Position.X);
                 if (shiftX > 0)
                     this.GoNextX(Math.Abs(shiftX));
@@ -331,11 +330,10 @@ namespace GPU_Declicker_UWP_0._01
 
         private void WaveFormsGroup_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            PointerPoint pointer = e.GetCurrentPoint(this); // this); // waveFormsGroup);
+            PointerPoint pointer = e.GetCurrentPoint(this); 
             PointerPointProperties pointerProperties = pointer.Properties;
             if (pointerProperties.IsLeftButtonPressed)
                 WaveFormsGroup_PointerPressed(sender, e);
         }
-
     }
 }
