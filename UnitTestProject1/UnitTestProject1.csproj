@@ -4,23 +4,20 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProjectGuid>{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}</ProjectGuid>
+    <ProjectGuid>{DB8C3DE8-F36E-4A01-BFFF-6D46BF7AB033}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GPU_Declicker_Tests</RootNamespace>
-    <AssemblyName>GPU_Declicker_Tests</AssemblyName>
-    <DefaultLanguage>ru-Ru</DefaultLanguage>
+    <RootNamespace>UnitTestProject1</RootNamespace>
+    <AssemblyName>UnitTestProject1</AssemblyName>
+    <DefaultLanguage>ru-RU</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <PackageCertificateKeyFile>GPU_Declicker_Tests_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>UnitTestProject1_TemporaryKey.pfx</PackageCertificateKeyFile>
     <UnitTestPlatformVersion Condition="'$(UnitTestPlatformVersion)' == ''">$(VisualStudioVersion)</UnitTestPlatformVersion>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
-    <AppxBundle>Always</AppxBundle>
-    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -28,7 +25,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
@@ -51,7 +48,7 @@
     <DefineConstants>DEBUG;TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
     <NoWarn>;2008</NoWarn>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>ARM</PlatformTarget>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
@@ -78,7 +75,6 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
-    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -99,13 +95,11 @@
     <SDKReference Include="TestPlatform.Universal, Version=$(UnitTestPlatformVersion)" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioInputOutputTest.cs" />
-    <Compile Include="AudioProcessingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
       <DependentUpon>UnitTestApp.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AudioClickTest.cs" />
+    <Compile Include="UnitTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="UnitTestApp.xaml">
@@ -117,65 +111,21 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="GPU_Declicker_Tests_TemporaryKey.pfx" />
+    <None Include="UnitTestProject1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-16.png" />
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-24.png" />
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-256.png" />
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-32.png" />
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-48.png" />
-    <Content Include="Assets\1AppIcon.scale-100.png" />
-    <Content Include="Assets\1AppIcon.scale-125.png" />
-    <Content Include="Assets\1AppIcon.scale-150.png" />
-    <Content Include="Assets\1AppIcon.scale-200.png" />
-    <Content Include="Assets\1AppIcon.scale-400.png" />
-    <Content Include="Assets\1AppIcon.targetsize-16.png" />
-    <Content Include="Assets\1AppIcon.targetsize-24.png" />
-    <Content Include="Assets\1AppIcon.targetsize-256.png" />
-    <Content Include="Assets\1AppIcon.targetsize-32.png" />
-    <Content Include="Assets\1AppIcon.targetsize-48.png" />
-    <Content Include="Assets\1LargeTile.scale-100.png" />
-    <Content Include="Assets\1LargeTile.scale-125.png" />
-    <Content Include="Assets\1LargeTile.scale-150.png" />
-    <Content Include="Assets\1LargeTile.scale-200.png" />
-    <Content Include="Assets\1LargeTile.scale-400.png" />
-    <Content Include="Assets\1MediumTile.scale-100.png" />
-    <Content Include="Assets\1MediumTile.scale-125.png" />
-    <Content Include="Assets\1MediumTile.scale-150.png" />
-    <Content Include="Assets\1MediumTile.scale-200.png" />
-    <Content Include="Assets\1MediumTile.scale-400.png" />
-    <Content Include="Assets\1PackageLogo.scale-100.png" />
-    <Content Include="Assets\1PackageLogo.scale-125.png" />
-    <Content Include="Assets\1PackageLogo.scale-150.png" />
-    <Content Include="Assets\1PackageLogo.scale-200.png" />
-    <Content Include="Assets\1PackageLogo.scale-400.png" />
-    <Content Include="Assets\1SmallTile.scale-100.png" />
-    <Content Include="Assets\1SmallTile.scale-125.png" />
-    <Content Include="Assets\1SmallTile.scale-150.png" />
-    <Content Include="Assets\1SmallTile.scale-200.png" />
-    <Content Include="Assets\1SmallTile.scale-400.png" />
-    <Content Include="Assets\1SplashScreen.scale-100.png" />
-    <Content Include="Assets\1SplashScreen.scale-125.png" />
-    <Content Include="Assets\1SplashScreen.scale-150.png" />
-    <Content Include="Assets\1SplashScreen.scale-200.png" />
-    <Content Include="Assets\1SplashScreen.scale-400.png" />
-    <Content Include="Assets\1WideTile.scale-100.png" />
-    <Content Include="Assets\1WideTile.scale-125.png" />
-    <Content Include="Assets\1WideTile.scale-150.png" />
-    <Content Include="Assets\1WideTile.scale-200.png" />
-    <Content Include="Assets\1WideTile.scale-400.png" />
     <Content Include="Properties\UnitTestApp.rd.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\GPU Declicker UWP 0.01\GPU Declicker UWP 0.01.csproj">
-      <Project>{d58852a8-707d-466d-b4e6-74ad591b69e0}</Project>
-      <Name>GPU Declicker UWP 0.01</Name>
-    </ProjectReference>
+    <Content Include="Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.0.7</Version>
+      <Version>6.0.6</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>1.2.0</Version>

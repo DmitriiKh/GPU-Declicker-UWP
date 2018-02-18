@@ -49,8 +49,6 @@ namespace GPU_Declicker_Tests
             {
                 await audioInputOutput.SaveAudioToFile(audioOutputFile, taskProgress, taskStatus);
             }
-
-            //Assert.AreEqual(5, 1000);
         }
     }
 }
