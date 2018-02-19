@@ -24,6 +24,7 @@ namespace GPU_Declicker_UWP_0._01
         public AudioProcessing AudioProcessingBinded {
             get => audioProcessingBinded;
             set => audioProcessingBinded = value; }
+        public ChannelType ChannelType { get => channelBinded; }
 
         public AudioClick(
             int position, 
@@ -31,7 +32,7 @@ namespace GPU_Declicker_UWP_0._01
             float threshold_level_detected, 
             AudioData audioData,
             AudioProcessing audioProcessing,
-            ChannelType channel)
+            ChannelType channelType)
         {
             Position = position;
             Lenght = lenght;
@@ -40,7 +41,7 @@ namespace GPU_Declicker_UWP_0._01
             Aproved = true;
             AudioDataBinded = audioData;
             AudioProcessingBinded = audioProcessing;
-            channelBinded = channel;
+            channelBinded = channelType;
         }
 
         public int CompareTo(AudioClick other)
@@ -49,7 +50,7 @@ namespace GPU_Declicker_UWP_0._01
             return this.Position.CompareTo(other.Position);
         }
 
-        public override bool Equals (object obj)
+        public override bool Equals(object obj)
         {
             AudioClick audioClick = (AudioClick)obj;
             return this.Position == audioClick.Position;
@@ -57,17 +58,23 @@ namespace GPU_Declicker_UWP_0._01
 
         public override int GetHashCode()
         {
-            return this.Position.GetHashCode() ^ this.Lenght.GetHashCode();
+            return this.Position.GetHashCode() ^ 
+                this.Lenght.GetHashCode() ^
+                this.ChannelType.GetHashCode();
         }
 
         public static bool operator == (AudioClick left, AudioClick right)
         {
-            return left.Position == right.Position;
+            return left.Position == right.Position &&
+                left.Lenght == right.Lenght &&
+                left.ChannelType == right.ChannelType;
         }
 
         public static bool operator != (AudioClick left, AudioClick right)
         {
-            return left.Position != right.Position;
+            return left.Position != right.Position ||
+                left.Lenght != right.Lenght ||
+                left.ChannelType != right.ChannelType;
         }
 
         public static bool operator < (AudioClick left, AudioClick right)
