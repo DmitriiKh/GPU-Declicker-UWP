@@ -1,5 +1,6 @@
 ﻿using GPU_Declicker_UWP_0._01;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace GPU_Declicker_Tests
 {
@@ -239,6 +240,116 @@ namespace GPU_Declicker_Tests
             Assert.IsFalse(audioClickFirst >= audioClickLargerPosition,
                 "Failed Operator >=: should be true " +
                 "(larger position of second operand)");
+        }
+
+        [TestMethod]
+        public void AudioClickChangeAprovedTest()
+        {
+            AudioClick audioClickFirst = new AudioClick(
+                1111, 10, 3.7F, null, null, ChannelType.Left);
+
+            bool aprovedState = audioClickFirst.Aproved;
+            // first change
+            audioClickFirst.ChangeAproved();
+            Assert.AreNotEqual(audioClickFirst.Aproved, aprovedState, 
+                "Failed ChangeAproved (first change): should not be " 
+                + aprovedState.ToString());
+            // second change
+            audioClickFirst.ChangeAproved();
+            Assert.AreEqual(audioClickFirst.Aproved, aprovedState,
+                "Failed ChangeAproved (second change): should be "
+                + aprovedState.ToString());
+        }
+
+        [TestMethod]
+        public void AudioClickGetInputSampleTest()
+        {
+            float[] inputAudio = new float[100];
+
+            for (int index = 0; index < inputAudio.Length; index++)
+                inputAudio[index] = (float)Math.Sin(
+                    2 * Math.PI * index / (inputAudio.Length / 5.3));
+            AudioData audioDataForTest = new AudioDataMono(inputAudio);
+
+            AudioClick audioClickForTest = new AudioClick(
+                audioDataForTest.LengthSamples() / 3,
+                audioDataForTest.LengthSamples() / 10,
+                10F,
+                audioDataForTest,
+                null,
+                ChannelType.Left);
+
+            for (int index = 0; index < audioDataForTest.LengthSamples(); index++)
+                Assert.AreEqual(
+                    audioClickForTest.GetInputSample(index),
+                    audioDataForTest.GetInputSample(index),
+                    "Failed GetInputSample for index" +
+                    index.ToString());
+        }
+
+        [TestMethod]
+        public void AudioClickGetOutputSampleTest()
+        {
+            float[] inputAudio = new float[100];
+
+            for (int index = 0; index < inputAudio.Length; index++)
+                inputAudio[index] = (float)Math.Sin(
+                    2 * Math.PI * index / (inputAudio.Length / 5.3));
+            AudioData audioDataForTest = new AudioDataMono(inputAudio);
+            for (int index = 0; index < inputAudio.Length; index++)
+                audioDataForTest.SetOutputSample(
+                    index,
+                    audioDataForTest.GetInputSample(index));
+
+            AudioClick audioClickForTest = new AudioClick(
+            audioDataForTest.LengthSamples() / 3,
+            audioDataForTest.LengthSamples() / 10,
+            10F,
+            audioDataForTest,
+            null,
+            ChannelType.Left);
+
+            for (int index = 0; index < audioDataForTest.LengthSamples(); index++)
+                Assert.AreEqual(
+                    audioClickForTest.GetOutputSample(index),
+                    audioDataForTest.GetOutputSample(index),
+                    "Failed GetInputSample for index" +
+                    index.ToString());
+        }
+
+        [TestMethod]
+        public void AudioClickShrinkLeftTest()
+        {
+            float[] inputAudio = new float[4000];
+
+            for (int index = 0; index < inputAudio.Length; index++)
+                inputAudio[index] = (float)Math.Sin(
+                    2 * Math.PI * index / (inputAudio.Length / 5.3));
+            AudioData audioDataForTest = new AudioDataMono(inputAudio);
+            AudioProcessing audioProcessingForTest = new AudioProcessing(
+                512,
+                4,
+                3.5F,
+                250);
+
+            int initialPosition = 2000;
+            int initialLength = 50;
+            AudioClick audioClickForTest = new AudioClick(
+                initialPosition, 
+                initialLength, 
+                10,
+                audioDataForTest,
+                audioProcessingForTest, 
+                ChannelType.Left);
+
+            audioClickForTest.ShrinkLeft();
+
+            Assert.AreEqual(audioClickForTest.Position,
+                initialPosition + 1,
+                "Failed ShrinkLeft: position is not right");
+            Assert.AreEqual(audioClickForTest.Lenght,
+                initialLength - 1,
+                "Failed ShrinkLeft: length is not right");
         }
     }
 }

@@ -27,6 +27,8 @@ namespace GPU_Declicker_UWP_0._01
 
         /// <summary>
         /// Calculates one prediction error value for one sample using CPU
+        /// For details please see 
+        /// "A tutorial on Burg's method, algorithm and recursion.pdf"
         /// </summary>
         /// <param name="audioData"></param>
         /// <param name="position">indicates position of the sample in array</param>
@@ -627,16 +629,7 @@ namespace GPU_Declicker_UWP_0._01
                     Calc_burg_pred(audioData, i)
                     );
             }
-
-            /*for (int i = position + lenght; i < position + lenght + 16; i++)
-            {
-                audioData.SetPredictionErr(
-                    i,
-                    Calc_burg_pred(audioData, i) - 
-                    audioData.GetInputSample(i)
-                    );
-            }*/
-
+            
             Calculate_a_average_CPU(
                 audioData, 
                 position - history_length_samples, 
@@ -657,5 +650,4 @@ namespace GPU_Declicker_UWP_0._01
                 history_length_samples);
         }
     }
-        
 }
