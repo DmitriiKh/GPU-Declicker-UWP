@@ -128,7 +128,7 @@ namespace GPU_Declicker_UWP_0._01
             return AudioDataOwningThisClick.GetOutputSample(position);
         }
 
-        internal void ExpandLeft()
+        public void ExpandLeft()
         {
             Position--;
             Lenght++;
@@ -146,14 +146,14 @@ namespace GPU_Declicker_UWP_0._01
             Threshold_level_detected = AudioProcessingBinded.Repair(AudioDataOwningThisClick, Position, Lenght);
         }
 
-        internal void ShrinkRight()
+        public void ShrinkRight()
         {
             AudioDataOwningThisClick.SetOutputSample(Position + Lenght, AudioDataOwningThisClick.GetInputSample(Position + Lenght));
             Lenght--;
             Threshold_level_detected = AudioProcessingBinded.Repair(AudioDataOwningThisClick, Position, Lenght);
         }
 
-        internal void ExpandRight()
+        public void ExpandRight()
         {
             Lenght++;
             Threshold_level_detected = AudioProcessingBinded.Repair(AudioDataOwningThisClick, Position, Lenght);
