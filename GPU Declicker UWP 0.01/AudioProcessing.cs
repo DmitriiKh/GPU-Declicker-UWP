@@ -105,8 +105,6 @@ namespace GPU_Declicker_UWP_0._01
 
             backwardPredictions[position - historyLengthSamples] = 
                 (float)ACCUM;
-
-            return; 
         }
 
         /// <summary>
@@ -177,12 +175,12 @@ namespace GPU_Declicker_UWP_0._01
         internal float Calc_detectoin_level(AudioData audioData, int position)
         {
             float threshold_level_detected = 0;
-            float a = (Math.Abs(Calc_burg_pred_fromInput(audioData, position))); 
+            float error = (Math.Abs(Calc_burg_pred_fromInput(audioData, position))); 
 
             // calculate average error value on the LEFT of the current sample
-            float a_av = audioData.GetErrorAverage(position - 15);
+            float errorAverage = audioData.GetErrorAverage(position - 15);
 
-            threshold_level_detected = a / a_av;
+            threshold_level_detected = error / errorAverage;
             return threshold_level_detected;
         }
 
@@ -221,20 +219,7 @@ namespace GPU_Declicker_UWP_0._01
             IProgress<double> progress,
             IProgress<string> status)
         {
-            if (audioData.IsStereo && 
-                audioData.GetCurrentChannelType() == ChannelType.Left)
-            {
-                status.Report("Left channel: preprocessing");
-            }
-            if (audioData.IsStereo && 
-                audioData.GetCurrentChannelType() == ChannelType.Right)
-            {
-                status.Report("Right channel: preprocessing");
-            }
-            if (!audioData.IsStereo)
-            {
-                status.Report("Mono: preprocessing");
-            }
+            SetStatus(audioData, status, "preprocessing");
 
             if (audioData.CurrentChannelIsPreprocessed())
             {
@@ -247,13 +232,13 @@ namespace GPU_Declicker_UWP_0._01
                 audioData.BackupCurrentChannelPredErrors();
             }
 
-            for (int i = 0; i < historyLengthSamples + 16; i++)
-                audioData.Set_a_average(i, 0.001F);
+            for (int index = 0; index < historyLengthSamples + 16; index++)
+                audioData.SetErrorAverage(index, 0.001F);
 
-            Calculate_a_average_CPU(
-                audioData, 
-                historyLengthSamples, 
-                audioData.LengthSamples(), 
+            CalculateErrorAverage_CPU(
+                audioData,
+                historyLengthSamples,
+                audioData.LengthSamples(),
                 historyLengthSamples);
 
             status.Report("");
@@ -264,60 +249,75 @@ namespace GPU_Declicker_UWP_0._01
                 audioData.SetOutputSample(i, audioData.GetInputSample(i));
             }
 
-            if (audioData.IsStereo && 
-                audioData.GetCurrentChannelType() == ChannelType.Left)
-            {
-                status.Report("Left channel: scanning");
-            }
-            if (audioData.IsStereo && 
-                audioData.GetCurrentChannelType() == ChannelType.Right)
-            {
-                status.Report("Right channel: scanning");
-            }
-            if (!audioData.IsStereo)
-            {
-                status.Report("Mono: scanning");
-            }
-
-            //              
+            SetStatus(audioData, status, "scanning");
+            
             await Task.Run(() => ScanAudioAsync(audioData, progress));
 
             status.Report("");
         }
 
-        public void Calculate_a_average_CPU(
+        private static void SetStatus(
+            AudioData audioData, 
+            IProgress<string> status,
+            String message)
+        {
+            if (audioData.IsStereo &&
+                            audioData.GetCurrentChannelType() == ChannelType.Left)
+            {
+                status.Report("Left channel: " + message);
+            }
+            if (audioData.IsStereo &&
+                audioData.GetCurrentChannelType() == ChannelType.Right)
+            {
+                status.Report("Right channel: " + message);
+            }
+            if (!audioData.IsStereo)
+            {
+                status.Report("Mono: " + message);
+            }
+        }
+
+        public void CalculateErrorAverage_CPU(
             AudioData audioData, 
             int start_position, 
             int end_position, 
             int _base)
         {
-            float a_av = 
+            float errorAverage = 
                 CalcErrorAverageForOneSample(audioData, start_position);
 
-            audioData.Set_a_average(start_position, a_av);
-            
+            audioData.SetErrorAverage(start_position, errorAverage);
+
+            // Fast version of CalcErrorAverageForOneSample
+            // Keep sliding to next block of 16 Burg prediction errors
             for (int index = start_position; 
                 index < end_position - 15; 
                 index += 16)
             {
                 // check each period of 16 errors to find maximums
-                float aa_first_16 = 0, aa_last_16 = 0, 
-                    temp_first = 0, temp_last = 0;
-                for (int l = index; l < index + 16; l++)
+                float maxErrorInExcludedBlock = 0, 
+                    maxErrorInIncludedBlock = 0, 
+                    tempExcludedBlock = 0, 
+                    tempIncludedBlock = 0;
+
+                for (int indexCurrent = index; indexCurrent < index + 16; indexCurrent++)
                 {
-                    temp_first = Math.Abs(audioData.GetPredictionErr(l - _base));
-                    if (aa_first_16 < temp_first) aa_first_16 = temp_first;
-                    temp_last = Math.Abs(audioData.GetPredictionErr(l));
-                    if (aa_last_16 < temp_last) aa_last_16 = temp_last;
+                    // find max in the block which will be excluded
+                    tempExcludedBlock = Math.Abs(audioData.GetPredictionErr(indexCurrent - _base));
+                    if (maxErrorInExcludedBlock < tempExcludedBlock) maxErrorInExcludedBlock = tempExcludedBlock;
+                    // find max in the block which will be included
+                    tempIncludedBlock = Math.Abs(audioData.GetPredictionErr(indexCurrent));
+                    if (maxErrorInIncludedBlock < tempIncludedBlock) maxErrorInIncludedBlock = tempIncludedBlock;
                 }
-                a_av = a_av + (aa_last_16 - aa_first_16) / (_base / 16);
+                // correction based on previously calculated errorAverage
+                errorAverage = errorAverage + (maxErrorInIncludedBlock - maxErrorInExcludedBlock) / (_base / 16);
                           
-                if (a_av < 0.0001)
-                    a_av = 0.0001F;      // minimum result to return is 0.0001
+                if (errorAverage < 0.0001)
+                    errorAverage = 0.0001F;      // minimum result to return is 0.0001
 
                 for (int l = index; l < index + 16; l++)
-                    audioData.Set_a_average(l,
-                        a_av);
+                    audioData.SetErrorAverage(l,
+                        errorAverage);
             }
         }
 
@@ -655,12 +655,12 @@ namespace GPU_Declicker_UWP_0._01
             float errorAverage = 0;
             
             for (int blockIndex = 0; blockIndex < Base - 16; blockIndex += 16)
-            {                           
+            {
                 // check each period of 16 errors to find maximums
-                float maxErrorInBlock = 0, temp = 0;
+                float maxErrorInBlock = 0;
                 for (int indexInBlock = 0; indexInBlock < 16; indexInBlock++)
                 {
-                    temp = Math.Abs(audioData.GetPredictionErr(
+                    float temp = Math.Abs(audioData.GetPredictionErr(
                         position - Base + blockIndex + indexInBlock
                         ));
                     if (maxErrorInBlock < temp) maxErrorInBlock = temp;
@@ -691,7 +691,7 @@ namespace GPU_Declicker_UWP_0._01
                     );
             }
             
-            Calculate_a_average_CPU(
+            CalculateErrorAverage_CPU(
                 audioData, 
                 position - historyLengthSamples, 
                 position + lenght + historyLengthSamples, 
@@ -707,7 +707,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             audioData.CurrentChannelRestoreInitState(position, lenght);
 
-            Calculate_a_average_CPU(
+            CalculateErrorAverage_CPU(
                 audioData, 
                 position - historyLengthSamples, 
                 position + lenght + historyLengthSamples, 

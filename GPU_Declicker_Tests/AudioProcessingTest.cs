@@ -103,9 +103,9 @@ namespace GPU_Declicker_Tests
             audioData.BackupCurrentChannelPredErrors();
 
             for (int i = 0; i < history_length + 16; i++)
-                audioData.Set_a_average(i, 0.001F);
+                audioData.SetErrorAverage(i, 0.001F);
 
-            audioProcessing_for_test.Calculate_a_average_CPU(
+            audioProcessing_for_test.CalculateErrorAverage_CPU(
                 audioData,
                 history_length,
                 audioData.LengthSamples(),

@@ -212,7 +212,7 @@ namespace GPU_Declicker_UWP_0._01
         public float GetErrorAverage(int position) =>
             currentAudioChannel.GetPredictionErrAverage(position);
 
-        public void Set_a_average(int position, float a_average) =>
+        public void SetErrorAverage(int position, float a_average) =>
             currentAudioChannel.SetPredictionErrAverage(position, a_average);
     }
 
