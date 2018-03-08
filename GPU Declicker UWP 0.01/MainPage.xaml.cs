@@ -134,7 +134,7 @@ namespace GPU_Declicker_UWP_0._01
             Threshold_Slider.IsEnabled = false;
             Max_length_Slider.IsEnabled = false;
 
-            audioProcessing.Threshold_for_detection = (float)Threshold_Slider.Value;
+            audioProcessing.ThresholdForDetection = (float)Threshold_Slider.Value;
             audioProcessing.Max_lenghth_correction = (int)Max_length_Slider.Value;
             await Task.Run(() => audioProcessing.ProcessAudioAsync(
                 audioData, taskProgress, taskStatus));
