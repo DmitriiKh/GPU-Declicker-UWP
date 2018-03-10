@@ -7,15 +7,9 @@ namespace GPU_Declicker_UWP_0._01
     {
         readonly int historyLengthSamples;
         readonly int coef_number;
-        float threshold_for_detection;
-        int max_lenghth_correction;
 
-        public float ThresholdForDetection {
-            get => threshold_for_detection;
-            set => threshold_for_detection = value; }
-        public int Max_lenghth_correction {
-            get => max_lenghth_correction;
-            set => max_lenghth_correction = value; }
+        public float ThresholdForDetection { get; set; }
+        public int Max_lenghth_correction { get; set; }
 
         public AudioProcessing (
             int history, 
@@ -114,11 +108,11 @@ namespace GPU_Declicker_UWP_0._01
             AudioData audioData, 
             IProgress<double> progress)
         {
-            int size = audioData.LengthSamples();
-            float[] forwardPredictions = new float[size];
-            float[] backwardPredictions = new float[size];
-            float[] inputaudio = new float[size];
-            for (int index = 0; index < size; index++)
+            float[] forwardPredictions = new float[audioData.LengthSamples()];
+            float[] backwardPredictions = new float[audioData.LengthSamples()];
+            float[] inputaudio = new float[audioData.LengthSamples()];
+
+            for (int index = 0; index < audioData.LengthSamples(); index++)
                 inputaudio[index] = audioData.GetInputSample(index);
 
             // we will use steps to report progress
@@ -128,11 +122,13 @@ namespace GPU_Declicker_UWP_0._01
                 index += step)
             {
                 progress.Report((double)100 * index / audioData.LengthSamples());
+
                 int end_position = index + step;
                 if (end_position > audioData.LengthSamples())
                 {
                     end_position = audioData.LengthSamples();
                 }
+
                 Parallel.For(index, end_position,
                     indexParallelFor =>
                         CalculateBurgPredictionThread(
@@ -143,8 +139,11 @@ namespace GPU_Declicker_UWP_0._01
                             coef_number)
                     );
             }
+
             progress.Report(0);
-            // for first samples forward prediction was not calculated
+
+            // for first samples forward predictions were not calculated
+            // we use backward predictions only 
             for (int index = 0; index < historyLengthSamples; index++)
             {
                 audioData.SetPredictionErr(index,
@@ -153,7 +152,7 @@ namespace GPU_Declicker_UWP_0._01
             }
             // finds prediction error based on forward and backward predictions
             for (int index = historyLengthSamples; 
-                index < size - historyLengthSamples; 
+                index < audioData.LengthSamples() - historyLengthSamples; 
                 index++)
             {
                 audioData.SetPredictionErr(index,
@@ -161,9 +160,10 @@ namespace GPU_Declicker_UWP_0._01
                         (forwardPredictions[index] + 
                         backwardPredictions[index]) / 2);
             }
-            // for last samples backward prediction was not calculated
+            // for last samples backward predictions were not calculated
+            // we use forward predictions only
             for (int index = historyLengthSamples; 
-                index < size - historyLengthSamples; 
+                index < audioData.LengthSamples() - historyLengthSamples; 
                 index++)
             {
                 audioData.SetPredictionErr(index,
@@ -175,18 +175,15 @@ namespace GPU_Declicker_UWP_0._01
         internal float Calc_detectoin_level(AudioData audioData, int position)
         {
             float threshold_level_detected = 0;
-            float error = (Math.Abs(Calc_burg_pred_fromInput(audioData, position))); 
-
-            // calculate average error value on the LEFT of the current sample
-            float errorAverage = audioData.GetErrorAverage(position - 15);
-
+            // use original input samples 
+            float error = (Math.Abs(CalcBurgPredFromInput(audioData, position))); 
+            // find average error value on the LEFT of the current sample
+            float errorAverage = audioData.GetErrorAverage(position - 16);
             threshold_level_detected = error / errorAverage;
+
             return threshold_level_detected;
         }
-
-        /// <summary>
-        /// Processes audio
-        /// </summary>
+        
         public async Task ProcessAudioAsync(
             AudioData audioData, 
             IProgress<double> progress,
@@ -199,18 +196,17 @@ namespace GPU_Declicker_UWP_0._01
             await Task.Run(() => ProcessChannelAsync(
                 audioData,
                 progress,
-                status
-                ));
+                status)
+                );
             
             if (audioData.IsStereo)
             {
-                status.Report("Right channel: preprocessing");
                 audioData.SetCurrentChannelType(ChannelType.Right);
                 await Task.Run(() => ProcessChannelAsync(
                     audioData, 
                     progress,
-                    status
-                    ));
+                    status)
+                    );
             }
         }
 
@@ -235,7 +231,7 @@ namespace GPU_Declicker_UWP_0._01
             for (int index = 0; index < historyLengthSamples + 16; index++)
                 audioData.SetErrorAverage(index, 0.001F);
 
-            CalculateErrorAverage_CPU(
+            CalculateErrorAverageCPU(
                 audioData,
                 historyLengthSamples,
                 audioData.LengthSamples(),
@@ -244,10 +240,8 @@ namespace GPU_Declicker_UWP_0._01
             status.Report("");
 
             // copies input samples to output before scanning 
-            for (int i = 0; i < audioData.LengthSamples(); i++)
-            {
-                audioData.SetOutputSample(i, audioData.GetInputSample(i));
-            }
+            for (int index = 0; index < audioData.LengthSamples(); index++)
+                audioData.SetOutputSample(index, audioData.GetInputSample(index));
 
             SetStatus(audioData, status, "scanning");
             
@@ -277,7 +271,17 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        public void CalculateErrorAverage_CPU(
+        /// <summary>
+        /// Calculates average prediction errors level using algorithm:
+        /// First: find max error in each block of 16 prediction errors
+        /// Second: find average of maximums over all blocks
+        /// (blocks number is _base/16)
+        /// </summary>
+        /// <param name="audioData"></param>
+        /// <param name="start_position"></param>
+        /// <param name="end_position"></param>
+        /// <param name="_base">number of prediction errors used for calculation</param>
+        public void CalculateErrorAverageCPU(
             AudioData audioData, 
             int start_position, 
             int end_position, 
@@ -285,7 +289,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             float errorAverage = 
                 CalcErrorAverageForOneSample(audioData, start_position);
-
+            // set one average error sample 
             audioData.SetErrorAverage(start_position, errorAverage);
 
             // Fast version of CalcErrorAverageForOneSample
@@ -295,26 +299,36 @@ namespace GPU_Declicker_UWP_0._01
                 index += 16)
             {
                 // check each period of 16 errors to find maximums
-                float maxErrorInExcludedBlock = 0, 
-                    maxErrorInIncludedBlock = 0, 
-                    tempExcludedBlock = 0, 
-                    tempIncludedBlock = 0;
+                float maxErrorInExcludedBlock = 0,
+                    maxErrorInIncludedBlock = 0;
 
-                for (int indexCurrent = index; indexCurrent < index + 16; indexCurrent++)
+                for (int indexCurrent = index; 
+                    indexCurrent < index + 16; 
+                    indexCurrent++)
                 {
+                    float tempExcludedBlock = 0, 
+                    tempIncludedBlock = 0;
                     // find max in the block which will be excluded
-                    tempExcludedBlock = Math.Abs(audioData.GetPredictionErr(indexCurrent - _base));
-                    if (maxErrorInExcludedBlock < tempExcludedBlock) maxErrorInExcludedBlock = tempExcludedBlock;
+                    tempExcludedBlock = Math.Abs(
+                        audioData.GetPredictionErr(indexCurrent - _base));
+                    if (maxErrorInExcludedBlock < tempExcludedBlock)
+                        maxErrorInExcludedBlock = tempExcludedBlock;
                     // find max in the block which will be included
-                    tempIncludedBlock = Math.Abs(audioData.GetPredictionErr(indexCurrent));
-                    if (maxErrorInIncludedBlock < tempIncludedBlock) maxErrorInIncludedBlock = tempIncludedBlock;
+                    tempIncludedBlock = Math.Abs(
+                        audioData.GetPredictionErr(indexCurrent));
+                    if (maxErrorInIncludedBlock < tempIncludedBlock)
+                        maxErrorInIncludedBlock = tempIncludedBlock;
                 }
                 // correction based on previously calculated errorAverage
-                errorAverage = errorAverage + (maxErrorInIncludedBlock - maxErrorInExcludedBlock) / (_base / 16);
-                          
-                if (errorAverage < 0.0001)
-                    errorAverage = 0.0001F;      // minimum result to return is 0.0001
+                errorAverage = errorAverage + 
+                    (maxErrorInIncludedBlock - maxErrorInExcludedBlock) / 
+                    (_base / 16);
 
+                // minimum result to return is 0.0001
+                if (errorAverage < 0.0001)
+                    errorAverage = 0.0001F;    
+                
+                // all 16 results in block are the same
                 for (int l = index; l < index + 16; l++)
                     audioData.SetErrorAverage(l,
                         errorAverage);
@@ -325,43 +339,46 @@ namespace GPU_Declicker_UWP_0._01
         /// <summary>
         /// Divides audio for segments and call ScanSegment for each og them
         /// </summary>
-        /// <param name="audioData"></param>
         private async Task ScanAudioAsync(
             AudioData audioData,
             IProgress<double> progress
             )
         {
-            int cpu_core_number = Environment.ProcessorCount;
+            int cpuCoreNumber = Environment.ProcessorCount;
 
-            int segment_lenght = (int)(
-                audioData.LengthSamples() / cpu_core_number
+            int segmentLenght = (int)(
+                audioData.LengthSamples() / cpuCoreNumber
                 );
             // make segments overlap
-            segment_lenght += 1;
+            segmentLenght += 1;
 
-            Task[] tasks = new Task[cpu_core_number];
-            for (int cpu_core = 0; cpu_core < cpu_core_number; cpu_core++)
+            Task[] tasks = new Task[cpuCoreNumber];
+            for (int cpuCoreIndex = 0; cpuCoreIndex < cpuCoreNumber; cpuCoreIndex++)
             {
-                int segment_start = cpu_core * segment_lenght;
-                int segment_end = segment_start + segment_lenght;
-                if (cpu_core == 0)
-                    segment_start += 2 * historyLengthSamples + 16;
-                if (cpu_core == cpu_core_number - 1)
-                    segment_end -= 2 * historyLengthSamples + 
-                        max_lenghth_correction;
-                int index = cpu_core;
-                tasks[cpu_core] = Task.Factory.StartNew(() =>
-                    ScanSegment(
-                        audioData,
-                        segment_start,
-                        segment_end,
-                        progress,
-                        index
-                        ));
+                int segmentBeginning = cpuCoreIndex * segmentLenght;
+                int segmentEnd = segmentBeginning + segmentLenght;
+                // for first segment shift beginning to the right
+                if (cpuCoreIndex == 0)
+                    segmentBeginning += 2 * historyLengthSamples + 16;
+                // for last segment shift end to the left
+                if (cpuCoreIndex == cpuCoreNumber - 1)
+                    segmentEnd -= 2 * historyLengthSamples + 
+                        Max_lenghth_correction;
+                {
+                    int index = cpuCoreIndex;
+                    tasks[cpuCoreIndex] = Task.Factory.StartNew(() =>
+                        ScanSegment(
+                            audioData,
+                            segmentBeginning,
+                            segmentEnd,
+                            progress,
+                            index
+                            ));
+                }
                 // need time to start task
                 await Task.Delay(50);
             }
-            for (int cpu_core = 0; cpu_core < cpu_core_number; cpu_core++)
+            for (int cpu_core = 0; cpu_core < cpuCoreNumber; cpu_core++)
             {
                 await tasks[cpu_core];
             }
@@ -399,7 +416,7 @@ namespace GPU_Declicker_UWP_0._01
                 int length = -1;
                 int indexRef = index;
                 if ( index > last_processed_sample && 
-                    Is_sample_suspicuous(
+                    IsSampleSuspicuous(
                         audioData, 
                         index,  
                         out threshold_level_detected)
@@ -501,15 +518,15 @@ namespace GPU_Declicker_UWP_0._01
                 Repair(audioData, index + correction + length + 4, 1);
                 length++;
 
-                if (!Is_sample_suspicuous(
+                if (!IsSampleSuspicuous(
                         audioData, 
                         index + correction + length + 4 + 1, 
                         out float threshold_level_detected1) &&
-                    !Is_sample_suspicuous(
+                    !IsSampleSuspicuous(
                         audioData, 
                         index + correction + length + 4 + 2, 
                         out float threshold_level_detected2) &&
-                    !Is_sample_suspicuous(
+                    !IsSampleSuspicuous(
                         audioData, 
                         index + correction + length + 4 + 3, 
                         out float threshold_level_detected3))
@@ -540,14 +557,14 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         /// <summary>
-        /// Returns prediction for a sample at i position
+        /// Returns prediction for a sample at position
         /// </summary>
-        public float Calc_burg_pred(
+        public float CalcBurgPred(
             AudioData audioData, 
             int position)
         {
             // use output audio as an input because it already contains
-            // fixed samples before sample i
+            // fixed samples before sample at position
             float[] audioShort = new float[historyLengthSamples + 1];
             for (int index = 0; index < historyLengthSamples + 1; index++)
             {
@@ -570,11 +587,11 @@ namespace GPU_Declicker_UWP_0._01
                 historyLengthSamples,
                 coef_number * 2);
 
-            // return prediction for i sample
+            // return prediction for sample at position
             return forwardPredictionsShort[historyLengthSamples];
         }
 
-        public float Calc_burg_pred_fromInput(
+        public float CalcBurgPredFromInput(
             AudioData audioData,
             int position)
         {
@@ -629,7 +646,7 @@ namespace GPU_Declicker_UWP_0._01
             return max_length;
         }
 
-        private bool Is_sample_suspicuous(
+        private bool IsSampleSuspicuous(
             AudioData audioData, 
             int position,  
             out float thresholdLevelDetected)
@@ -656,7 +673,7 @@ namespace GPU_Declicker_UWP_0._01
             
             for (int blockIndex = 0; blockIndex < Base - 16; blockIndex += 16)
             {
-                // check each period of 16 errors to find maximums
+                // check each period of 16 errors to find maximum
                 float maxErrorInBlock = 0;
                 for (int indexInBlock = 0; indexInBlock < 16; indexInBlock++)
                 {
@@ -665,12 +682,15 @@ namespace GPU_Declicker_UWP_0._01
                         ));
                     if (maxErrorInBlock < temp) maxErrorInBlock = temp;
                 }
-                errorAverage = errorAverage + maxErrorInBlock;  // sum up maximums
+                // sum up maximums 
+                errorAverage = errorAverage + maxErrorInBlock; 
             }
-                
-            errorAverage = errorAverage / (Base / 16) + 0.0000001F; // to find average
+            // find average
+            errorAverage = errorAverage / (Base / 16) + 0.0000001F;
+            // minimum result to return is 0.0001
             if (errorAverage < 0.0001)
-                errorAverage = 0.0001F;      // minimum result to return is 0.0001
+                errorAverage = 0.0001F;      
+
             return errorAverage;
         }
 
@@ -687,11 +707,11 @@ namespace GPU_Declicker_UWP_0._01
                 audioData.SetPredictionErr(index, 0.001F);
                 audioData.SetOutputSample(
                     index,
-                    Calc_burg_pred(audioData, index)
+                    CalcBurgPred(audioData, index)
                     );
             }
             
-            CalculateErrorAverage_CPU(
+            CalculateErrorAverageCPU(
                 audioData, 
                 position - historyLengthSamples, 
                 position + lenght + historyLengthSamples, 
@@ -707,7 +727,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             audioData.CurrentChannelRestoreInitState(position, lenght);
 
-            CalculateErrorAverage_CPU(
+            CalculateErrorAverageCPU(
                 audioData, 
                 position - historyLengthSamples, 
                 position + lenght + historyLengthSamples, 

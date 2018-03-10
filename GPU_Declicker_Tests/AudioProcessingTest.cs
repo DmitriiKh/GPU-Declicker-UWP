@@ -62,7 +62,7 @@ namespace GPU_Declicker_Tests
                     audioData.GetInputSample(index));
             }
 
-            float prediction = audioProcessing_for_test.Calc_burg_pred(
+            float prediction = audioProcessing_for_test.CalcBurgPred(
                 audioData,
                 history_length);
 
@@ -105,7 +105,7 @@ namespace GPU_Declicker_Tests
             for (int i = 0; i < history_length + 16; i++)
                 audioData.SetErrorAverage(i, 0.001F);
 
-            audioProcessing_for_test.CalculateErrorAverage_CPU(
+            audioProcessing_for_test.CalculateErrorAverageCPU(
                 audioData,
                 history_length,
                 audioData.LengthSamples(),
