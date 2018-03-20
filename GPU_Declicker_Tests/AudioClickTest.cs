@@ -45,7 +45,7 @@ namespace GPU_Declicker_Tests
             Assert.AreEqual(1111, audioClickFirst.Position);
             Assert.AreEqual(10, audioClickFirst.Lenght);
             Assert.AreEqual(3.7F, audioClickFirst.Threshold_level_detected);
-            Assert.AreEqual(ChannelType.Left, audioClickFirst.ChannelType);
+            Assert.AreEqual(ChannelType.Left, audioClickFirst.FromChannel);
         }
 
         [TestMethod]

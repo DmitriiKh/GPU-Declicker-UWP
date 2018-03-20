@@ -4,26 +4,16 @@ namespace GPU_Declicker_UWP_0._01
 {
     public class AudioClick : IComparable<AudioClick>
     {
-        private int lenght;
-        private float threshold_level_detected;
-        private bool aproved;
-        private readonly AudioData audioDataOwningThisClick;
-        private AudioProcessing audioProcessingBinded;
-        private readonly ChannelType channelBinded;
-        private int position;
+        public int Position { get; private set; }
+        public int Lenght { get; private set; }
+        public float Threshold_level_detected { get; private set; }
+        // new click is always aproved initially by default initializing of 
+        // boolean type
+        public bool Aproved { get; private set; }
+        public ChannelType FromChannel { get; }
 
-        public int Position { get => position; set => position = value; }
-        public int Lenght { get => lenght; set => lenght = value; }
-        public float Threshold_level_detected {
-            get => threshold_level_detected;
-            set => threshold_level_detected = value; }
-        public bool Aproved { get => aproved; set => aproved = value; }
-        public AudioData AudioDataOwningThisClick {
-            get => audioDataOwningThisClick; }
-        public AudioProcessing AudioProcessingBinded {
-            get => audioProcessingBinded;
-            set => audioProcessingBinded = value; }
-        public ChannelType ChannelType { get => channelBinded; }
+        private readonly AudioData _audioDataOwningThisClick;
+        private readonly AudioProcessing _audioProcessingBinded;
 
         public AudioClick(
             int position, 
@@ -31,16 +21,14 @@ namespace GPU_Declicker_UWP_0._01
             float threshold_level_detected, 
             AudioData audioData,
             AudioProcessing audioProcessing,
-            ChannelType channelType)
+            ChannelType fromChannel)
         {
             Position = position;
             Lenght = lenght;
             Threshold_level_detected = threshold_level_detected;
-            // new click is always aproved initially
-            Aproved = true;
-            audioDataOwningThisClick = audioData;
-            AudioProcessingBinded = audioProcessing;
-            channelBinded = channelType;
+            _audioDataOwningThisClick = audioData;
+            _audioProcessingBinded = audioProcessing;
+            FromChannel = fromChannel;
         }
 
         public int CompareTo(AudioClick other)
@@ -59,21 +47,21 @@ namespace GPU_Declicker_UWP_0._01
         {
             return this.Position.GetHashCode() ^ 
                 this.Lenght.GetHashCode() ^
-                this.ChannelType.GetHashCode();
+                this.FromChannel.GetHashCode();
         }
 
         public static bool operator == (AudioClick left, AudioClick right)
         {
             return left.Position == right.Position &&
                 left.Lenght == right.Lenght &&
-                left.ChannelType == right.ChannelType;
+                left.FromChannel == right.FromChannel;
         }
 
         public static bool operator != (AudioClick left, AudioClick right)
         {
             return left.Position != right.Position ||
                 left.Lenght != right.Lenght ||
-                left.ChannelType != right.ChannelType;
+                left.FromChannel != right.FromChannel;
         }
 
         public static bool operator < (AudioClick left, AudioClick right)
@@ -115,7 +103,7 @@ namespace GPU_Declicker_UWP_0._01
         /// <returns></returns>
         public float GetInputSample(int position)
         {
-            return AudioDataOwningThisClick.GetInputSample(position);
+            return _audioDataOwningThisClick.GetInputSample(position);
         }
 
         /// <summary>
@@ -125,38 +113,38 @@ namespace GPU_Declicker_UWP_0._01
         /// <returns></returns>
         public float GetOutputSample(int position)
         {
-            return AudioDataOwningThisClick.GetOutputSample(position);
+            return _audioDataOwningThisClick.GetOutputSample(position);
         }
 
         public void ExpandLeft()
         {
             Position--;
             Lenght++;
-            Threshold_level_detected = AudioProcessingBinded.Repair(
-                AudioDataOwningThisClick, 
+            Threshold_level_detected = _audioProcessingBinded.Repair(
+                _audioDataOwningThisClick, 
                 Position, 
                 Lenght);
         }
 
         public void ShrinkLeft()
         {
-            AudioDataOwningThisClick.SetOutputSample(Position, AudioDataOwningThisClick.GetInputSample(Position));
+            _audioDataOwningThisClick.SetOutputSample(Position, _audioDataOwningThisClick.GetInputSample(Position));
             Position++;
             Lenght--;
-            Threshold_level_detected = AudioProcessingBinded.Repair(AudioDataOwningThisClick, Position, Lenght);
+            Threshold_level_detected = _audioProcessingBinded.Repair(_audioDataOwningThisClick, Position, Lenght);
         }
 
         public void ShrinkRight()
         {
-            AudioDataOwningThisClick.SetOutputSample(Position + Lenght, AudioDataOwningThisClick.GetInputSample(Position + Lenght));
+            _audioDataOwningThisClick.SetOutputSample(Position + Lenght, _audioDataOwningThisClick.GetInputSample(Position + Lenght));
             Lenght--;
-            Threshold_level_detected = AudioProcessingBinded.Repair(AudioDataOwningThisClick, Position, Lenght);
+            Threshold_level_detected = _audioProcessingBinded.Repair(_audioDataOwningThisClick, Position, Lenght);
         }
 
         public void ExpandRight()
         {
             Lenght++;
-            Threshold_level_detected = AudioProcessingBinded.Repair(AudioDataOwningThisClick, Position, Lenght);
+            Threshold_level_detected = _audioProcessingBinded.Repair(_audioDataOwningThisClick, Position, Lenght);
         }
     }
 }
