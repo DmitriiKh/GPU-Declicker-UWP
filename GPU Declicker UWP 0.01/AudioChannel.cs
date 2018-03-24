@@ -56,7 +56,6 @@ namespace GPU_Declicker_UWP_0._01
             int lenght,
             float threshold_level_detected,
             AudioData audioData,
-            AudioProcessing audioProcessing,
             ChannelType channel)
         {
             ClicksList.Add(new AudioClick(
@@ -64,7 +63,6 @@ namespace GPU_Declicker_UWP_0._01
                 lenght,
                 threshold_level_detected,
                 audioData,
-                audioProcessing,
                 channel));
         }
 

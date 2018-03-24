@@ -11,21 +11,18 @@ namespace GPU_Declicker_UWP_0._01
         public ChannelType FromChannel { get; }
 
         private readonly AudioData _audioDataOwningThisClick;
-        private readonly AudioProcessing _audioProcessingBinded;
 
         public AudioClick(
             int position, 
             int lenght, 
             float threshold_level_detected, 
             AudioData audioData,
-            AudioProcessing audioProcessing,
             ChannelType fromChannel)
         {
             Position = position;
             Lenght = lenght;
             Threshold_level_detected = threshold_level_detected;
             _audioDataOwningThisClick = audioData;
-            _audioProcessingBinded = audioProcessing;
             FromChannel = fromChannel;
             Aproved = true;
         }

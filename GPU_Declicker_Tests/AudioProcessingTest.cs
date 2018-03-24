@@ -8,12 +8,10 @@ namespace GPU_Declicker_Tests
     public class AudioProcessingTest
     {
         [TestMethod]
-        public void AudioProcessingCalculateBurgPredictionThread()
+        public void BurgPredictionCalculator_Calculate()
         {
             const int coef_number = 4;
             const int history_length = 512;
-            AudioProcessing audioProcessing_for_test = 
-                new AudioProcessing(history_length, coef_number, 3.5F, 250);
 
             float[] input_audio = new float[history_length + 1];
             float[] forwardPredictions = new float[history_length + 1];
@@ -24,12 +22,13 @@ namespace GPU_Declicker_Tests
                 input_audio[i] = (float) Math.Sin(2 * Math.PI * i / (history_length / 5.2));
             }
 
-            audioProcessing_for_test.CalculateBurgPredictionThread(
+            BurgPredictionCalculator.Calculate(
                 input_audio,
                 forwardPredictions,
                 backwardPredictions,
                 history_length,
-                coef_number);
+                coef_number,
+                history_length);
                 
             Assert.AreEqual(
                 forwardPredictions[forwardPredictions.Length - 1],
@@ -42,8 +41,6 @@ namespace GPU_Declicker_Tests
         {
             const int coef_number = 4;
             const int history_length = 512;
-            AudioProcessing audioProcessing_for_test =
-                new AudioProcessing(history_length, coef_number, 3.5F, 250);
 
             float[] input_audio = new float[history_length + 1];
 
@@ -62,7 +59,7 @@ namespace GPU_Declicker_Tests
                     audioData.GetInputSample(index));
             }
 
-            float prediction = audioProcessing_for_test.CalcBurgPred(
+            float prediction = ClickRepairer.CalcBurgPred(
                 audioData,
                 history_length);
 
@@ -77,8 +74,6 @@ namespace GPU_Declicker_Tests
         {
             const int coef_number = 4;
             const int history_length = 512;
-            AudioProcessing audioProcessing_for_test =
-                new AudioProcessing(history_length, coef_number, 3.5F, 250);
 
             float[] input_audio = new float[5 * history_length];
             
@@ -96,7 +91,7 @@ namespace GPU_Declicker_Tests
 
             Progress<double> progress = new Progress<double>(
                 (p) => { double t = p; });
-            audioProcessing_for_test.CalculateBurgPredictionErrCPU(
+            AudioProcessing.CalculateBurgPredictionErrCPU(
                 audioData, 
                 progress);
             audioData.SetCurrentChannelIsPreprocessed();
@@ -105,7 +100,7 @@ namespace GPU_Declicker_Tests
             for (int i = 0; i < history_length + 16; i++)
                 audioData.SetErrorAverage(i, 0.001F);
 
-            audioProcessing_for_test.CalculateErrorAverageCPU(
+            HelperCalculator.CalculateErrorAverageCPU(
                 audioData,
                 history_length,
                 audioData.LengthSamples(),
@@ -123,7 +118,7 @@ namespace GPU_Declicker_Tests
                 audioData.SetPredictionErr(index, random.Next());
             }
 
-            audioProcessing_for_test.RestoreInitState(
+            AudioProcessing.RestoreInitState(
                 audioData, 
                 startPosition, 
                 endPosition - startPosition);

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GPU_Declicker_UWP_0._01
 {
-    class ClickRepairer
+    public static class ClickRepairer
     {
         /// <summary>
         /// Replace output sample at position with prediction and 

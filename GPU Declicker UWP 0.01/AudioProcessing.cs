@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace GPU_Declicker_UWP_0._01
 {
-    public class AudioProcessing
+    public static class AudioProcessing
     {
-        readonly int historyLengthSamples;
+        /*readonly int historyLengthSamples;
         readonly int coef_number;
 
         public float ThresholdForDetection { get; set; }
@@ -21,15 +21,17 @@ namespace GPU_Declicker_UWP_0._01
             coef_number = coef;
             ThresholdForDetection = threshold;
             Max_lenghth_correction = max_length;
-        }
+        }*/
 
         /// <summary>
         /// Calculates prediction errors for a channel using CPU (Parallel.For)
         /// </summary>
-        public void CalculateBurgPredictionErrCPU(
+        public static void CalculateBurgPredictionErrCPU(
             AudioData audioData, 
             IProgress<double> progress)
         {
+            int historyLengthSamples = 
+                audioData.AudioProcessingSettings.HistoryLengthSamples;
             float[] forwardPredictions = new float[audioData.LengthSamples()];
             float[] backwardPredictions = new float[audioData.LengthSamples()];
             float[] inputaudio = new float[audioData.LengthSamples()];
@@ -58,7 +60,7 @@ namespace GPU_Declicker_UWP_0._01
                             forwardPredictions,
                             backwardPredictions,
                             indexParallelFor,
-                            coef_number,
+                            audioData.AudioProcessingSettings.CoefficientsNumber,
                             audioData.AudioProcessingSettings.HistoryLengthSamples)
                     );
             }
@@ -95,7 +97,7 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
         
-        public async Task ProcessAudioAsync(
+        public static async Task ProcessAudioAsync(
             AudioData audioData, 
             IProgress<double> progress,
             IProgress<string> status)
@@ -121,11 +123,14 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        private async Task ProcessChannelAsync(
+        private static async Task ProcessChannelAsync(
             AudioData audioData, 
             IProgress<double> progress,
             IProgress<string> status)
         {
+            int historyLengthSamples =
+                   audioData.AudioProcessingSettings.HistoryLengthSamples;
+
             SetStatus(audioData, status, "preprocessing");
 
             if (audioData.CurrentChannelIsPreprocessed())
@@ -188,11 +193,14 @@ namespace GPU_Declicker_UWP_0._01
         /// <summary>
         /// Divides audio for segments and call ScanSegment for each og them
         /// </summary>
-        private async Task ScanAudioAsync(
+        private static async Task ScanAudioAsync(
             AudioData audioData,
             IProgress<double> progress
             )
         {
+            int historyLengthSamples =
+                audioData.AudioProcessingSettings.HistoryLengthSamples;
+
             int cpuCoreNumber = Environment.ProcessorCount;
 
             int segmentLenght = (int)(
@@ -212,7 +220,7 @@ namespace GPU_Declicker_UWP_0._01
                 // for last segment shift end to the left
                 if (cpuCoreIndex == cpuCoreNumber - 1)
                     segmentEnd -= 2 * historyLengthSamples + 
-                        Max_lenghth_correction;
+                        audioData.AudioProcessingSettings.MaxLengthCorrection;
                 {
                     int index = cpuCoreIndex;
                     tasks[cpuCoreIndex] = Task.Factory.StartNew(() =>
@@ -240,7 +248,7 @@ namespace GPU_Declicker_UWP_0._01
             audioData.SortClicks();
         }
 
-        private void ScanSegment(
+        private static void ScanSegment(
             AudioData audioData,
             int segment_start,
             int segment_end,
@@ -248,7 +256,6 @@ namespace GPU_Declicker_UWP_0._01
             int cpu_core
             )
         {
-            float threshold_level_detected = 0;
             AttemptToFixResult result = new AttemptToFixResult
             {
                 Success = false
@@ -288,20 +295,21 @@ namespace GPU_Declicker_UWP_0._01
                     audioData.AddClickToList(
                         result.Position, 
                         result.Length, 
-                        HelperCalculator.CalculateDetectionLevel(audioData,result.Position), 
-                        this); 
+                        HelperCalculator.CalculateDetectionLevel(audioData,result.Position)); 
 
                     last_processed_sample = result.Position + result.Length + 1;
                 }
             }
         }
 
-        private int GetMaxLength(AudioData audioData, int position)
+        private static int GetMaxLength(AudioData audioData, int position)
         {
             int lenght = 0;
             float error = (Math.Abs(audioData.GetPredictionErr(position))); 
             float errorAverage = audioData.GetErrorAverage(position - 15); 
-            float rate = error / (ThresholdForDetection * errorAverage);
+            float rate = error / 
+                (audioData.AudioProcessingSettings.ThresholdForDetection * 
+                errorAverage);
             while (error > errorAverage)
             {
                 lenght = lenght + 3;
@@ -313,18 +321,21 @@ namespace GPU_Declicker_UWP_0._01
             int max_length = (int) (lenght * rate * 2); 
 
             // follow user's limit
-            if (max_length > Max_lenghth_correction)
-                max_length = Max_lenghth_correction;
+            if (max_length > audioData.AudioProcessingSettings.MaxLengthCorrection)
+                max_length = audioData.AudioProcessingSettings.MaxLengthCorrection;
 
             return max_length;
         }
 
-        public void RestoreInitState(
+        public static void RestoreInitState(
             AudioData audioData, 
             int position, 
             int lenght)
         {
             audioData.CurrentChannelRestoreInitState(position, lenght);
+
+            int historyLengthSamples =
+                audioData.AudioProcessingSettings.HistoryLengthSamples;
 
             HelperCalculator.CalculateErrorAverageCPU(
                 audioData, 

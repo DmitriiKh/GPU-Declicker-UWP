@@ -21,22 +21,22 @@ namespace GPU_Declicker_Tests
         public void AudioClickBeforeRunningTests()
         {
             audioClickFirst = new AudioClick(
-                1111, 10, 3.7F, null, null, ChannelType.Left);
+                1111, 10, 3.7F, null, ChannelType.Left);
             audioClickTheSame = audioClickFirst;
             audioClickEqual = new AudioClick(
-                1111, 10, 3.7F, null, null, ChannelType.Left);
+                1111, 10, 3.7F, null, ChannelType.Left);
             audioClickSecond = new AudioClick(
-                2222, 10, 3.7F, null, null, ChannelType.Left);
+                2222, 10, 3.7F, null, ChannelType.Left);
             audioClickDifferentChannel = new AudioClick(
-                1111, 10, 3.7F, null, null, ChannelType.Right);
+                1111, 10, 3.7F, null, ChannelType.Right);
             audioClickDifferentLength = new AudioClick(
-                1111, 22, 3.7F, null, null, ChannelType.Left);
+                1111, 22, 3.7F, null, ChannelType.Left);
             audioClickDifferentPosition = new AudioClick(
-                2222, 10, 3.7F, null, null, ChannelType.Left);
+                2222, 10, 3.7F, null, ChannelType.Left);
             audioClickLargerPosition = new AudioClick(
-                2222, 10, 3.7F, null, null, ChannelType.Left);
+                2222, 10, 3.7F, null, ChannelType.Left);
             audioClickLesserPosition = new AudioClick(
-                0001, 10, 3.7F, null, null, ChannelType.Left);
+                0001, 10, 3.7F, null, ChannelType.Left);
         }
 
         [TestMethod]
@@ -210,7 +210,6 @@ namespace GPU_Declicker_Tests
                 audioDataForTest.LengthSamples() / 10,
                 10F,
                 audioDataForTest,
-                null,
                 ChannelType.Left);
 
             for (int index = 0; index < audioDataForTest.LengthSamples(); index++)
@@ -240,7 +239,6 @@ namespace GPU_Declicker_Tests
             audioDataForTest.LengthSamples() / 10,
             10F,
             audioDataForTest,
-            null,
             ChannelType.Left);
 
             for (int index = 0; index < audioDataForTest.LengthSamples(); index++)
@@ -260,20 +258,14 @@ namespace GPU_Declicker_Tests
                 inputAudio[index] = (float)Math.Sin(
                     2 * Math.PI * index / (inputAudio.Length / 5.3));
             AudioData audioDataForTest = new AudioDataMono(inputAudio);
-            AudioProcessing audioProcessingForTest = new AudioProcessing(
-                512,
-                4,
-                3.5F,
-                250);
-
+            
             int initialPosition = 2000;
             int initialLength = 50;
             AudioClick audioClickForTest = new AudioClick(
                 initialPosition, 
                 initialLength, 
                 10,
-                audioDataForTest,
-                audioProcessingForTest, 
+                audioDataForTest, 
                 ChannelType.Left);
 
             audioClickForTest.ShrinkLeft();
@@ -295,11 +287,6 @@ namespace GPU_Declicker_Tests
                 inputAudio[index] = (float)Math.Sin(
                     2 * Math.PI * index / (inputAudio.Length / 5.3));
             AudioData audioDataForTest = new AudioDataMono(inputAudio);
-            AudioProcessing audioProcessingForTest = new AudioProcessing(
-                512,
-                4,
-                3.5F,
-                250);
 
             int initialPosition = 2000;
             int initialLength = 50;
@@ -308,7 +295,6 @@ namespace GPU_Declicker_Tests
                 initialLength,
                 10,
                 audioDataForTest,
-                audioProcessingForTest,
                 ChannelType.Left);
 
             audioClickForTest.ShrinkRight();
@@ -330,11 +316,6 @@ namespace GPU_Declicker_Tests
                 inputAudio[index] = (float)Math.Sin(
                     2 * Math.PI * index / (inputAudio.Length / 5.3));
             AudioData audioDataForTest = new AudioDataMono(inputAudio);
-            AudioProcessing audioProcessingForTest = new AudioProcessing(
-                512,
-                4,
-                3.5F,
-                250);
 
             int initialPosition = 2000;
             int initialLength = 50;
@@ -343,7 +324,6 @@ namespace GPU_Declicker_Tests
                 initialLength,
                 10,
                 audioDataForTest,
-                audioProcessingForTest,
                 ChannelType.Left);
 
             audioClickForTest.ExpandLeft();
@@ -365,11 +345,6 @@ namespace GPU_Declicker_Tests
                 inputAudio[index] = (float)Math.Sin(
                     2 * Math.PI * index / (inputAudio.Length / 5.3));
             AudioData audioDataForTest = new AudioDataMono(inputAudio);
-            AudioProcessing audioProcessingForTest = new AudioProcessing(
-                512,
-                4,
-                3.5F,
-                250);
 
             int initialPosition = 2000;
             int initialLength = 50;
@@ -378,7 +353,6 @@ namespace GPU_Declicker_Tests
                 initialLength,
                 10,
                 audioDataForTest,
-                audioProcessingForTest,
                 ChannelType.Left);
 
             audioClickForTest.ExpandRight();

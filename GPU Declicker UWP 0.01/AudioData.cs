@@ -71,14 +71,12 @@ namespace GPU_Declicker_UWP_0._01
         public void AddClickToList(
             int position,
             int lenght,
-            float threshold_level_detected,
-            AudioProcessing audioProcessing) =>
+            float threshold_level_detected) =>
 
                 currentAudioChannel.AddClickToList(
                     position, lenght,
                     threshold_level_detected,
                     this,
-                    audioProcessing,
                     GetCurrentChannelType());
 
         public int CurrentChannelGetNumberOfClicks() =>

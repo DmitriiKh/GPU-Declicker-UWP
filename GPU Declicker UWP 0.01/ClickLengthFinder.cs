@@ -111,20 +111,8 @@ namespace GPU_Declicker_UWP_0._01
 
                 if (!SeveralSamplesInARowAreSuspicious(audioData, index, 3))
                 {
-                    result.ErrSum =
-                        Math.Abs(
-                            audioData.GetOutputSample(index + result.Length + 1) -
-                            audioData.GetInputSample(index + result.Length + 1)) +
-                        Math.Abs(
-                            audioData.GetOutputSample(index + result.Length + 2) -
-                            audioData.GetInputSample(index + result.Length + 2)) +
-                        Math.Abs(
-                            audioData.GetOutputSample(index + result.Length + 3) -
-                            audioData.GetInputSample(index + result.Length + 3)) +
-                        Math.Abs(
-                            audioData.GetOutputSample(index + result.Length + 4) -
-                            audioData.GetInputSample(index + result.Length + 4));
-
+                    result.ErrSum = CalcErrSum(audioData, index + result.Length + 1, 4);
+                        
                     if (result.ErrSum < 0.03F) //0.005F
                     {
                         result.Success = true;
@@ -138,6 +126,20 @@ namespace GPU_Declicker_UWP_0._01
             }
 
             return result;
+        }
+
+        private static float CalcErrSum(AudioData audioData, int position, int length)
+        {
+            float errSum = 0;
+
+            for (int index = position; index < position + length; index++)
+            {
+                errSum += Math.Abs(
+                               audioData.GetOutputSample(index) -
+                               audioData.GetInputSample(index));
+            }
+
+            return errSum;
         }
 
         private static bool SeveralSamplesInARowAreSuspicious(

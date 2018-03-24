@@ -16,7 +16,6 @@ namespace GPU_Declicker_UWP_0._01
         private StorageFile audioOutputFile;
 
         AudioInputOutput audioInputOutput;
-        AudioProcessing audioProcessing;
 
         // variables for subclasses to report progress and status
         Progress<double> taskProgress;
@@ -27,11 +26,6 @@ namespace GPU_Declicker_UWP_0._01
             this.InitializeComponent();
 
             audioInputOutput = new AudioInputOutput();
-            audioProcessing = new AudioProcessing(
-                512, 
-                4, 
-                (float)Threshold_Slider.Value, 
-                (int)Max_length_Slider.Value);
             
             // initialize variables for subclasses to report progress and status 
             taskProgress = new Progress<double>(
@@ -134,9 +128,11 @@ namespace GPU_Declicker_UWP_0._01
             Threshold_Slider.IsEnabled = false;
             Max_length_Slider.IsEnabled = false;
 
-            audioProcessing.ThresholdForDetection = (float)Threshold_Slider.Value;
-            audioProcessing.Max_lenghth_correction = (int)Max_length_Slider.Value;
-            await Task.Run(() => audioProcessing.ProcessAudioAsync(
+            audioData.AudioProcessingSettings.ThresholdForDetection = 
+                (float)Threshold_Slider.Value;
+            audioData.AudioProcessingSettings.MaxLengthCorrection =
+                (int)Max_length_Slider.Value;
+            await Task.Run(() => AudioProcessing.ProcessAudioAsync(
                 audioData, taskProgress, taskStatus));
 
             // enable Scan, Save and Open buttons
