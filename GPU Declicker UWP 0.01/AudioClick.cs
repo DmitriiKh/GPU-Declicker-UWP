@@ -7,8 +7,6 @@ namespace GPU_Declicker_UWP_0._01
         public int Position { get; private set; }
         public int Lenght { get; private set; }
         public float Threshold_level_detected { get; private set; }
-        // new click is always aproved initially by default initializing of 
-        // boolean type
         public bool Aproved { get; private set; }
         public ChannelType FromChannel { get; }
 
@@ -29,6 +27,7 @@ namespace GPU_Declicker_UWP_0._01
             _audioDataOwningThisClick = audioData;
             _audioProcessingBinded = audioProcessing;
             FromChannel = fromChannel;
+            Aproved = true;
         }
 
         public int CompareTo(AudioClick other)
@@ -120,7 +119,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             Position--;
             Lenght++;
-            Threshold_level_detected = _audioProcessingBinded.Repair(
+            Threshold_level_detected = ClickRepairer.Repair(
                 _audioDataOwningThisClick, 
                 Position, 
                 Lenght);
@@ -128,23 +127,36 @@ namespace GPU_Declicker_UWP_0._01
 
         public void ShrinkLeft()
         {
-            _audioDataOwningThisClick.SetOutputSample(Position, _audioDataOwningThisClick.GetInputSample(Position));
+            _audioDataOwningThisClick.SetOutputSample(
+                Position, 
+                _audioDataOwningThisClick.GetInputSample(Position));
             Position++;
             Lenght--;
-            Threshold_level_detected = _audioProcessingBinded.Repair(_audioDataOwningThisClick, Position, Lenght);
+            Threshold_level_detected = ClickRepairer.Repair(
+                _audioDataOwningThisClick, 
+                Position, 
+                Lenght);
         }
 
         public void ShrinkRight()
         {
-            _audioDataOwningThisClick.SetOutputSample(Position + Lenght, _audioDataOwningThisClick.GetInputSample(Position + Lenght));
+            _audioDataOwningThisClick.SetOutputSample(
+                Position + Lenght, 
+                _audioDataOwningThisClick.GetInputSample(Position + Lenght));
             Lenght--;
-            Threshold_level_detected = _audioProcessingBinded.Repair(_audioDataOwningThisClick, Position, Lenght);
+            Threshold_level_detected = ClickRepairer.Repair(
+                _audioDataOwningThisClick, 
+                Position, 
+                Lenght);
         }
 
         public void ExpandRight()
         {
             Lenght++;
-            Threshold_level_detected = _audioProcessingBinded.Repair(_audioDataOwningThisClick, Position, Lenght);
+            Threshold_level_detected = ClickRepairer.Repair(
+                _audioDataOwningThisClick, 
+                Position, 
+                Lenght);
         }
     }
 }

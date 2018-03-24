@@ -107,19 +107,29 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AudioChannel.cs" />
     <Compile Include="AudioClick.cs" />
-    <Compile Include="AudioDataClass.cs" />
+    <Compile Include="AudioData.cs" />
+    <Compile Include="AudioDataMono.cs" />
+    <Compile Include="AudioDataStereo.cs" />
     <Compile Include="AudioInputOutput.cs" />
     <Compile Include="AudioProcessing.cs" />
+    <Compile Include="AudioProcessingSettings.cs" />
     <Compile Include="AudioViewer.xaml.cs">
       <DependentUpon>AudioViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AttemptToFixResult.cs" />
+    <Compile Include="BurgPredictionCalculator.cs" />
+    <Compile Include="ClickDetector.cs" />
+    <Compile Include="ClickLengthFinder.cs" />
+    <Compile Include="ClickRepairer.cs" />
     <Compile Include="ClickWindow.xaml.cs">
       <DependentUpon>ClickWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="HelperCalculator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
