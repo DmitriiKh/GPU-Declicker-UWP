@@ -5,24 +5,6 @@ namespace GPU_Declicker_UWP_0._01
 {
     public static class AudioProcessing
     {
-        /*readonly int historyLengthSamples;
-        readonly int coef_number;
-
-        public float ThresholdForDetection { get; set; }
-        public int Max_lenghth_correction { get; set; }
-
-        public AudioProcessing (
-            int history, 
-            int coef, 
-            float threshold, 
-            int max_length)
-        {
-            historyLengthSamples = history;
-            coef_number = coef;
-            ThresholdForDetection = threshold;
-            Max_lenghth_correction = max_length;
-        }*/
-
         /// <summary>
         /// Calculates prediction errors for a channel using CPU (Parallel.For)
         /// </summary>
@@ -176,11 +158,13 @@ namespace GPU_Declicker_UWP_0._01
             {
                 status.Report("Left channel: " + message);
             }
+
             if (audioData.IsStereo &&
                 audioData.GetCurrentChannelType() == ChannelType.Right)
             {
                 status.Report("Right channel: " + message);
             }
+
             if (!audioData.IsStereo)
             {
                 status.Report("Mono: " + message);
@@ -325,23 +309,6 @@ namespace GPU_Declicker_UWP_0._01
                 max_length = audioData.AudioProcessingSettings.MaxLengthCorrection;
 
             return max_length;
-        }
-
-        public static void RestoreInitState(
-            AudioData audioData, 
-            int position, 
-            int lenght)
-        {
-            audioData.CurrentChannelRestoreInitState(position, lenght);
-
-            int historyLengthSamples =
-                audioData.AudioProcessingSettings.HistoryLengthSamples;
-
-            HelperCalculator.CalculateErrorAverageCPU(
-                audioData, 
-                position - historyLengthSamples, 
-                position + lenght + historyLengthSamples, 
-                historyLengthSamples);
         }
     }
 }

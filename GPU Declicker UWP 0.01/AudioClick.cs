@@ -15,13 +15,13 @@ namespace GPU_Declicker_UWP_0._01
         public AudioClick(
             int position, 
             int lenght, 
-            float threshold_level_detected, 
+            float thresholdLevelDetected, 
             AudioData audioData,
             ChannelType fromChannel)
         {
             Position = position;
             Lenght = lenght;
-            Threshold_level_detected = threshold_level_detected;
+            Threshold_level_detected = thresholdLevelDetected;
             _audioDataOwningThisClick = audioData;
             FromChannel = fromChannel;
             Aproved = true;
@@ -60,25 +60,17 @@ namespace GPU_Declicker_UWP_0._01
                 left.FromChannel != right.FromChannel;
         }
 
-        public static bool operator < (AudioClick left, AudioClick right)
-        {
-            return left.Position < right.Position;
-        }
+        public static bool operator <(AudioClick left, AudioClick right) => 
+            left.Position < right.Position;
 
-        public static bool operator <= (AudioClick left, AudioClick right)
-        {
-            return left.Position <= right.Position;
-        }
+        public static bool operator <=(AudioClick left, AudioClick right) => 
+            left.Position <= right.Position;
 
-        public static bool operator >= (AudioClick left, AudioClick right)
-        {
-            return left.Position >= right.Position;
-        }
+        public static bool operator >=(AudioClick left, AudioClick right) => 
+            left.Position >= right.Position;
 
-        public static bool operator > (AudioClick left, AudioClick right)
-        {
-            return left.Position > right.Position;
-        }
+        public static bool operator >(AudioClick left, AudioClick right) => 
+            left.Position > right.Position;
 
         public void ChangeAproved()
         {
@@ -91,26 +83,12 @@ namespace GPU_Declicker_UWP_0._01
                 Aproved = false;
             }
         }
-        
-        /// <summary>
-        /// Get input sample from audioData
-        /// </summary>
-        /// <param name="position">position from begining of audioData</param>
-        /// <returns></returns>
-        public float GetInputSample(int position)
-        {
-            return _audioDataOwningThisClick.GetInputSample(position);
-        }
 
-        /// <summary>
-        /// Get output sample from audioData
-        /// </summary>
-        /// <param name="position">position from begining of audioData</param>
-        /// <returns></returns>
-        public float GetOutputSample(int position)
-        {
-            return _audioDataOwningThisClick.GetOutputSample(position);
-        }
+        public float GetInputSample(int position) => 
+            _audioDataOwningThisClick.GetInputSample(position);
+
+        public float GetOutputSample(int position) => 
+            _audioDataOwningThisClick.GetOutputSample(position);
 
         public void ExpandLeft()
         {

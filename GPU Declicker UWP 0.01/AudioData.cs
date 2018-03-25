@@ -20,12 +20,7 @@ namespace GPU_Declicker_UWP_0._01
         public int LengthSamples() =>
             currentAudioChannel.LengthSamples();
 
-        /// <summary>
-        /// Restores initial prediction errors from buckup and 
-        /// output samples from input samples 
-        /// </summary>
-        /// <param name="position">start position</param>
-        /// <param name="lenght">length</param>
+        
         public void CurrentChannelRestoreInitState(int position, int lenght) =>
             currentAudioChannel.RestoreInitState(position, lenght);
 
@@ -38,9 +33,6 @@ namespace GPU_Declicker_UWP_0._01
         public bool CurrentChannelIsPreprocessed() =>
             currentAudioChannel.ChannelIsPreprocessed;
 
-        /// <summary>
-        /// Backup prediction errors data for current channel
-        /// </summary>
         public void BackupCurrentChannelPredErrors()
         {
             for (int index = 0;
@@ -53,9 +45,6 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        /// <summary>
-        /// Restore prediction errors data for current channel
-        /// </summary>
         public void RestoreCurrentChannelPredErrors()
         {
             for (int index = 0;

@@ -25,7 +25,7 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         public override ChannelType GetCurrentChannelType() =>
-            // always answer Left for mono
+            // always answers Left for mono
             ChannelType.Left;
 
         public override void SetCurrentChannelType(ChannelType channelType)

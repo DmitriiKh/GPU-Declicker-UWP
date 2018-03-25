@@ -255,10 +255,12 @@ namespace GPU_Declicker_UWP_0._01
                 return;
             }
 
-            FileSavePicker filePicker = new FileSavePicker();
-            filePicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
+            FileSavePicker filePicker = new FileSavePicker
+            {
+                SuggestedStartLocation = PickerLocationId.MusicLibrary,
+                SuggestedFileName = audioInputFile.Name
+            };
             filePicker.FileTypeChoices.Add("Audio file", new List<string>() { ".mp3", ".wav", ".wma", ".m4a" });
-            filePicker.SuggestedFileName = audioInputFile.Name;
 
             audioOutputFile = await filePicker.PickSaveFileAsync();
 
@@ -280,24 +282,6 @@ namespace GPU_Declicker_UWP_0._01
         {
             AboutDialog aboutDialog = new AboutDialog();
             await aboutDialog.ShowAsync();
-        }
-
-        private async Task SaveClicks_Click()
-        {
-            FileSavePicker filePicker = new FileSavePicker();
-            filePicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-            filePicker.FileTypeChoices.Add("Text file", new List<string>() { ".txt" });
-            filePicker.SuggestedFileName = audioInputFile.Name + ".txt";
-
-            StorageFile txtOutputFile = await filePicker.PickSaveFileAsync();
-
-            if (txtOutputFile != null)
-            {
-                await FileIO.WriteTextAsync(txtOutputFile, "");
-                await FileIO.AppendTextAsync(txtOutputFile, "fffff");
-                await FileIO.AppendTextAsync(txtOutputFile, "\r\n");
-                await FileIO.AppendTextAsync(txtOutputFile, "nnnnn");
-            }
         }
     }
 }

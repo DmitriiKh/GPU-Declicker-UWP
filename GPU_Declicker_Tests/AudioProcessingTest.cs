@@ -39,7 +39,6 @@ namespace GPU_Declicker_Tests
         [TestMethod]
         public void AudioProcessingCalc_burg_pred()
         {
-            const int coef_number = 4;
             const int history_length = 512;
 
             float[] input_audio = new float[history_length + 1];
@@ -67,71 +66,6 @@ namespace GPU_Declicker_Tests
                 prediction,
                 input_audio[input_audio.Length - 1],
                 0.0001);
-        }
-
-        [TestMethod]
-        public void AudioProcessingRestoreInitState()
-        {
-            const int coef_number = 4;
-            const int history_length = 512;
-
-            float[] input_audio = new float[5 * history_length];
-            
-            for (int index = 0; index < input_audio.Length; index++)
-            {
-                input_audio[index] = (float)Math.Sin(2 * Math.PI * index / (history_length / 5.2));
-            }
-
-            AudioData audioData = new AudioDataMono(input_audio);
-
-            for (int index = 0; index < input_audio.Length; index++)
-            {
-                audioData.SetOutputSample(index, audioData.GetInputSample(index));
-            }
-
-            Progress<double> progress = new Progress<double>(
-                (p) => { double t = p; });
-            AudioProcessing.CalculateBurgPredictionErrCPU(
-                audioData, 
-                progress);
-            audioData.SetCurrentChannelIsPreprocessed();
-            audioData.BackupCurrentChannelPredErrors();
-
-            for (int i = 0; i < history_length + 16; i++)
-                audioData.SetErrorAverage(i, 0.001F);
-
-            HelperCalculator.CalculateErrorAverageCPU(
-                audioData,
-                history_length,
-                audioData.LengthSamples(),
-                history_length);
-
-            // damage some samples
-            int startPosition = 2 * history_length + 5;
-            int endPosition = startPosition + 50;
-            for (int index = startPosition; 
-                index < endPosition; 
-                index++)
-            {
-                Random random = new Random();
-                audioData.SetOutputSample(index, random.Next());
-                audioData.SetPredictionErr(index, random.Next());
-            }
-
-            AudioProcessing.RestoreInitState(
-                audioData, 
-                startPosition, 
-                endPosition - startPosition);
-
-            for (int index = 0; index < audioData.LengthSamples(); index++)
-            {
-                Assert.AreEqual(
-                    audioData.GetInputSample(index), 
-                    audioData.GetOutputSample(index));
-                Assert.AreEqual(
-                    audioData.GetPredictionErrBackup(index),
-                    audioData.GetPredictionErr(index));
-            }
         }
     }
 }

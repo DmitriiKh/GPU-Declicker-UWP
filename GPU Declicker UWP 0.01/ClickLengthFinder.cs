@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GPU_Declicker_UWP_0._01
 {
@@ -20,7 +16,10 @@ namespace GPU_Declicker_UWP_0._01
             };
 
             int position = initPosition;
-            int minPosition = GetMinPosition(position, positionOfLastProcessedSample, 10);
+            int minPosition = GetMinPosition(
+                position, 
+                positionOfLastProcessedSample, 
+                10);
             
             while (position > minPosition)
             {
@@ -104,6 +103,7 @@ namespace GPU_Declicker_UWP_0._01
             };
             
             ClickRepairer.Repair(audioData, index, result.Length + 4);
+
             while (result.Length < maxLength)
             {
                 ClickRepairer.Repair(audioData, index + result.Length + 4, 1);
@@ -112,7 +112,8 @@ namespace GPU_Declicker_UWP_0._01
                 if (!SeveralSamplesInARowAreSuspicious(audioData, index, 3))
                 {
                     result.ErrSum = CalcErrSum(audioData, index + result.Length + 1, 4);
-                        
+                    
+                    // if click fixed
                     if (result.ErrSum < 0.03F) //0.005F
                     {
                         result.Success = true;
