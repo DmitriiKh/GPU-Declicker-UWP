@@ -94,9 +94,12 @@ namespace GPU_Declicker_UWP_0._01
             if (OffsetPosition + shift + samplesOnScrean < audioData.LengthSamples())
                 OffsetPosition += shift;
             else
+            {
                 // set OffsetPosition to show the end of audioData
-                OffsetPosition = audioData.LengthSamples() - samplesOnScrean - 1
-                    - (int)audioDataToWaveFormRatio;
+                OffsetPosition = audioData.LengthSamples() - samplesOnScrean;
+                if (OffsetPosition < 0)
+                    OffsetPosition = 0;
+            }
 
             DrawWaveForm();
         }
