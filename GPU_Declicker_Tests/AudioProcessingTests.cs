@@ -5,7 +5,7 @@ using System;
 namespace GPU_Declicker_Tests
 {
     [TestClass]
-    public class AudioProcessingTest
+    public class AudioProcessingTests
     {
         [TestMethod]
         public void BurgPredictionCalculator_Calculate()

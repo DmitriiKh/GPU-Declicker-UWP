@@ -9,7 +9,7 @@ using Windows.Storage;
 namespace GPU_Declicker_Tests
 {
     [TestClass]
-    public class AudioInputOutputTest
+    public class AudioInputOutputTests
     {
         [TestMethod]
         public async Task AudioInputOutputSaveLoadTest()
