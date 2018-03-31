@@ -149,6 +149,12 @@ namespace GPU_Declicker_UWP_0._01
             return forwardPredictionsShort[historyLengthSamples];
         }
 
+        /// <summary>
+        /// Predicts max length of damaged samples sequence 
+        /// </summary>
+        /// <param name="audioData"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public static int GetMaxLength(AudioData audioData, int position)
         {
             int lenght = 0;
