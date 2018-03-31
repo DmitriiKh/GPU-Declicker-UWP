@@ -8,7 +8,7 @@ namespace GPU_Declicker_UWP_0._01
         /// <summary>
         /// Calculates prediction errors for a channel using CPU (Parallel.For)
         /// </summary>
-        public static void CalculateBurgPredictionErrCPU(
+        private static void CalculateBurgPredictionErrCPU(
             AudioData audioData, 
             IProgress<double> progress)
         {
@@ -171,9 +171,6 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        
-
-
         /// <summary>
         /// Divides audio for segments and call ScanSegment for each og them
         /// </summary>
@@ -265,7 +262,7 @@ namespace GPU_Declicker_UWP_0._01
                         audioData, 
                         index))
                 {
-                    max_length = GetMaxLength(audioData, index);
+                    max_length = HelperCalculator.GetMaxLength(audioData, index);
                     result = ClickLengthFinder.FindSequenceOfDamagedSamples(
                         audioData, 
                         index,
@@ -284,31 +281,6 @@ namespace GPU_Declicker_UWP_0._01
                     last_processed_sample = result.Position + result.Length + 1;
                 }
             }
-        }
-
-        private static int GetMaxLength(AudioData audioData, int position)
-        {
-            int lenght = 0;
-            float error = (Math.Abs(audioData.GetPredictionErr(position))); 
-            float errorAverage = audioData.GetErrorAverage(position - 15); 
-            float rate = error / 
-                (audioData.AudioProcessingSettings.ThresholdForDetection * 
-                errorAverage);
-            while (error > errorAverage)
-            {
-                lenght = lenght + 3;
-                error = (Math.Abs(audioData.GetPredictionErr(position + lenght)) +
-                    Math.Abs(audioData.GetPredictionErr(position + 1 + lenght)) +
-                    Math.Abs(audioData.GetPredictionErr(position + 2 + lenght))) / 3;
-            }
-            // the result is multiplication lenght and rate (doubled)
-            int max_length = (int) (lenght * rate * 2); 
-
-            // follow user's limit
-            if (max_length > audioData.AudioProcessingSettings.MaxLengthCorrection)
-                max_length = audioData.AudioProcessingSettings.MaxLengthCorrection;
-
-            return max_length;
         }
     }
 }

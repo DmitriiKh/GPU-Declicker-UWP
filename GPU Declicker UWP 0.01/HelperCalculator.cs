@@ -148,5 +148,30 @@ namespace GPU_Declicker_UWP_0._01
             // return prediction for i sample
             return forwardPredictionsShort[historyLengthSamples];
         }
+
+        public static int GetMaxLength(AudioData audioData, int position)
+        {
+            int lenght = 0;
+            float error = (Math.Abs(audioData.GetPredictionErr(position)));
+            float errorAverage = audioData.GetErrorAverage(position - 15);
+            float rate = error /
+                (audioData.AudioProcessingSettings.ThresholdForDetection *
+                errorAverage);
+            while (error > errorAverage)
+            {
+                lenght = lenght + 3;
+                error = (Math.Abs(audioData.GetPredictionErr(position + lenght)) +
+                    Math.Abs(audioData.GetPredictionErr(position + 1 + lenght)) +
+                    Math.Abs(audioData.GetPredictionErr(position + 2 + lenght))) / 3;
+            }
+            // the result is multiplication lenght and rate (doubled)
+            int max_length = (int)(lenght * rate * 2);
+
+            // follow user's limit
+            if (max_length > audioData.AudioProcessingSettings.MaxLengthCorrection)
+                max_length = audioData.AudioProcessingSettings.MaxLengthCorrection;
+
+            return max_length;
+        }
     }
 }
