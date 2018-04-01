@@ -16,7 +16,7 @@ namespace GPU_Declicker_UWP_0._01
         /// <param name="lenght"></param>
         static public float Repair(AudioData audioData, int position, int lenght)
         {
-            for (int index = position; index <= position + lenght; index++)
+            for (int index = position; index < position + lenght; index++)
             {
                 audioData.SetPredictionErr(index, 0.001F);
                 audioData.SetOutputSample(
