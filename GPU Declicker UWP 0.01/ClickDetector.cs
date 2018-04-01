@@ -2,7 +2,7 @@
 
 namespace GPU_Declicker_UWP_0._01
 {
-    static class ClickDetector
+    public static class ClickDetector
     {
         static public bool IsSampleSuspicious(
             AudioData audioData,

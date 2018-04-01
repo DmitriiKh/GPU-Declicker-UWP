@@ -25,6 +25,16 @@ namespace GPU_Declicker_UWP_0._01
                     );
             }
 
+            for (int index = position + lenght;
+                index < position + lenght + 5;
+                index++)
+            {
+                audioData.SetPredictionErr(
+                    index,
+                    CalcBurgPred(audioData, index) -
+                    audioData.GetOutputSample(index));
+            }
+
             int historyLengthSamples =
                 audioData.AudioProcessingSettings.HistoryLengthSamples;
 

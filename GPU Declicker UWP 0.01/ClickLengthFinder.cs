@@ -2,9 +2,9 @@
 
 namespace GPU_Declicker_UWP_0._01
 {
-    static class ClickLengthFinder
+    public static class ClickLengthFinder
     {
-        public static AttemptToFixResult FindSequenceOfDamagedSamples(
+        public static AttemptToFixResult FindLengthOfClick(
             AudioData audioData,
             int initPosition,
             int maxLength,
@@ -36,7 +36,7 @@ namespace GPU_Declicker_UWP_0._01
                 if (result.BetterThan(bestResult))
                     bestResult = result;
 
-                audioData.CurrentChannelRestoreInitState(position, maxLength);
+                audioData.CurrentChannelRestoreInitState(position, maxLength + 16);
                 RestorePredictionErrAverage(
                     audioData,
                     position,
@@ -101,28 +101,28 @@ namespace GPU_Declicker_UWP_0._01
                 Length = minLength,
                 ErrSum = float.MaxValue
             };
-            
-            ClickRepairer.Repair(audioData, index, result.Length + 4);
+
+            ClickRepairer.Repair(audioData, index, minLength);
 
             while (result.Length < maxLength)
             {
-                ClickRepairer.Repair(audioData, index + result.Length + 4, 1);
+                ClickRepairer.Repair(audioData, index + result.Length, 1);
                 result.Length++;
 
-                if (!SeveralSamplesInARowAreSuspicious(audioData, index, 3))
+                if (!SeveralSamplesInARowAreSuspicious(
+                    audioData, index + result.Length, 3))
                 {
-                    result.ErrSum = CalcErrSum(audioData, index + result.Length + 1, 4);
+                    result.ErrSum = CalcErrSum(
+                        audioData, index + result.Length, 4);
                     
                     // if click fixed
                     if (result.ErrSum < 0.03F) //0.005F
                     {
                         result.Success = true;
-                        // correction for better fix
-                        result.Length++;
                         break;
                     }
 
-                    result.Length++;
+                  
                 }
             }
 
@@ -132,13 +132,9 @@ namespace GPU_Declicker_UWP_0._01
         private static float CalcErrSum(AudioData audioData, int position, int length)
         {
             float errSum = 0;
-
+            
             for (int index = position; index < position + length; index++)
-            {
-                errSum += Math.Abs(
-                               audioData.GetOutputSample(index) -
-                               audioData.GetInputSample(index));
-            }
+                errSum += Math.Abs(audioData.GetPredictionErr(index));
 
             return errSum;
         }
@@ -152,7 +148,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 if (ClickDetector.IsSampleSuspicious(
                         audioData,
-                        index + length))
+                        index))
                     return true;
             }
 

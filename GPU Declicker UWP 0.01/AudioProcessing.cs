@@ -263,7 +263,7 @@ namespace GPU_Declicker_UWP_0._01
                         index))
                 {
                     max_length = HelperCalculator.GetMaxLength(audioData, index);
-                    result = ClickLengthFinder.FindSequenceOfDamagedSamples(
+                    result = ClickLengthFinder.FindLengthOfClick(
                         audioData, 
                         index,
                         max_length,

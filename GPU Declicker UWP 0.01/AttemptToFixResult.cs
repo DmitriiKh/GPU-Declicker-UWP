@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GPU_Declicker_UWP_0._01
 {
-    class AttemptToFixResult
+    public class AttemptToFixResult
     {
         public bool Success { get; set; }
         public int Position { get; set; }
@@ -15,14 +15,12 @@ namespace GPU_Declicker_UWP_0._01
 
         public bool BetterThan(AttemptToFixResult anotherResult)
         {
-            if (!anotherResult.Success)
+            if ((Success && !anotherResult.Success) ||
+                (Length < anotherResult.Length) || 
+                (ErrSum / anotherResult.ErrSum < 0.5))
                 return true;
-            if (Length < anotherResult.Length)
-                return true;
-            if (ErrSum < anotherResult.ErrSum)
-                return true;
-
-            return false;
+            else
+                return false;
         }
     }
 }
