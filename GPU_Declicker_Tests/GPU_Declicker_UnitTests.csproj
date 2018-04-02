@@ -101,6 +101,7 @@
   <ItemGroup>
     <Compile Include="AudioInputOutputTests.cs" />
     <Compile Include="AudioProcessingTests.cs" />
+    <Compile Include="BurgPredictionCalculatorTests.cs" />
     <Compile Include="ClickLengthFinderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTestApp.xaml.cs">
