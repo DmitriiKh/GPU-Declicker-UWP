@@ -79,7 +79,7 @@ namespace GPU_Declicker_UWP_0._01
                 forwardPredictionsShort,
                 backwardPredictionsShort,
                 historyLengthSamples,
-                audioData.AudioProcessingSettings.CoefficientsNumber * 2,
+                audioData.AudioProcessingSettings.CoefficientsNumber,
                 historyLengthSamples);
 
             // return prediction for sample at position

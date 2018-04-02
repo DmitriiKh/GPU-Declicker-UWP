@@ -71,7 +71,7 @@ namespace GPU_Declicker_Tests
         public void FindLengthOfClick_DamagedSinusoidalInput_ReturnsLength(int shift)
         {
             const int historyLength = 512;
-            const int signalLength = 5 * historyLength;
+            const int signalLength = 10 * historyLength;
             const int damageLength = 10;
             int damageStartPosition = signalLength / 2 + shift;
 
@@ -89,7 +89,9 @@ namespace GPU_Declicker_Tests
             AudioData audioData =
                 new AudioDataMono(inputAudio);
 
-            for (int index = historyLength; index < audioData.LengthSamples() - historyLength; index++)
+            for (int index = historyLength; 
+                index < audioData.LengthSamples() - historyLength; 
+                index++)
             {
                 audioData.SetOutputSample(
                     index,

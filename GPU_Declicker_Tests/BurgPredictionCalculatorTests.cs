@@ -8,7 +8,7 @@ namespace GPU_Declicker_Tests
     public class BurgPredictionCalculatorTests
     {
         [TestMethod]
-        public void Calculate()
+        public void Calculate_SinusoidInput_CalculatesPrediction()
         {
             const int coefNumber = 4;
             const int historyLength = 512;
