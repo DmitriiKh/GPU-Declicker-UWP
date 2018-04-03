@@ -116,7 +116,7 @@ namespace GPU_Declicker_UWP_0._01
                         audioData, index + result.Length, 4);
                     
                     // if click fixed
-                    if (result.ErrSum < 0.03F) //0.005F
+                    if (result.ErrSum < 0.01F) //0.005F //0.03F
                     {
                         result.Success = true;
                         break;
