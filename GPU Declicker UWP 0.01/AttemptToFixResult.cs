@@ -17,7 +17,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             if ((Success && !anotherResult.Success) ||
                 (Length < anotherResult.Length) || 
-                (ErrSum / anotherResult.ErrSum < 0.5))
+                (ErrSum / anotherResult.ErrSum < 0.01))
                 return true;
             else
                 return false;
