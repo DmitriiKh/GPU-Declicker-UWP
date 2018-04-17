@@ -20,23 +20,25 @@ namespace GPU_Declicker_Tests
         [TestInitialize]
         public void AudioClickBeforeRunningTests()
         {
+            var audioData = new AudioDataMono(new float[100]);
+
             _audioClickFirst = new AudioClick(
-                1111, 10, 3.7F, null, ChannelType.Left);
+                1111, 10, 3.7F, audioData, ChannelType.Left);
             _audioClickTheSame = _audioClickFirst;
             _audioClickEqual = new AudioClick(
-                1111, 10, 3.7F, null, ChannelType.Left);
+                1111, 10, 3.7F, audioData, ChannelType.Left);
             _audioClickSecond = new AudioClick(
-                2222, 10, 3.7F, null, ChannelType.Left);
+                2222, 10, 3.7F, audioData, ChannelType.Left);
             _audioClickDifferentChannel = new AudioClick(
-                1111, 10, 3.7F, null, ChannelType.Right);
+                1111, 10, 3.7F, audioData, ChannelType.Right);
             _audioClickDifferentLength = new AudioClick(
-                1111, 22, 3.7F, null, ChannelType.Left);
+                1111, 22, 3.7F, audioData, ChannelType.Left);
             _audioClickDifferentPosition = new AudioClick(
-                2222, 10, 3.7F, null, ChannelType.Left);
+                2222, 10, 3.7F, audioData, ChannelType.Left);
             _audioClickLargerPosition = new AudioClick(
-                2222, 10, 3.7F, null, ChannelType.Left);
+                2222, 10, 3.7F, audioData, ChannelType.Left);
             _audioClickLesserPosition = new AudioClick(
-                0001, 10, 3.7F, null, ChannelType.Left);
+                0001, 10, 3.7F, audioData, ChannelType.Left);
         }
 
         [TestMethod]
@@ -74,6 +76,13 @@ namespace GPU_Declicker_Tests
         }
 
         [TestMethod]
+        public void CompareTo_Null_ReturnsPositive()
+        {
+            Assert.IsTrue(_audioClickFirst.CompareTo(null) > 0,
+                "Failed CompareTo: should return positive");
+        }
+
+        [TestMethod]
         public void Equals_TheSameClick_ReturnsTrue()
         {
             Assert.IsTrue(_audioClickFirst.Equals(_audioClickTheSame),
@@ -92,6 +101,13 @@ namespace GPU_Declicker_Tests
         {
             Assert.IsFalse(_audioClickFirst.Equals(_audioClickSecond),
                 "Failed Equals: should be false (different)");
+        }
+
+        [TestMethod]
+        public void Equals_Null_ReturnsFalse()
+        {
+            Assert.IsFalse(_audioClickFirst.Equals(null),
+                "Failed Equals: should be false (null)");
         }
 
         [TestMethod]
@@ -168,6 +184,13 @@ namespace GPU_Declicker_Tests
         }
 
         [TestMethod]
+        public void OperatorEqual_Null_ReturnsFalse()
+        {
+            Assert.IsFalse(_audioClickFirst == null,
+                "Failed Operator ==: should be false (null)");
+        }
+
+        [TestMethod]
         public void OperatorNotEqual_TheSameClick_ReturnsFalse()
         {
             Assert.IsFalse(_audioClickFirst != _audioClickTheSame,
@@ -201,7 +224,14 @@ namespace GPU_Declicker_Tests
             Assert.IsTrue(_audioClickFirst != _audioClickDifferentChannel,
                 "Failed Operator !=: should be true (different channel)");
         }
-        
+
+        [TestMethod]
+        public void OperatorNotEqual_Null_ReturnsTrue()
+        {
+            Assert.IsTrue(_audioClickFirst != null,
+                "Failed Operator !=: should be true (null)");
+        }
+
         [TestMethod]
         public void OperatorLess_ComparitionToLesserPositionClick_ReturnsFalse()
         {
@@ -229,6 +259,13 @@ namespace GPU_Declicker_Tests
             Assert.IsTrue(_audioClickFirst < _audioClickLargerPosition,
                 "Failed Operator <: should be true " +
                 "(larger position of second operand)");
+        }
+
+        [TestMethod]
+        public void OperatorLess_ComparitionToNull_ReturnsFalse()
+        {
+            Assert.IsFalse(_audioClickFirst < null,
+                "Failed Operator <: should be false (null)");
         }
 
         [TestMethod]
@@ -261,6 +298,13 @@ namespace GPU_Declicker_Tests
         }
 
         [TestMethod]
+        public void OperatorLessOrEqual_ComparitionToNull_ReturnsFalse()
+        {
+            Assert.IsFalse(_audioClickFirst <= null,
+                "Failed Operator <=: should be false (null)");
+        }
+
+        [TestMethod]
         public void OperatorMore_ComparitionToLesserPositionClick_ReturnsTrue()
         {
             Assert.IsTrue(_audioClickFirst > _audioClickLesserPosition,
@@ -290,6 +334,13 @@ namespace GPU_Declicker_Tests
         }
 
         [TestMethod]
+        public void OperatorMore_ComparitionToNull_ReturnsTrue()
+        {
+            Assert.IsTrue(_audioClickFirst > null,
+                "Failed Operator >: should be true (null)");
+        }
+
+        [TestMethod]
         public void OperatorMoreOrEqual_ComparitionToLesserPositionClick_ReturnsTrue()
         {
             Assert.IsTrue(_audioClickFirst >= _audioClickLesserPosition,
@@ -316,6 +367,13 @@ namespace GPU_Declicker_Tests
             Assert.IsFalse(_audioClickFirst >= _audioClickLargerPosition,
                 "Failed Operator >=: should be true " +
                 "(larger position of second operand)");
+        }
+
+        [TestMethod]
+        public void OperatorMoreOrEqual_ComparitionToNull_ReturnsTrue()
+        {
+            Assert.IsTrue(_audioClickFirst >= null,
+                "Failed Operator >=: should be true (null)");
         }
 
         [TestMethod]

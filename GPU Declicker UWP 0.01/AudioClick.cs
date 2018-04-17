@@ -39,12 +39,17 @@ namespace GPU_Declicker_UWP_0._01
 
         public int CompareTo(AudioClick other)
         {
+            if (other is null)
+                return 1;
             // return the same result as for positions comparison
             return this.Position.CompareTo(other.Position);
         }
 
         public override bool Equals(object obj)
         {
+            if (obj is null)
+                return false;
+
             AudioClick audioClick = (AudioClick)obj;
             return this.Position == audioClick.Position;
         }
@@ -58,6 +63,9 @@ namespace GPU_Declicker_UWP_0._01
 
         public static bool operator == (AudioClick left, AudioClick right)
         {
+            if (right is null)
+                return false;
+
             return left.Position == right.Position &&
                 left.Lenght == right.Lenght &&
                 left.FromChannel == right.FromChannel;
@@ -65,22 +73,45 @@ namespace GPU_Declicker_UWP_0._01
 
         public static bool operator != (AudioClick left, AudioClick right)
         {
+            if (right is null)
+                return true;
+
             return left.Position != right.Position ||
                 left.Lenght != right.Lenght ||
                 left.FromChannel != right.FromChannel;
         }
 
-        public static bool operator <(AudioClick left, AudioClick right) => 
-            left.Position < right.Position;
+        public static bool operator <(AudioClick left, AudioClick right)
+        {
+            if (right is null)
+                return false;
 
-        public static bool operator <=(AudioClick left, AudioClick right) => 
-            left.Position <= right.Position;
+            return left.Position < right.Position;
+        }
 
-        public static bool operator >=(AudioClick left, AudioClick right) => 
-            left.Position >= right.Position;
+        public static bool operator <=(AudioClick left, AudioClick right)
+        {
+            if (right is null)
+                return false;
 
-        public static bool operator >(AudioClick left, AudioClick right) => 
-            left.Position > right.Position;
+            return left.Position <= right.Position;
+        }
+
+        public static bool operator >=(AudioClick left, AudioClick right)
+        {
+            if (right is null)
+                return true;
+
+            return left.Position >= right.Position;
+        }
+
+        public static bool operator >(AudioClick left, AudioClick right)
+        {
+            if (right is null)
+                return true;
+
+            return left.Position > right.Position;
+        }
 
         public void ChangeAproved()
         {
