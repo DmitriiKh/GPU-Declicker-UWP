@@ -1,16 +1,25 @@
 ﻿using System;
 
 namespace GPU_Declicker_UWP_0._01
+
 {
+    public class ClickEventArgs: EventArgs
+    {
+        public bool Shrinked { get; set; }
+        public float ThresholdLevelDetected { get; set; }
+    }
+
     public class AudioClick : IComparable<AudioClick>
     {
         public int Position { get; private set; }
         public int Lenght { get; private set; }
-        public float Threshold_level_detected { get; private set; }
+        public float ThresholdLevelDetected { get; private set; }
         public bool Aproved { get; private set; }
         public ChannelType FromChannel { get; }
 
         private readonly AudioData _audioDataOwningThisClick;
+
+        public event EventHandler<ClickEventArgs> ClickChanged;
 
         public AudioClick(
             int position, 
@@ -21,8 +30,9 @@ namespace GPU_Declicker_UWP_0._01
         {
             Position = position;
             Lenght = lenght;
-            Threshold_level_detected = thresholdLevelDetected;
+            ThresholdLevelDetected = thresholdLevelDetected;
             _audioDataOwningThisClick = audioData;
+            ClickChanged += audioData.OnClickChanged;
             FromChannel = fromChannel;
             Aproved = true;
         }
@@ -94,44 +104,39 @@ namespace GPU_Declicker_UWP_0._01
         {
             Position--;
             Lenght++;
-            Threshold_level_detected = ClickRepairer.Repair(
-                _audioDataOwningThisClick, 
-                Position, 
-                Lenght);
+
+            OnClickChanged(false);
         }
 
         public void ShrinkLeft()
         {
-            _audioDataOwningThisClick.SetOutputSample(
-                Position, 
-                _audioDataOwningThisClick.GetInputSample(Position));
             Position++;
             Lenght--;
-            Threshold_level_detected = ClickRepairer.Repair(
-                _audioDataOwningThisClick, 
-                Position, 
-                Lenght);
+
+            OnClickChanged(true);
         }
 
         public void ShrinkRight()
         {
-            _audioDataOwningThisClick.SetOutputSample(
-                Position + Lenght, 
-                _audioDataOwningThisClick.GetInputSample(Position + Lenght));
             Lenght--;
-            Threshold_level_detected = ClickRepairer.Repair(
-                _audioDataOwningThisClick, 
-                Position, 
-                Lenght);
+
+            OnClickChanged(true);
         }
 
         public void ExpandRight()
         {
             Lenght++;
-            Threshold_level_detected = ClickRepairer.Repair(
-                _audioDataOwningThisClick, 
-                Position, 
-                Lenght);
+
+            OnClickChanged(false);
+        }
+
+        protected virtual void OnClickChanged(bool shrinked)
+        {
+            var e = new ClickEventArgs { Shrinked = shrinked };
+
+            ClickChanged?.Invoke(this, e);
+
+            ThresholdLevelDetected = e.ThresholdLevelDetected;
         }
     }
 }

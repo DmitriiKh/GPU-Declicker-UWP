@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace GPU_Declicker_UWP_0._01
@@ -103,5 +104,27 @@ namespace GPU_Declicker_UWP_0._01
 
         public void SetErrorAverage(int position, float a_average) =>
             currentAudioChannel.SetPredictionErrAverage(position, a_average);
+
+        public void OnClickChanged(object source, ClickEventArgs e)
+        {
+            var click = source as AudioClick;
+            //if (click == null)
+                //return;
+
+            if (e.Shrinked)
+            {
+                SetOutputSample(
+                    click.Position,
+                    GetInputSample(click.Position));
+                SetOutputSample(
+                    click.Position + click.Lenght,
+                    GetInputSample(click.Position + click.Lenght));
+            }
+
+            e.ThresholdLevelDetected = ClickRepairer.Repair(
+                this,
+                click.Position,
+                click.Lenght);
+        }
     }
 }

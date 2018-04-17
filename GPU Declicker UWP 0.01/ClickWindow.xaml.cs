@@ -32,7 +32,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             this.InitializeComponent();
             audioClickBinded = audioClick;
-            Threshold_level_detected.Text = audioClick.Threshold_level_detected.ToString("0.0");
+            Threshold_level_detected.Text = audioClick.ThresholdLevelDetected.ToString("0.0");
             Position.Text = audioClick.Position.ToString("0");
             SetBorderColour();
             SetPolylines();
@@ -112,7 +112,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on left
                 audioClickBinded.ShrinkLeft();
-                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
+                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
             if (areaPressed == Area.Midle)
@@ -127,7 +127,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on right
                 audioClickBinded.ShrinkRight();
-                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
+                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
             if (areaPressed == Area.RightExpand)
@@ -213,14 +213,14 @@ namespace GPU_Declicker_UWP_0._01
                 {
                     // expand marked damaged sample sequence to right
                     audioClickBinded.ExpandRight();
-                    Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
+                    Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                     changed = true;
                 }
                 if (point.X - pointerLastPosition.X < -minMovement)
                 {
                     // expand marked damaged sample sequence to right
                     audioClickBinded.ExpandLeft();
-                    Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
+                    Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                     changed = true;
                 }
             }
@@ -229,7 +229,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on right
                 audioClickBinded.ShrinkRight();
-                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
+                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 changed = true;
             }
 
@@ -237,7 +237,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on right
                 audioClickBinded.ShrinkLeft();
-                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
+                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 changed = true;
             }
 
@@ -285,7 +285,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // expand marked damaged sample sequence to right
                 audioClickBinded.ExpandRight();
-                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
+                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
@@ -295,7 +295,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // expand marked damaged sample sequence to right
                 audioClickBinded.ExpandLeft();
-                Threshold_level_detected.Text = audioClickBinded.Threshold_level_detected.ToString("0.0");
+                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
