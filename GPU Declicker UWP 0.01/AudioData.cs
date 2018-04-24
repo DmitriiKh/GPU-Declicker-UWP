@@ -114,8 +114,8 @@ namespace GPU_Declicker_UWP_0._01
             if (e.Shrinked)
             {
                 SetOutputSample(
-                    click.Position,
-                    GetInputSample(click.Position));
+                    click.Position - 1,
+                    GetInputSample(click.Position - 1));
                 SetOutputSample(
                     click.Position + click.Lenght,
                     GetInputSample(click.Position + click.Lenght));
