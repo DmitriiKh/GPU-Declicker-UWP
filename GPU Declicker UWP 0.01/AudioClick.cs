@@ -12,7 +12,7 @@ namespace GPU_Declicker_UWP_0._01
     public class AudioClick : IComparable<AudioClick>
     {
         public int Position { get; private set; }
-        public int Lenght { get; private set; }
+        public int Length { get; private set; }
         public float ThresholdLevelDetected { get; private set; }
         public bool Aproved { get; private set; }
         public ChannelType FromChannel { get; }
@@ -31,7 +31,7 @@ namespace GPU_Declicker_UWP_0._01
             ChannelType fromChannel)
         {
             Position = position;
-            Lenght = lenght;
+            Length = lenght;
             ThresholdLevelDetected = thresholdLevelDetected;
             _audioDataOwningThisClick = audioData;
             ClickChanged += audioData.OnClickChanged;
@@ -59,7 +59,7 @@ namespace GPU_Declicker_UWP_0._01
         public override int GetHashCode()
         {
             return this.Position.GetHashCode() ^ 
-                this.Lenght.GetHashCode() ^
+                this.Length.GetHashCode() ^
                 this.FromChannel.GetHashCode();
         }
 
@@ -69,7 +69,7 @@ namespace GPU_Declicker_UWP_0._01
                 return false;
 
             return left.Position == right.Position &&
-                left.Lenght == right.Lenght &&
+                left.Length == right.Length &&
                 left.FromChannel == right.FromChannel;
         }
 
@@ -79,7 +79,7 @@ namespace GPU_Declicker_UWP_0._01
                 return true;
 
             return left.Position != right.Position ||
-                left.Lenght != right.Lenght ||
+                left.Length != right.Length ||
                 left.FromChannel != right.FromChannel;
         }
 
@@ -136,7 +136,7 @@ namespace GPU_Declicker_UWP_0._01
         public void ExpandLeft()
         {
             Position--;
-            Lenght++;
+            Length++;
 
             OnClickChanged(NotShrinked);
         }
@@ -144,21 +144,21 @@ namespace GPU_Declicker_UWP_0._01
         public void ShrinkLeft()
         {
             Position++;
-            Lenght--;
+            Length--;
 
             OnClickChanged(Shrinked);
         }
 
         public void ShrinkRight()
         {
-            Lenght--;
+            Length--;
 
             OnClickChanged(Shrinked);
         }
 
         public void ExpandRight()
         {
-            Lenght++;
+            Length++;
 
             OnClickChanged(NotShrinked);
         }

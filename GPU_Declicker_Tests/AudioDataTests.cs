@@ -38,7 +38,7 @@ namespace GPU_Declicker_Tests
         public void OnClickChanged_Shrinked_RestoreSampleAndRepair()
         {
             _audioData.SetOutputSample(_audioClick.Position - 1, 0);
-            _audioData.SetOutputSample(_audioClick.Position + _audioClick.Lenght, 0);
+            _audioData.SetOutputSample(_audioClick.Position + _audioClick.Length, 0);
 
             _audioData.OnClickChanged(
                 _audioClick, 

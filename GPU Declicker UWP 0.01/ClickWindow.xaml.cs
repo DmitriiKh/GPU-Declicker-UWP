@@ -58,7 +58,7 @@ namespace GPU_Declicker_UWP_0._01
             //in the center of this CW
             int cwStartPos = (int)(
                 audioClickBinded.Position + 
-                audioClickBinded.Lenght / 2 - 
+                audioClickBinded.Length / 2 - 
                 this.MainGrid.Width / 2);
             // set Input polylyne
             for (int i = 0; i < this.MainGrid.Width; i++)
@@ -69,7 +69,7 @@ namespace GPU_Declicker_UWP_0._01
             }
             // set Output polyline two samples wider than click
             for (int i = audioClickBinded.Position - cwStartPos - 1; 
-                i <= audioClickBinded.Position - cwStartPos + audioClickBinded.Lenght + 1; 
+                i <= audioClickBinded.Position - cwStartPos + audioClickBinded.Length + 1; 
                 i++)
             {
                 float s = audioClickBinded.GetOutputSample(cwStartPos + i);

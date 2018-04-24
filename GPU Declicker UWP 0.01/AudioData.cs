@@ -117,14 +117,14 @@ namespace GPU_Declicker_UWP_0._01
                     click.Position - 1,
                     GetInputSample(click.Position - 1));
                 SetOutputSample(
-                    click.Position + click.Lenght,
-                    GetInputSample(click.Position + click.Lenght));
+                    click.Position + click.Length,
+                    GetInputSample(click.Position + click.Length));
             }
 
             e.ThresholdLevelDetected = ClickRepairer.Repair(
                 this,
                 click.Position,
-                click.Lenght);
+                click.Length);
         }
     }
 }
