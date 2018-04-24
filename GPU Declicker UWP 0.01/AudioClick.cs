@@ -16,6 +16,8 @@ namespace GPU_Declicker_UWP_0._01
         public float ThresholdLevelDetected { get; private set; }
         public bool Aproved { get; private set; }
         public ChannelType FromChannel { get; }
+        const bool Shrinked = true;
+        const bool NotShrinked = false;
 
         private readonly AudioData _audioDataOwningThisClick;
 
@@ -136,7 +138,7 @@ namespace GPU_Declicker_UWP_0._01
             Position--;
             Lenght++;
 
-            OnClickChanged(false);
+            OnClickChanged(NotShrinked);
         }
 
         public void ShrinkLeft()
@@ -144,21 +146,21 @@ namespace GPU_Declicker_UWP_0._01
             Position++;
             Lenght--;
 
-            OnClickChanged(true);
+            OnClickChanged(Shrinked);
         }
 
         public void ShrinkRight()
         {
             Lenght--;
 
-            OnClickChanged(true);
+            OnClickChanged(Shrinked);
         }
 
         public void ExpandRight()
         {
             Lenght++;
 
-            OnClickChanged(false);
+            OnClickChanged(NotShrinked);
         }
 
         protected virtual void OnClickChanged(bool shrinked)
