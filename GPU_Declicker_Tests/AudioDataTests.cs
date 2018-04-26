@@ -5,7 +5,7 @@ using System;
 namespace GPU_Declicker_Tests
 {
     [TestClass]
-    public class AudioSataTests
+    public class AudioDataTests
     {
         AudioData _audioData;
         AudioClick _audioClick;
