@@ -67,15 +67,15 @@ namespace GPU_Declicker_UWP_0._01
             // if file picked
             if (audioInputFile != null)
             {
-                CreateAudioFileInputNodeResult load_audio_result = 
+                CreateAudioFileInputNodeResult loadAudioResult = 
                     await audioInputOutput.LoadAudioFromFile(
                         audioInputFile, 
                         taskProgress, 
                         taskStatus);
 
-                if (load_audio_result.Status != AudioFileNodeCreationStatus.Success)
+                if (loadAudioResult.Status != AudioFileNodeCreationStatus.Success)
                 {
-                    await ShowErrorMessage(load_audio_result.Status.ToString());
+                    await ShowErrorMessage(loadAudioResult.Status.ToString());
                     return;
                 }
                 else
