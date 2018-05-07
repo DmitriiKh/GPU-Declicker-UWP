@@ -67,11 +67,28 @@ namespace GPU_Declicker_UWP_0._01
             // if file picked
             if (audioInputFile != null)
             {
-                CreateAudioFileInputNodeResult loadAudioResult = 
-                    await audioInputOutput.LoadAudioFromFile(
-                        audioInputFile, 
-                        taskProgress, 
-                        taskStatus);
+                CreateAudioFileInputNodeResult loadAudioResult = null;
+
+                try
+                {
+                    loadAudioResult =
+                        await audioInputOutput.LoadAudioFromFile(
+                            audioInputFile,
+                            taskProgress,
+                            taskStatus);
+                }
+                catch (Exception ex)
+                {
+                    await ShowErrorMessage("An error occured while trying to read file.\n" +
+                        "Details:\n" +  
+                        "Message: " + ex.Message + "\n" +
+                        "Source: " + ex.Source + "\n" +
+                        "StackTrace: " + ex.StackTrace + "\n" +
+                        "InnerExeption" + ex.InnerException);
+                }
+
+                if (loadAudioResult == null)
+                    return;
 
                 if (loadAudioResult.Status != AudioFileNodeCreationStatus.Success)
                 {
