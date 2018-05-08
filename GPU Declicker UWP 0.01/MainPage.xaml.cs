@@ -283,8 +283,26 @@ namespace GPU_Declicker_UWP_0._01
 
             if (audioOutputFile != null)
             {
-                CreateAudioFileOutputNodeResult save_audio_result =
-                    await audioInputOutput.SaveAudioToFile(audioOutputFile, taskProgress, taskStatus);
+
+                CreateAudioFileOutputNodeResult save_audio_result = null;
+
+                try
+                {
+                    save_audio_result =
+                        await audioInputOutput.SaveAudioToFile(audioOutputFile, taskProgress, taskStatus);
+                }
+                catch (Exception ex)
+                {
+                    await ShowErrorMessage("An error occured while trying to save file.\n" +
+                        "Details:\n" +
+                        "Message: " + ex.Message + "\n" +
+                        "Source: " + ex.Source + "\n" +
+                        "StackTrace: " + ex.StackTrace + "\n" +
+                        "InnerExeption.Message: " + ex.InnerException.Message);
+                }
+
+                if (save_audio_result == null)
+                    return;
 
                 if (save_audio_result.Status !=
                     AudioFileNodeCreationStatus.Success)
