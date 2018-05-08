@@ -248,6 +248,14 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
+        internal void SetMargin(double cwOffsetX, double cwOffsetY)
+        {
+            Thickness margin = Margin;
+            margin.Left = cwOffsetX;
+            margin.Top = cwOffsetY;
+            Margin = margin;
+        }
+
         private void Grid_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             ActionNotification.Text = "";

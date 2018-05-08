@@ -270,10 +270,7 @@ namespace GPU_Declicker_UWP_0._01
                 ClickWindow clickWindow = new ClickWindow(click);
 
                 // set ClickWindow margin to position ClickWindow
-                Thickness margin = clickWindow.Margin;
-                margin.Left = cwOffsetX;
-                margin.Top = cwOffsetY;
-                clickWindow.Margin = margin;
+                clickWindow.SetMargin(cwOffsetX, cwOffsetY);
 
                 // insert the ClickWindow to ClickWindowsGrid
                 ClickWindowsGrid.Children.Add(clickWindow);
