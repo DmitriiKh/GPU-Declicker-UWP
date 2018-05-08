@@ -209,7 +209,7 @@ namespace GPU_Declicker_UWP_0._01
             // clear ClickWindowsGrid before adding new ClickWindows
             ClickWindowsGrid.Children.Clear();
             // initialize offset
-            double cwOffsetY = 0;
+            double cwOffsetY = 10;
             
             if (audioData.IsStereo)
             {
