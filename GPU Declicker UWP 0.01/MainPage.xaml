@@ -77,7 +77,7 @@
             <Button Grid.Column="0" 
                     Name="OpenButton"
                     Content="Open" 
-                    Click="OpenAudioFile_Click" 
+                    Click="OpenAudioFile_ClickAsync" 
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"/>
             <Grid Grid.Column="1">
@@ -139,14 +139,14 @@
             <Button Grid.Column="5" 
                     Name="SaveButton"
                     Content="Save" 
-                    Click="SaveAudioFile_Click" 
+                    Click="SaveAudioFile_ClickAsync" 
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"
                     IsEnabled="False"/>
             <Button Grid.Column="6" 
                     Name="AboutButton"
                     Content="About" 
-                    Click="AboutDialog_Click" 
+                    Click="AboutDialog_ClickAsync" 
                     VerticalAlignment="Center" 
                     HorizontalAlignment="Center"/>
             <!--<Button Grid.Column="4" 

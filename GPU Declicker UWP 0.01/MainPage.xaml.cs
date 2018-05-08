@@ -36,7 +36,7 @@ namespace GPU_Declicker_UWP_0._01
                 );
         }
     
-        private async void OpenAudioFile_Click(object sender, RoutedEventArgs e)
+        private async void OpenAudioFile_ClickAsync(object sender, RoutedEventArgs e)
         {
             // remove all clicks from display
             ClickWindowsGrid.Children.Clear();
@@ -76,7 +76,7 @@ namespace GPU_Declicker_UWP_0._01
 
             if (loadAudioResult.Status != AudioFileNodeCreationStatus.Success)
             {
-                await ShowErrorMessage(loadAudioResult.Status.ToString());
+                await ShowErrorMessageAsync(loadAudioResult.Status.ToString());
                 return;
             }
             else
@@ -107,7 +107,7 @@ namespace GPU_Declicker_UWP_0._01
 
         private async Task ShowExeptionAsync(string str, Exception ex)
         {
-            await ShowErrorMessage(str + "\n" +
+            await ShowErrorMessageAsync(str + "\n" +
                "Details:\n" +
                "Message: " + ex.Message + "\n" +
                "Source: " + ex.Source + "\n" +
@@ -122,7 +122,7 @@ namespace GPU_Declicker_UWP_0._01
 
             if (initResult.Status != AudioGraphCreationStatus.Success)
             {
-                await ShowErrorMessage(
+                await ShowErrorMessageAsync(
                     "AudioGraph creation error: "
                     + initResult.Status.ToString()
                     );
@@ -147,7 +147,7 @@ namespace GPU_Declicker_UWP_0._01
             return await filePicker.PickSingleFileAsync();
         }
 
-        private async Task ShowErrorMessage(string message)
+        private async Task ShowErrorMessageAsync(string message)
         {
             var dialog = new MessageDialog(message);
             await dialog.ShowAsync();
@@ -297,7 +297,7 @@ namespace GPU_Declicker_UWP_0._01
             DisplayClicks();
         }
 
-        private async void SaveAudioFile_Click(object sender, RoutedEventArgs e)
+        private async void SaveAudioFile_ClickAsync(object sender, RoutedEventArgs e)
         {
             CreateAudioGraphResult init_result =
                  await InitAudioInputOutputAsync();
@@ -323,7 +323,7 @@ namespace GPU_Declicker_UWP_0._01
             if (saveAudioResult.Status !=
                 AudioFileNodeCreationStatus.Success)
             {
-                await ShowErrorMessage(
+                await ShowErrorMessageAsync(
                     saveAudioResult.Status.ToString());
             }
         }
@@ -363,7 +363,7 @@ namespace GPU_Declicker_UWP_0._01
             return await filePicker.PickSaveFileAsync();
         }
 
-        private async void AboutDialog_Click(object sender, RoutedEventArgs e)
+        private async void AboutDialog_ClickAsync(object sender, RoutedEventArgs e)
         {
             AboutDialog aboutDialog = new AboutDialog();
             await aboutDialog.ShowAsync();
