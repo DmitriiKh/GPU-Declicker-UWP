@@ -208,56 +208,58 @@ namespace GPU_Declicker_UWP_0._01
 
             // clear ClickWindowsGrid before adding new ClickWindows
             ClickWindowsGrid.Children.Clear();
-            // initialize offsets 
-            double cwOffsetX = 0;
+            // initialize offset
             double cwOffsetY = 0;
             
             if (audioData.IsStereo)
             {
-                // add text notation on top of the ClickWindowsGrid 
-                // before inserting clicks
-                TextBlock textBlock_LeftChannel = new TextBlock
-                {
-                    Text = "Left Channel Clicks"
-                };
-                ClickWindowsGrid.Children.Add(textBlock_LeftChannel);
-                cwOffsetY += textBlock_LeftChannel.FontSize * 2;
+                AddLabelToClickWindow(
+                    "Left Channel Clicks",
+                    ref cwOffsetY);
 
                 // insert left channel clicks
                 audioData.SetCurrentChannelType(ChannelType.Left);
-                DisplayClicks_ForChannel(audioData, ref cwOffsetX, ref cwOffsetY);
+                DisplayClicks_ForChannel(audioData, ref cwOffsetY);
 
-                // add text notation to the ClickWindowsGrid
-                cwOffsetX = 0;
-                TextBlock textBlock_RightChannel = new TextBlock
-                {
-                    Text = "Right Channel Clicks"
-                };
-                // using margin to position textBlock_RightChannel
-                Thickness margin = textBlock_RightChannel.Margin;
-                margin.Left = 0;
-                margin.Top = cwOffsetY;
-                textBlock_RightChannel.Margin = margin;
-                ClickWindowsGrid.Children.Add(textBlock_RightChannel);
-                cwOffsetY += textBlock_RightChannel.FontSize * 2;
+                AddLabelToClickWindow(
+                    "Right Channel Clicks", 
+                    ref cwOffsetY);
 
                 // insert right channel clicks
                 audioData.SetCurrentChannelType(ChannelType.Right);
-                DisplayClicks_ForChannel(audioData, ref cwOffsetX, ref cwOffsetY);
+                DisplayClicks_ForChannel(audioData, ref cwOffsetY);
             }
             // for mono
             else
             {
                 // insert clicks
-                DisplayClicks_ForChannel(audioData, ref cwOffsetX, ref cwOffsetY);
+                DisplayClicks_ForChannel(audioData, ref cwOffsetY);
             }
+        }
+
+        private void AddLabelToClickWindow(
+            string str, 
+            ref double cwOffsetY)
+        {
+            TextBlock textBlock = new TextBlock{ Text = str };
+
+            // using margin to position textBlock
+            Thickness margin = textBlock.Margin;
+            margin.Left = 0;  // on the left side
+            margin.Top = cwOffsetY;  // at the bottom
+            textBlock.Margin = margin;
+
+            ClickWindowsGrid.Children.Add(textBlock);
+
+            cwOffsetY += textBlock.FontSize * 2;
         }
 
         private void DisplayClicks_ForChannel(
             AudioData audioData, 
-            ref double cwOffsetX, 
             ref double cwOffsetY)
         {
+            double cwOffsetX = 0;
+
             // for every click in channel
             for (int clicks_index = 0; 
                 clicks_index < audioData.CurrentChannelGetNumberOfClicks(); 
