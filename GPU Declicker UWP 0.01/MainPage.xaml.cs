@@ -258,7 +258,8 @@ namespace GPU_Declicker_UWP_0._01
             AudioData audioData, 
             ref double cwOffsetY)
         {
-            double cwOffsetX = 0;
+            const double distanceBetweenClickWindows = 10;
+            double cwOffsetX = distanceBetweenClickWindows;
 
             // for every click in channel
             for (int clicks_index = 0; 
@@ -274,20 +275,50 @@ namespace GPU_Declicker_UWP_0._01
 
                 // insert the ClickWindow to ClickWindowsGrid
                 ClickWindowsGrid.Children.Add(clickWindow);
-                
-                // set offsets for next ClickWindow
-                if (cwOffsetX + 210 + 200 < ClickWindowsGrid.ActualWidth)
-                {
-                    cwOffsetX += 210;
-                }
-                else
-                {
-                    cwOffsetX = 0;
-                    cwOffsetY += 110;
-                }
+
+                SetOffsetsForNextClickWindow(
+                    ref cwOffsetX, 
+                    ref cwOffsetY,
+                    clickWindow.GetMainGridWidth(),
+                    clickWindow.GetMainGridHeight(),
+                    distanceBetweenClickWindows);
             }
-            // set cwOffsetY for new row
-            cwOffsetY += 110;
+
+            SetOffsetYForNextChanellClickWindows(
+                ref cwOffsetY,
+                distanceBetweenClickWindows);
+        }
+
+        private void SetOffsetYForNextChanellClickWindows(
+            ref double cwOffsetY,
+            double distanceBetweenClickWindows)
+        {
+            // use new ClickWindow to get height
+            cwOffsetY += new ClickWindow(
+                new AudioClick(
+                    512, 1, 3f, 
+                    new AudioDataMono(new float[1024]), 
+                    ChannelType.Left))
+                .GetMainGridHeight() +
+                distanceBetweenClickWindows;
+        }
+
+        private void SetOffsetsForNextClickWindow(
+            ref double cwOffsetX, 
+            ref double cwOffsetY, 
+            double width, 
+            double height, 
+            double distanceBetween)
+        {
+            cwOffsetX += width + distanceBetween;
+
+            // if no more space in the row
+            if (cwOffsetX + width > ClickWindowsGrid.ActualWidth)
+            {
+                // make a new row
+                cwOffsetX = distanceBetween;
+                cwOffsetY += height + distanceBetween;
+            }
         }
 
         private void PageSizeChangedEventHandler(object sender, SizeChangedEventArgs e)

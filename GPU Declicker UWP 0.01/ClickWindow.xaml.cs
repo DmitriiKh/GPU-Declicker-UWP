@@ -248,6 +248,10 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
+        internal double GetMainGridWidth() => MainGrid.Width;
+
+        internal double GetMainGridHeight() => MainGrid.Height;
+
         internal void SetMargin(double cwOffsetX, double cwOffsetY)
         {
             Thickness margin = Margin;
