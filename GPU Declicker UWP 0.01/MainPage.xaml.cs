@@ -84,7 +84,7 @@ namespace GPU_Declicker_UWP_0._01
                         "Message: " + ex.Message + "\n" +
                         "Source: " + ex.Source + "\n" +
                         "StackTrace: " + ex.StackTrace + "\n" +
-                        "InnerExeption" + ex.InnerException);
+                        "InnerExeption.Message: " + ex.InnerException.Message);
                 }
 
                 if (loadAudioResult == null)
