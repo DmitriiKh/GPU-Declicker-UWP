@@ -46,7 +46,7 @@ namespace GPU_Declicker_UWP_0._01
             if (init_result == null)
                 return;
             
-            audioInputFile = await PickFileOpenAsync();
+            audioInputFile = await PickInputFileAsync();
 
             // if file picked
             if (audioInputFile != null)
@@ -97,15 +97,22 @@ namespace GPU_Declicker_UWP_0._01
             }
             catch (Exception ex)
             {
-                await ShowErrorMessage("An error occured while trying to read file.\n" +
-                    "Details:\n" +
-                    "Message: " + ex.Message + "\n" +
-                    "Source: " + ex.Source + "\n" +
-                    "StackTrace: " + ex.StackTrace + "\n" +
-                    "InnerExeption.Message: " + ex.InnerException.Message);
+                await ShowExeptionAsync(
+                    "An error occured while trying to read file.",
+                    ex);
             }
 
             return loadAudioResult;
+        }
+
+        private async Task ShowExeptionAsync(string str, Exception ex)
+        {
+            await ShowErrorMessage(str + "\n" +
+               "Details:\n" +
+               "Message: " + ex.Message + "\n" +
+               "Source: " + ex.Source + "\n" +
+               "StackTrace: " + ex.StackTrace + "\n" +
+               "InnerExeption.Message: " + ex.InnerException?.Message);
         }
 
         private async Task<CreateAudioGraphResult> InitAudioInputOutputAsync()
@@ -125,7 +132,7 @@ namespace GPU_Declicker_UWP_0._01
             return initResult;
         }
 
-        private async Task<StorageFile> PickFileOpenAsync()
+        private async Task<StorageFile> PickInputFileAsync()
         {
             FileOpenPicker filePicker = new FileOpenPicker
             {
@@ -292,56 +299,68 @@ namespace GPU_Declicker_UWP_0._01
 
         private async void SaveAudioFile_Click(object sender, RoutedEventArgs e)
         {
-            CreateAudioGraphResult IO_init_result =
-                await audioInputOutput.Init(taskProgress);
+            CreateAudioGraphResult init_result =
+                 await InitAudioInputOutputAsync();
+            if (init_result == null)
+                return;
 
-            if (IO_init_result.Status != AudioGraphCreationStatus.Success)
+            audioOutputFile = await PickOutputFileAsync();
+
+            if (audioOutputFile != null)
+            {
+                CreateAudioFileOutputNodeResult saveAudioResult =
+                    await SaveAudioAsync();
+
+                await ProcessSaveAudioResultAsync(saveAudioResult);
+            }
+        }
+
+        private async Task ProcessSaveAudioResultAsync(CreateAudioFileOutputNodeResult saveAudioResult)
+        {
+            if (saveAudioResult == null)
+                return;
+
+            if (saveAudioResult.Status !=
+                AudioFileNodeCreationStatus.Success)
             {
                 await ShowErrorMessage(
-                    "AudioGraph creation error: "
-                    + IO_init_result.Status.ToString());
-                return;
+                    saveAudioResult.Status.ToString());
+            }
+        }
+
+        private async Task<CreateAudioFileOutputNodeResult> SaveAudioAsync()
+        {
+            CreateAudioFileOutputNodeResult saveAudioResult = null;
+
+            try
+            {
+                saveAudioResult =
+                    await audioInputOutput.SaveAudioToFile(
+                        audioOutputFile, 
+                        taskProgress, 
+                        taskStatus);
+            }
+            catch (Exception ex)
+            {
+                await ShowExeptionAsync(
+                    "An error occured while trying to save file.",
+                    ex);
             }
 
+            return saveAudioResult;
+        }
+
+        private async Task<StorageFile> PickOutputFileAsync()
+        {
             FileSavePicker filePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.MusicLibrary,
                 SuggestedFileName = audioInputFile.Name
             };
+
             filePicker.FileTypeChoices.Add("Audio file", new List<string>() { ".mp3", ".wav", ".wma", ".m4a" });
 
-            audioOutputFile = await filePicker.PickSaveFileAsync();
-
-            if (audioOutputFile != null)
-            {
-
-                CreateAudioFileOutputNodeResult save_audio_result = null;
-
-                try
-                {
-                    save_audio_result =
-                        await audioInputOutput.SaveAudioToFile(audioOutputFile, taskProgress, taskStatus);
-                }
-                catch (Exception ex)
-                {
-                    await ShowErrorMessage("An error occured while trying to save file.\n" +
-                        "Details:\n" +
-                        "Message: " + ex.Message + "\n" +
-                        "Source: " + ex.Source + "\n" +
-                        "StackTrace: " + ex.StackTrace + "\n" +
-                        "InnerExeption.Message: " + ex.InnerException.Message);
-                }
-
-                if (save_audio_result == null)
-                    return;
-
-                if (save_audio_result.Status !=
-                    AudioFileNodeCreationStatus.Success)
-                {
-                    await ShowErrorMessage(
-                        save_audio_result.Status.ToString());
-                }
-            }
+            return await filePicker.PickSaveFileAsync();
         }
 
         private async void AboutDialog_Click(object sender, RoutedEventArgs e)
