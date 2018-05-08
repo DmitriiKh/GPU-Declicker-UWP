@@ -38,65 +38,23 @@ namespace GPU_Declicker_UWP_0._01
     
         private async void OpenAudioFile_Click(object sender, RoutedEventArgs e)
         {
+            // remove all clicks from display
             ClickWindowsGrid.Children.Clear();
 
             CreateAudioGraphResult init_result = 
-                await audioInputOutput.Init(taskProgress);
-            
-            if (init_result.Status != AudioGraphCreationStatus.Success)
-            {
-                await ShowErrorMessage(
-                    "AudioGraph creation error: " 
-                    + init_result.Status.ToString()
-                    );
+                await InitAudioInputOutputAsync();
+            if (init_result == null)
                 return;
-            }
-
-            FileOpenPicker filePicker = new FileOpenPicker
-            {
-                SuggestedStartLocation = PickerLocationId.MusicLibrary
-            };
-            filePicker.FileTypeFilter.Add(".mp3");
-            filePicker.FileTypeFilter.Add(".wav");
-            filePicker.FileTypeFilter.Add(".wma");
-            filePicker.FileTypeFilter.Add(".m4a");
-            filePicker.ViewMode = PickerViewMode.Thumbnail;
-
-            audioInputFile = await filePicker.PickSingleFileAsync();
+            
+            audioInputFile = await PickFileOpenAsync();
 
             // if file picked
             if (audioInputFile != null)
             {
-                CreateAudioFileInputNodeResult loadAudioResult = null;
+                CreateAudioFileInputNodeResult loadAudioResult =
+                    await LoadAudioAsync();
 
-                try
-                {
-                    loadAudioResult =
-                        await audioInputOutput.LoadAudioFromFile(
-                            audioInputFile,
-                            taskProgress,
-                            taskStatus);
-                }
-                catch (Exception ex)
-                {
-                    await ShowErrorMessage("An error occured while trying to read file.\n" +
-                        "Details:\n" +  
-                        "Message: " + ex.Message + "\n" +
-                        "Source: " + ex.Source + "\n" +
-                        "StackTrace: " + ex.StackTrace + "\n" +
-                        "InnerExeption.Message: " + ex.InnerException.Message);
-                }
-
-                if (loadAudioResult == null)
-                    return;
-
-                if (loadAudioResult.Status != AudioFileNodeCreationStatus.Success)
-                {
-                    await ShowErrorMessage(loadAudioResult.Status.ToString());
-                    return;
-                }
-                else
-                    audioViewer.Fill(audioInputOutput.GetAudioData());
+                await ProcessLoadAudioResultAsync(loadAudioResult);
             }
             // if no file picked
             else
@@ -107,6 +65,79 @@ namespace GPU_Declicker_UWP_0._01
             // enable Scan button but not Save button yet
             ScanButton.IsEnabled = true;
             SaveButton.IsEnabled = false;
+        }
+
+        private async Task ProcessLoadAudioResultAsync(
+            CreateAudioFileInputNodeResult loadAudioResult)
+        {
+
+            if (loadAudioResult == null)
+                return;
+
+            if (loadAudioResult.Status != AudioFileNodeCreationStatus.Success)
+            {
+                await ShowErrorMessage(loadAudioResult.Status.ToString());
+                return;
+            }
+            else
+                audioViewer.Fill(audioInputOutput.GetAudioData());
+        }
+
+        private async Task<CreateAudioFileInputNodeResult> LoadAudioAsync()
+        {
+            CreateAudioFileInputNodeResult loadAudioResult = null;
+
+            try
+            {
+                loadAudioResult =
+                    await audioInputOutput.LoadAudioFromFile(
+                        audioInputFile,
+                        taskProgress,
+                        taskStatus);
+            }
+            catch (Exception ex)
+            {
+                await ShowErrorMessage("An error occured while trying to read file.\n" +
+                    "Details:\n" +
+                    "Message: " + ex.Message + "\n" +
+                    "Source: " + ex.Source + "\n" +
+                    "StackTrace: " + ex.StackTrace + "\n" +
+                    "InnerExeption.Message: " + ex.InnerException.Message);
+            }
+
+            return loadAudioResult;
+        }
+
+        private async Task<CreateAudioGraphResult> InitAudioInputOutputAsync()
+        {
+            CreateAudioGraphResult initResult =
+                await audioInputOutput.Init(taskProgress);
+
+            if (initResult.Status != AudioGraphCreationStatus.Success)
+            {
+                await ShowErrorMessage(
+                    "AudioGraph creation error: "
+                    + initResult.Status.ToString()
+                    );
+                return null;
+            }
+
+            return initResult;
+        }
+
+        private async Task<StorageFile> PickFileOpenAsync()
+        {
+            FileOpenPicker filePicker = new FileOpenPicker
+            {
+                SuggestedStartLocation = PickerLocationId.MusicLibrary
+            };
+            filePicker.FileTypeFilter.Add(".mp3");
+            filePicker.FileTypeFilter.Add(".wav");
+            filePicker.FileTypeFilter.Add(".wma");
+            filePicker.FileTypeFilter.Add(".m4a");
+            filePicker.ViewMode = PickerViewMode.Thumbnail;
+
+            return await filePicker.PickSingleFileAsync();
         }
 
         private async Task ShowErrorMessage(string message)
