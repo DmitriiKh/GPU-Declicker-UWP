@@ -80,7 +80,7 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         // move OffsetPositionX to the right for shiftX samples
-        public void GoNextX(int deltaX)
+        private void GoNextX(int deltaX)
         {
             if (audioData == null) return;
             // Calculate number of samples to shift
@@ -125,7 +125,7 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         // move OffsetPositionX to the right for shiftX samples 
-        public void GoPrevX(int X)
+        private void GoPrevX(int X)
         {
             if (audioData == null) return;
             // Calculate number of samples to shift
@@ -267,7 +267,7 @@ namespace GPU_Declicker_UWP_0._01
         /// Returns offset in samples for pointer position
         /// </summary>
         /// <param name="pointerPosition"> pointer position on waveForm</param>
-        public int PointerOffsetPosition(double pointerPosition)
+        private int PointerOffsetPosition(double pointerPosition)
             => (int)(pointerPosition * audioDataToWaveFormRatio)
                 + OffsetPosition;
 
@@ -276,7 +276,7 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         /// <param name="Offset"> offset for pointer position</param>
         /// <param name="pointerPosition"> X of pointer position on waveForm</param>
-        public void SetOffsetForPointer(int Offset, double pointerPosition)
+        private void SetOffsetForPointer(int Offset, double pointerPosition)
         {
             OffsetPosition = Offset - (int)(pointerPosition * audioDataToWaveFormRatio);
             if (OffsetPosition < 0)
