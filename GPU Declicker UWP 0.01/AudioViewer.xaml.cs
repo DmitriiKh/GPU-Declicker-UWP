@@ -170,11 +170,12 @@ namespace GPU_Declicker_UWP_0._01
         {
             int offsetY = (int)waveFormLeftChannel.ActualHeight / 2;
             int start = OffsetPosition + (int)(x * audioDataToWaveFormRatio);
-            if (start >= audioData.LengthSamples())
+            int length = (int)audioDataToWaveFormRatio;
+
+            if (start < 0 || start + length >= audioData.LengthSamples())
             {
                 return;
             }
-            int length = (int)audioDataToWaveFormRatio;
 
             // looks for max and min among many samples represented by a point on wave form
             FindMinMax(start, length, out float min, out float max);
