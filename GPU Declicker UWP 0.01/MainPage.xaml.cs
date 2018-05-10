@@ -75,10 +75,7 @@ namespace GPU_Declicker_UWP_0._01
                 return;
 
             if (loadAudioResult.Status != AudioFileNodeCreationStatus.Success)
-            {
                 await ShowErrorMessageAsync(loadAudioResult.Status.ToString());
-                return;
-            }
             else
                 audioViewer.Fill(audioInputOutput.GetAudioData());
         }
