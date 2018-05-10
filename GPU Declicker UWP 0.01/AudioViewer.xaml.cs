@@ -191,22 +191,29 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         /// <summary>
-        /// Looks for max and min among many samples represented by a point on wave form
+        /// Looks for max and min values among many samples represented 
+        /// by a point on wave form
         /// </summary>
-        /// <param name="start">first sample position</param>
+        /// <param name="begining">first sample position</param>
         /// <param name="length">number of samples</param>
-        /// <param name="min">min value</param>
-        /// <param name="max">max value</param>
-        private void FindMinMax(int start, int length, out float min, out float max)
+        /// <param name="minValue">min value</param>
+        /// <param name="maxValue">max value</param>
+        private void FindMinMax(
+            int begining, 
+            int length, 
+            out float minValue, 
+            out float maxValue)
         {
-            min = audioData.GetInputSample(start);
-            max = audioData.GetInputSample(start);
-            for (int j = 0; j < length && start + j < audioData.LengthSamples(); j++)
+            minValue = audioData.GetInputSample(begining);
+            maxValue = audioData.GetInputSample(begining);
+            for (int index = 0; 
+                index < length && begining + index < audioData.LengthSamples(); 
+                index++)
             {
-                if (audioData.GetInputSample(start + j) < min)
-                    min = audioData.GetInputSample(start + j);
-                if (audioData.GetInputSample(start + j) > max)
-                    max = audioData.GetInputSample(start + j);
+                if (audioData.GetInputSample(begining + index) < minValue)
+                    minValue = audioData.GetInputSample(begining + index);
+                if (audioData.GetInputSample(begining + index) > maxValue)
+                    maxValue = audioData.GetInputSample(begining + index);
             }
         }
 
