@@ -102,6 +102,7 @@
     <Compile Include="AudioDataTests.cs" />
     <Compile Include="AudioInputOutputTests.cs" />
     <Compile Include="AudioProcessingTests.cs" />
+    <Compile Include="AudioViewerTests.cs" />
     <Compile Include="BurgPredictionCalculatorTests.cs" />
     <Compile Include="ClickLengthFinderTests.cs" />
     <Compile Include="ClickRepairerTests.cs" />
