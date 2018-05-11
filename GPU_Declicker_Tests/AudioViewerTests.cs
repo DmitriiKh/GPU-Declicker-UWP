@@ -6,6 +6,10 @@ namespace GPU_Declicker_Tests
     [TestClass]
     public class AudioViewerTests
     {
-
+        [TestMethod]
+        public void Fill_HighFreqSignal_()
+        {
+            
+        }
     }
 }
