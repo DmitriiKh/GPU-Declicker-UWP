@@ -21,45 +21,37 @@ namespace GPU_Declicker_UWP_0._01
             RightChannelWaveFormPoints = new PointCollection();
         }
 
+        // These two collections of points are Binded to Polylines 
+        // in XAML that represent WaveForms on screen
         private PointCollection LeftChannelWaveFormPoints { get; set; }
         private PointCollection RightChannelWaveFormPoints { get; set; }
-        
 
+        // These are updated every time when WaveForm's size changed
+        // by event handler WaveFormLeftChannel_SizeChanged
         private double WaveFormWidth = 100;
         private double WaveFormHeight = 100;
-
-        /// <summary>
-        /// audio samples to view
-        /// </summary>
+        
+        // audio samples to view
         private AudioData audioData = null;
-
-        /// <summary>
-        /// offset from beginning of audioData to beginning waveForm
-        /// </summary>
+        
+        // offset from beginning of audioData to beginning waveForm
         private int OffsetPosition;
-
-        /// <summary>
-        /// magnification ratio
-        /// when set to 1, waveForm is most detailed
-        /// when set to R, waveForm drops each R-1 from R audioData samples
-        /// </summary>
+        
+        // magnification ratio
+        // when set to 1, waveForm is most detailed
+        // when set to R, waveForm drops each R-1 from R audioData samples
         private double audioDataToWaveFormRatio = 1;
-
-        /// <summary>
-        /// Last mouse pointer position touching waveForms
-        /// Used to calculate new OffsetPosition when user slides waveForms
-        /// </summary>
+        
+        // Last mouse pointer position touching waveForms
+        // Used to calculate new OffsetPosition when user slides waveForms
         public Point PointerLastPosition { get; internal set; }
-
-        /// <summary>
-        /// True when when user slides waveForms
-        /// </summary>
+        
+        // True when when user slides waveForms
         public bool IsMovingByMouse { get; internal set; }
 
         /// <summary>
         /// Fills this with AudioData, sets Ratio and OffsetPosition
         /// </summary>
-        /// <param name="audioDataInput"></param>
         public void Fill(AudioData audioDataInput)
         {
             OffsetPosition = 0;
