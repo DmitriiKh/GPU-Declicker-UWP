@@ -353,7 +353,7 @@ namespace GPU_Declicker_UWP_0._01
                 audioDataToWaveFormRatio =
                     audioData.LengthSamples() / WaveFormWidth;
 
-            DrawWaveForm();
+            //DrawWaveForm function not called because it slows down significantly
         }
     }
 }
