@@ -212,6 +212,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             minValue = audioData.GetInputSample(begining);
             maxValue = audioData.GetInputSample(begining);
+            
             for (int index = 0; 
                 index < length && begining + index < audioData.LengthSamples(); 
                 index++)
@@ -220,7 +221,7 @@ namespace GPU_Declicker_UWP_0._01
                     minValue = audioData.GetInputSample(begining + index);
                 if (audioData.GetInputSample(begining + index) > maxValue)
                     maxValue = audioData.GetInputSample(begining + index);
-            }
+            }  
         }
 
         /// <summary>
@@ -253,17 +254,6 @@ namespace GPU_Declicker_UWP_0._01
             else
                 audioDataToWaveFormRatio =
                 audioData.LengthSamples() / WaveFormWidth;
-
-            DrawWaveForm();
-        }
-
-        internal void AudioViewerSizeChanged()
-        {
-            OffsetPosition = 0;
-            // Sets Ratio to show whole audio track
-            if (audioData != null)
-                audioDataToWaveFormRatio =
-                    audioData.LengthSamples() / WaveFormWidth;
 
             DrawWaveForm();
         }
@@ -352,10 +342,18 @@ namespace GPU_Declicker_UWP_0._01
                 WaveFormsGroup_PointerPressed(sender, e);
         }
 
-        private void WaveFormLeftChannel_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        private void WaveForm_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
         {
             WaveFormHeight = waveFormLeftChannel.ActualHeight;
             WaveFormWidth = waveFormLeftChannel.ActualWidth;
+
+            OffsetPosition = 0;
+            // Sets Ratio to show whole audio track
+            if (audioData != null)
+                audioDataToWaveFormRatio =
+                    audioData.LengthSamples() / WaveFormWidth;
+
+            DrawWaveForm();
         }
     }
 }

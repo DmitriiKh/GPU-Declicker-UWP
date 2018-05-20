@@ -16,21 +16,21 @@
             PointerReleased="WaveFormsGroup_PointerReleased"
             PointerMoved="WaveFormsGroup_PointerMoved"
             PointerExited="WaveFormsGroup_PointerExited"
-            PointerEntered="WaveFormsGroup_PointerEntered">
+            PointerEntered="WaveFormsGroup_PointerEntered"
+            SizeChanged="WaveForm_SizeChanged">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Polyline Grid.Row="0" 
-                          Points="{x:Bind LeftChannelWaveFormPoints, Mode=OneWay}" 
-                          Name="waveFormLeftChannel" 
-                          Stroke="{StaticResource ApplicationForegroundThemeBrush}"
-                          StrokeThickness="1"
-                          SizeChanged="WaveFormLeftChannel_SizeChanged"/>
+                    Points="{x:Bind LeftChannelWaveFormPoints, Mode=OneWay}" 
+                    Name="waveFormLeftChannel" 
+                    Stroke="{StaticResource ApplicationForegroundThemeBrush}"
+                    StrokeThickness="1"/>
         <Polyline Grid.Row="1" 
-                          Points="{x:Bind RightChannelWaveFormPoints, Mode=OneWay}" 
-                          Name="waveFormRightCnannel" 
-                          Stroke="{Binding ElementName=waveFormLeftChannel, Path=Stroke}"
-                          StrokeThickness="{Binding ElementName=waveFormLeftChannel, Path=StrokeThickness}"/>
+                    Points="{x:Bind RightChannelWaveFormPoints, Mode=OneWay}" 
+                    Name="waveFormRightCnannel" 
+                    Stroke="{Binding ElementName=waveFormLeftChannel, Path=Stroke}"
+                    StrokeThickness="{Binding ElementName=waveFormLeftChannel, Path=StrokeThickness}"/>
     </Grid>
 </UserControl>

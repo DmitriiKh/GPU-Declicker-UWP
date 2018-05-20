@@ -320,7 +320,6 @@ namespace GPU_Declicker_UWP_0._01
 
         private void PageSizeChangedEventHandler(object sender, SizeChangedEventArgs e)
         {
-            audioViewer.AudioViewerSizeChanged();
             DisplayClicks();
         }
 
