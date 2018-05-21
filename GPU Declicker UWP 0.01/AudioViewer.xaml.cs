@@ -356,7 +356,7 @@ namespace GPU_Declicker_UWP_0._01
         private void WaveForm_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
         {
             WaveFormHeight = waveFormLeftChannel.ActualHeight;
-            WaveFormWidth = waveFormLeftChannel.ActualWidth;
+            WaveFormWidth = waveFormsGroup.ActualWidth;
 
             OffsetPosition = 0;
             // Sets Ratio to show whole audio track
