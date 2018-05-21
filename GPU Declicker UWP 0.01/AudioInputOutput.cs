@@ -66,7 +66,9 @@ namespace GPU_Declicker_UWP_0._01
 
             CreateAudioGraphResult result = 
                 await AudioGraph.CreateAsync(settings);
-            audioGraph = result.Graph;
+
+            if (result.Status == AudioGraphCreationStatus.Success)
+                audioGraph = result.Graph;
             
             return result;
         }
