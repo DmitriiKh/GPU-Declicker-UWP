@@ -400,16 +400,17 @@ namespace GPU_Declicker_UWP_0._01
                             dataInFloat[index + 1] = 0;
                         }
                     }
+
                     audioDataCurrentPosition++;
+                    if (audioDataCurrentPosition >= audioData.LengthSamples())
+                    {
+                        // last frame may be not full
+                        Finished = true;
+                        return frame;
+                    }
                 }
             }
-
-            if (audioDataCurrentPosition >= audioData.LengthSamples())
-            {
-                // last frame may be not full
-                Finished = true;
-            }
-
+            
             return frame;
 
         }
