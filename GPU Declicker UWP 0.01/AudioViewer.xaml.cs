@@ -1,12 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Windows.Foundation;
 using Windows.UI.Input;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Shapes;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -19,6 +17,19 @@ namespace GPU_Declicker_UWP_0._01
             this.InitializeComponent();
             LeftChannelWaveFormPoints = new PointCollection();
             RightChannelWaveFormPoints = new PointCollection();
+            _redrawingTimer = new DispatcherTimer();
+            _redrawingTimer.Tick += _redrawingTimer_Tick;
+            _redrawingTimer.Interval = TimeSpan.FromSeconds(0.1);
+        }
+        
+        // this timer creates a delay between WaveForm size changing and its redrawing
+        // to make resizing faster
+        private DispatcherTimer _redrawingTimer;
+
+        private void _redrawingTimer_Tick(object sender, object e)
+        {
+            _redrawingTimer.Stop();
+            DrawWaveForm();
         }
 
         // These two collections of points are Binded to Polylines 
@@ -353,7 +364,9 @@ namespace GPU_Declicker_UWP_0._01
                 audioDataToWaveFormRatio =
                     audioData.LengthSamples() / WaveFormWidth;
 
-            //DrawWaveForm function not called because it slows down significantly
+            // DrawWaveForm function not called because it slows down significantly
+            // It will start after a delay
+            _redrawingTimer.Start();
         }
     }
 }
