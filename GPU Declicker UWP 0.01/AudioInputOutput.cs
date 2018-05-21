@@ -386,7 +386,7 @@ namespace GPU_Declicker_UWP_0._01
                     if (channelCount == 2)
                     {
                         // if processed audio is sretero
-                        if (audioData.IsStereo == true)
+                        if (audioData.IsStereo)
                         {
                             GetAudioData().SetCurrentChannelType(ChannelType.Right);
                             dataInFloat[index + 1] = audioData.GetOutputSample(
