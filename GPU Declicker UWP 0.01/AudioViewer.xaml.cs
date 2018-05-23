@@ -34,14 +34,14 @@ namespace GPU_Declicker_UWP_0._01
 
         // These two collections of points are Binded to Polylines 
         // in XAML that represent WaveForms on screen
-        private PointCollection LeftChannelWaveFormPoints { get; set; }
-        private PointCollection RightChannelWaveFormPoints { get; set; }
+        public PointCollection LeftChannelWaveFormPoints { get; set; }
+        public PointCollection RightChannelWaveFormPoints { get; set; }
 
         // These are updated every time when WaveForm's size changed
         // by event handler WaveFormLeftChannel_SizeChanged
-        private double WaveFormWidth = 100;
-        private double WaveFormHeight = 100;
-        
+        public double WaveFormWidth { get ; set; }
+        public double WaveFormHeight { get; set; }
+
         // audio samples to view
         private AudioData audioData = null;
         
