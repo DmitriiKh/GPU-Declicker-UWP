@@ -173,9 +173,9 @@
     <Content Include="Properties\UnitTestApp.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GPU Declicker UWP 0.01\GPU Declicker UWP 0.01.csproj">
+    <ProjectReference Include="..\GPU Declicker UWP 0.01\GPUDeclickerUWP.csproj">
       <Project>{d58852a8-707d-466d-b4e6-74ad591b69e0}</Project>
-      <Name>GPU Declicker UWP 0.01</Name>
+      <Name>GPUDeclickerUWP</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
