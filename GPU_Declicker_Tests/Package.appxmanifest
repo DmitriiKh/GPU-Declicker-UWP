@@ -5,7 +5,7 @@
   <Properties>
     <DisplayName>GPU_Declicker_Tests</DisplayName>
     <PublisherDisplayName>dimki</PublisherDisplayName>
-    <Logo>Assets1\PackageLogo.png</Logo>
+    <Logo>Assets1\1PackageLogo.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
@@ -15,15 +15,15 @@
   </Resources>
   <Applications>
     <Application Id="vstest.executionengine.universal.App" Executable="$targetnametoken$.exe" EntryPoint="GPU_Declicker_Tests.App">
-      <uap:VisualElements DisplayName="GPU_Declicker_Tests" Square150x150Logo="Assets1\MediumTile.png" Square44x44Logo="Assets1\AppIcon.png" Description="GPU_Declicker_Tests" BackgroundColor="transparent">
-        <uap:DefaultTile Square310x310Logo="Assets1\LargeTile.png" Wide310x150Logo="Assets1\WideTile.png" Square71x71Logo="Assets1\SmallTile.png">
+      <uap:VisualElements DisplayName="GPU_Declicker_Tests" Square150x150Logo="Assets1\MediumTile1.png" Square44x44Logo="Assets1\AppIcon1.png" Description="GPU_Declicker_Tests" BackgroundColor="transparent">
+        <uap:DefaultTile Square310x310Logo="Assets1\LargeTile1.png" Wide310x150Logo="Assets1\WideTile1.png" Square71x71Logo="Assets1\SmallTile1.png">
           <uap:ShowNameOnTiles>
             <uap:ShowOn Tile="square150x150Logo" />
             <uap:ShowOn Tile="wide310x150Logo" />
             <uap:ShowOn Tile="square310x310Logo" />
           </uap:ShowNameOnTiles>
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets1\SplashScreen.png" />
+        <uap:SplashScreen Image="Assets1\SplashScreen1.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
