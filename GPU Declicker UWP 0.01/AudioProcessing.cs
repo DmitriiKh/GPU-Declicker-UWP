@@ -237,7 +237,7 @@ namespace GPU_Declicker_UWP_0._01
             int cpu_core
             )
         {
-            AttemptToFixResult result = new AttemptToFixResult
+            FixResult result = new FixResult
             {
                 Success = false
             };

@@ -4,13 +4,13 @@ namespace GPU_Declicker_UWP_0._01
 {
     public static class ClickLengthFinder
     {
-        public static AttemptToFixResult FindLengthOfClick(
+        public static FixResult FindLengthOfClick(
             AudioData audioData,
             int initPosition,
             int maxLength,
             int positionOfLastProcessedSample)
         {
-            AttemptToFixResult bestResult = new AttemptToFixResult
+            FixResult bestResult = new FixResult
             {
                 Success = false
             };
@@ -28,7 +28,7 @@ namespace GPU_Declicker_UWP_0._01
                     position, 
                     audioData.AudioProcessingSettings.HistoryLengthSamples + maxLength);
 
-                AttemptToFixResult result = TryToFix(audioData,
+                FixResult result = TryToFix(audioData,
                         position,
                         maxLength,
                         initPosition - position);
@@ -88,13 +88,13 @@ namespace GPU_Declicker_UWP_0._01
             return backup;
         }
 
-        private static AttemptToFixResult TryToFix(
+        private static FixResult TryToFix(
             AudioData audioData, 
             int index, 
             int maxLength,
             int minLength)
         {
-            AttemptToFixResult result = new AttemptToFixResult
+            FixResult result = new FixResult
             {
                 Success = false,
                 Position = index,
