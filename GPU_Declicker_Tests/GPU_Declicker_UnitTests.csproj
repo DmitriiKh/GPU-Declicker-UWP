@@ -125,96 +125,6 @@
     <None Include="GPU_Declicker_Tests_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-16.png" />
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-24.png" />
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-256.png" />
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-32.png" />
-    <Content Include="Assets\1AppIcon.altform-unplated_targetsize-48.png" />
-    <Content Include="Assets\1AppIcon.scale-100.png" />
-    <Content Include="Assets\1AppIcon.scale-125.png" />
-    <Content Include="Assets\1AppIcon.scale-150.png" />
-    <Content Include="Assets\1AppIcon.scale-200.png" />
-    <Content Include="Assets\1AppIcon.scale-400.png" />
-    <Content Include="Assets\1AppIcon.targetsize-16.png" />
-    <Content Include="Assets\1AppIcon.targetsize-24.png" />
-    <Content Include="Assets\1AppIcon.targetsize-256.png" />
-    <Content Include="Assets\1AppIcon.targetsize-32.png" />
-    <Content Include="Assets\1AppIcon.targetsize-48.png" />
-    <Content Include="Assets\1LargeTile.scale-100.png" />
-    <Content Include="Assets\1LargeTile.scale-125.png" />
-    <Content Include="Assets\1LargeTile.scale-150.png" />
-    <Content Include="Assets\1LargeTile.scale-200.png" />
-    <Content Include="Assets\1LargeTile.scale-400.png" />
-    <Content Include="Assets\1MediumTile.scale-100.png" />
-    <Content Include="Assets\1MediumTile.scale-125.png" />
-    <Content Include="Assets\1MediumTile.scale-150.png" />
-    <Content Include="Assets\1MediumTile.scale-200.png" />
-    <Content Include="Assets\1MediumTile.scale-400.png" />
-    <Content Include="Assets\1PackageLogo.scale-100.png" />
-    <Content Include="Assets\1PackageLogo.scale-125.png" />
-    <Content Include="Assets\1PackageLogo.scale-150.png" />
-    <Content Include="Assets\1PackageLogo.scale-200.png" />
-    <Content Include="Assets\1PackageLogo.scale-400.png" />
-    <Content Include="Assets\1SmallTile.scale-100.png" />
-    <Content Include="Assets\1SmallTile.scale-125.png" />
-    <Content Include="Assets\1SmallTile.scale-150.png" />
-    <Content Include="Assets\1SmallTile.scale-200.png" />
-    <Content Include="Assets\1SmallTile.scale-400.png" />
-    <Content Include="Assets\1SplashScreen.scale-100.png" />
-    <Content Include="Assets\1SplashScreen.scale-125.png" />
-    <Content Include="Assets\1SplashScreen.scale-150.png" />
-    <Content Include="Assets\1SplashScreen.scale-200.png" />
-    <Content Include="Assets\1SplashScreen.scale-400.png" />
-    <Content Include="Assets\1WideTile.scale-100.png" />
-    <Content Include="Assets\1WideTile.scale-125.png" />
-    <Content Include="Assets\1WideTile.scale-150.png" />
-    <Content Include="Assets\1WideTile.scale-200.png" />
-    <Content Include="Assets\1WideTile.scale-400.png" />
-    <Content Include="Assets\AppIcon.altform-unplated_targetsize-16.png" />
-    <Content Include="Assets\AppIcon.altform-unplated_targetsize-24.png" />
-    <Content Include="Assets\AppIcon.altform-unplated_targetsize-256.png" />
-    <Content Include="Assets\AppIcon.altform-unplated_targetsize-32.png" />
-    <Content Include="Assets\AppIcon.altform-unplated_targetsize-48.png" />
-    <Content Include="Assets\AppIcon.scale-100.png" />
-    <Content Include="Assets\AppIcon.scale-125.png" />
-    <Content Include="Assets\AppIcon.scale-150.png" />
-    <Content Include="Assets\AppIcon.scale-200.png" />
-    <Content Include="Assets\AppIcon.scale-400.png" />
-    <Content Include="Assets\AppIcon.targetsize-16.png" />
-    <Content Include="Assets\AppIcon.targetsize-24.png" />
-    <Content Include="Assets\AppIcon.targetsize-256.png" />
-    <Content Include="Assets\AppIcon.targetsize-32.png" />
-    <Content Include="Assets\AppIcon.targetsize-48.png" />
-    <Content Include="Assets\LargeTile.scale-100.png" />
-    <Content Include="Assets\LargeTile.scale-125.png" />
-    <Content Include="Assets\LargeTile.scale-150.png" />
-    <Content Include="Assets\LargeTile.scale-200.png" />
-    <Content Include="Assets\LargeTile.scale-400.png" />
-    <Content Include="Assets\MediumTile.scale-100.png" />
-    <Content Include="Assets\MediumTile.scale-125.png" />
-    <Content Include="Assets\MediumTile.scale-150.png" />
-    <Content Include="Assets\MediumTile.scale-200.png" />
-    <Content Include="Assets\MediumTile.scale-400.png" />
-    <Content Include="Assets\PackageLogo.scale-100.png" />
-    <Content Include="Assets\PackageLogo.scale-125.png" />
-    <Content Include="Assets\PackageLogo.scale-150.png" />
-    <Content Include="Assets\PackageLogo.scale-200.png" />
-    <Content Include="Assets\PackageLogo.scale-400.png" />
-    <Content Include="Assets\SmallTile.scale-100.png" />
-    <Content Include="Assets\SmallTile.scale-125.png" />
-    <Content Include="Assets\SmallTile.scale-150.png" />
-    <Content Include="Assets\SmallTile.scale-200.png" />
-    <Content Include="Assets\SmallTile.scale-400.png" />
-    <Content Include="Assets\SplashScreen.scale-100.png" />
-    <Content Include="Assets\SplashScreen.scale-125.png" />
-    <Content Include="Assets\SplashScreen.scale-150.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-400.png" />
-    <Content Include="Assets\WideTile.scale-100.png" />
-    <Content Include="Assets\WideTile.scale-125.png" />
-    <Content Include="Assets\WideTile.scale-150.png" />
-    <Content Include="Assets\WideTile.scale-200.png" />
-    <Content Include="Assets\WideTile.scale-400.png" />
     <Content Include="Properties\UnitTestApp.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +146,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assets\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
