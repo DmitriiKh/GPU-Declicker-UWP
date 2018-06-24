@@ -1,5 +1,6 @@
 # GPU-Declicker-UWP
 The app automatically finds and repairs damaged samples (clicks, pops, bit rots) in audio files. 
+![Alt text](/2017-11-25.png?raw=true "GPU-Declicker-UWP")
 
 <b>Basic Using</b>
 
@@ -20,5 +21,3 @@ AudioGraph API used for reading and writing audio files.
 <b>Known Issuses</b>
 
 Lengths of input and output files are different by about 1000 samples.
-
-Attempt to open unreadable audio file causes an exeption and a crash.
