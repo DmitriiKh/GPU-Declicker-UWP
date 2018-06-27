@@ -1,8 +1,8 @@
-﻿using GPU_Declicker_UWP_0._01;
+﻿using System;
+using Windows.Foundation;
+using GPU_Declicker_UWP_0._01;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.AppContainer;
-using System;
-using Windows.Foundation;
 
 namespace GPU_Declicker_Tests
 {

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GPU_Declicker_UWP_0._01
+﻿namespace GPU_Declicker_UWP_0._01
 {
     public static class ClickRepairer
     {
@@ -12,9 +6,10 @@ namespace GPU_Declicker_UWP_0._01
         /// Replace output sample at position with prediction and 
         /// sets prediction error sample to zero
         /// </summary>
+        /// <param name="audioData"></param>
         /// <param name="position"></param>
         /// <param name="lenght"></param>
-        static public float Repair(AudioData audioData, int position, int lenght)
+        public static float Repair(AudioData audioData, int position, int lenght)
         {
             for (int index = position; index < position + lenght; index++)
             {

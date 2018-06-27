@@ -1,6 +1,5 @@
 ﻿using GPU_Declicker_UWP_0._01;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace GPU_Declicker_Tests
 {
@@ -384,12 +383,12 @@ namespace GPU_Declicker_Tests
             _audioClickFirst.ChangeAproved();
             Assert.AreNotEqual(_audioClickFirst.Aproved, aprovedState, 
                 "Failed ChangeAproved (first change): should not be " 
-                + aprovedState.ToString());
+                + aprovedState);
             // second change
             _audioClickFirst.ChangeAproved();
             Assert.AreEqual(_audioClickFirst.Aproved, aprovedState,
                 "Failed ChangeAproved (second change): should be "
-                + aprovedState.ToString());
+                + aprovedState);
         }
     }
 }

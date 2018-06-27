@@ -15,7 +15,7 @@ namespace GPU_Declicker_UWP_0._01
         public int Length { get; private set; }
         public float ThresholdLevelDetected { get; private set; }
         public bool Aproved { get; private set; }
-        public ChannelType FromChannel { get; }
+        private ChannelType FromChannel { get; }
         const bool Shrinked = true;
         const bool NotShrinked = false;
 
@@ -44,7 +44,7 @@ namespace GPU_Declicker_UWP_0._01
             if (other is null)
                 return 1;
             // return the same result as for positions comparison
-            return this.Position.CompareTo(other.Position);
+            return Position.CompareTo(other.Position);
         }
 
         public override bool Equals(object obj)
@@ -53,14 +53,14 @@ namespace GPU_Declicker_UWP_0._01
                 return false;
 
             AudioClick audioClick = (AudioClick)obj;
-            return this.Position == audioClick.Position;
+            return Position == audioClick.Position;
         }
 
         public override int GetHashCode()
         {
-            return this.Position.GetHashCode() ^ 
-                this.Length.GetHashCode() ^
-                this.FromChannel.GetHashCode();
+            return Position.GetHashCode() ^ 
+                Length.GetHashCode() ^
+                FromChannel.GetHashCode();
         }
 
         public static bool operator == (AudioClick left, AudioClick right)

@@ -184,9 +184,7 @@ namespace GPU_Declicker_UWP_0._01
 
             int cpuCoreNumber = Environment.ProcessorCount;
 
-            int segmentLenght = (int)(
-                audioData.LengthSamples() / cpuCoreNumber
-                );
+            int segmentLenght = audioData.LengthSamples() / cpuCoreNumber;
             // make segments overlap
             segmentLenght += 1;
 

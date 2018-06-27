@@ -59,8 +59,7 @@ namespace GPU_Declicker_UWP_0._01
             if (position - positionOfLastProcessedSample < maxDepth)
                 return positionOfLastProcessedSample;
             // go for full maxDepth
-            else
-                return position - maxDepth;
+            return position - maxDepth;
         }
 
         private static void RestorePredictionErrAverage(

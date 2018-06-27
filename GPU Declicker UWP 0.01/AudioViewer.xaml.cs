@@ -14,7 +14,7 @@ namespace GPU_Declicker_UWP_0._01
     {
         public AudioViewer()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             LeftChannelWaveFormPoints = new PointCollection();
             RightChannelWaveFormPoints = new PointCollection();
             _redrawingTimer = new DispatcherTimer();
@@ -43,7 +43,7 @@ namespace GPU_Declicker_UWP_0._01
         public double WaveFormHeight { get; set; }
 
         // audio samples to view
-        private AudioData audioData = null;
+        private AudioData audioData;
         
         // offset from beginning of audioData to beginning waveForm
         private int OffsetPosition;
@@ -301,48 +301,48 @@ namespace GPU_Declicker_UWP_0._01
             PointerPoint pointer = e.GetCurrentPoint(this); 
             Point pointerPosition = pointer.Position;
             // calculates offset for samples at pointer
-            int offsetAtPointer = this.PointerOffsetPosition(pointerPosition.X);
+            int offsetAtPointer = PointerOffsetPosition(pointerPosition.X);
             PointerPointProperties pointerProperties = pointer.Properties;
             int delta = pointerProperties.MouseWheelDelta;
             if (delta > 0)
-                this.MagnifyMore();
+                MagnifyMore();
             else
-                this.MagnifyLess();
+                MagnifyLess();
             // set pointer at the same position
-            this.SetOffsetForPointer(offsetAtPointer, pointerPosition.X);
+            SetOffsetForPointer(offsetAtPointer, pointerPosition.X);
         }
 
         private void WaveFormsGroup_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             PointerPoint pointer = e.GetCurrentPoint(this); 
-            this.PointerLastPosition = pointer.Position;
-            this.IsMovingByMouse = true;
+            PointerLastPosition = pointer.Position;
+            IsMovingByMouse = true;
         }
 
         private void WaveFormsGroup_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            this.IsMovingByMouse = false;
+            IsMovingByMouse = false;
         }
 
         private void WaveFormsGroup_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (this.IsMovingByMouse)
+            if (IsMovingByMouse)
             {
                 PointerPoint pointer = e.GetCurrentPoint(this); 
-                int shiftX = (int)(this.PointerLastPosition.X - pointer.Position.X);
+                int shiftX = (int)(PointerLastPosition.X - pointer.Position.X);
                 if (shiftX > 0)
-                    this.GoNextX(Math.Abs(shiftX));
+                    GoNextX(Math.Abs(shiftX));
                 else
-                    this.GoPrevX(Math.Abs(shiftX));
+                    GoPrevX(Math.Abs(shiftX));
 
-                this.PointerLastPosition = pointer.Position;
+                PointerLastPosition = pointer.Position;
             }
         }
 
         private void WaveFormsGroup_PointerExited(object sender, PointerRoutedEventArgs e)
         {
             WaveFormsGroup_PointerReleased(sender, e);
-            this.IsMovingByMouse = false;
+            IsMovingByMouse = false;
         }
 
         private void WaveFormsGroup_PointerEntered(object sender, PointerRoutedEventArgs e)
@@ -353,7 +353,7 @@ namespace GPU_Declicker_UWP_0._01
                 WaveFormsGroup_PointerPressed(sender, e);
         }
 
-        private void WaveForm_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        private void WaveForm_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             WaveFormHeight = waveFormLeftChannel.ActualHeight;
             WaveFormWidth = waveFormsGroup.ActualWidth;

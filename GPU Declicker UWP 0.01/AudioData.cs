@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace GPU_Declicker_UWP_0._01
+﻿namespace GPU_Declicker_UWP_0._01
 {
-    public enum ChannelType { Left, Right };
+    public enum ChannelType { Left, Right }
     
     public abstract class AudioData
     {

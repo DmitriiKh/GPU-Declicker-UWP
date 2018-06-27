@@ -1,6 +1,5 @@
 ﻿using GPU_Declicker_UWP_0._01;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace GPU_Declicker_Tests
 {
@@ -48,7 +47,7 @@ namespace GPU_Declicker_Tests
                 Assert.AreEqual(
                     0.5f, 
                     _audioData.GetOutputSample(index), 
-                    "error at index " + index.ToString());
+                    "error at index " + index);
         }
 
         [TestMethod]
@@ -62,7 +61,7 @@ namespace GPU_Declicker_Tests
                 Assert.AreEqual(
                     0.5f,
                     _audioData.GetOutputSample(index),
-                    "error at index " + index.ToString());
+                    "error at index " + index);
         }
     }
 }

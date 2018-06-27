@@ -6,7 +6,7 @@ namespace GPU_Declicker_UWP_0._01
     {
         public AboutDialog()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

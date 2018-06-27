@@ -1,10 +1,9 @@
 ﻿
 using System;
 using System.Threading.Tasks;
+using Windows.Storage;
 using GPU_Declicker_UWP_0._01;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Windows.Media.Audio;
-using Windows.Storage;
 
 namespace GPU_Declicker_Tests
 {

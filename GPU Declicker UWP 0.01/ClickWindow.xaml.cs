@@ -30,7 +30,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public ClickWindow(AudioClick audioClick)
         {
-            this.InitializeComponent();
+            InitializeComponent();
             audioClickBinded = audioClick;
             Threshold_level_detected.Text = audioClick.ThresholdLevelDetected.ToString("0.0");
             Position.Text = audioClick.Position.ToString("0");
@@ -59,13 +59,13 @@ namespace GPU_Declicker_UWP_0._01
             int cwStartPos = (int)(
                 audioClickBinded.Position + 
                 audioClickBinded.Length / 2 - 
-                this.MainGrid.Width / 2);
+                MainGrid.Width / 2);
             // set Input polylyne
-            for (int i = 0; i < this.MainGrid.Width; i++)
+            for (int i = 0; i < MainGrid.Width; i++)
             {
                 float s = audioClickBinded.GetInputSample(cwStartPos + i);
                 double y = 100 * (-s + 1) / 2;
-                Input.Points.Add(new Point((double)i, y));
+                Input.Points.Add(new Point(i, y));
             }
             // set Output polyline two samples wider than click
             for (int i = audioClickBinded.Position - cwStartPos - 1; 
@@ -74,7 +74,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 float s = audioClickBinded.GetOutputSample(cwStartPos + i);
                 double y = 100 * (-s + 1) / 2;
-                Output.Points.Add(new Point((double)i, y));
+                Output.Points.Add(new Point(i, y));
             }
         }
 

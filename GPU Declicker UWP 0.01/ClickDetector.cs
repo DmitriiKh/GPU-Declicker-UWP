@@ -4,7 +4,7 @@ namespace GPU_Declicker_UWP_0._01
 {
     public static class ClickDetector
     {
-        static public bool IsSampleSuspicious(
+        public static bool IsSampleSuspicious(
             AudioData audioData,
             int position)
         {
@@ -17,8 +17,7 @@ namespace GPU_Declicker_UWP_0._01
             if (thresholdLevelDetected > 
                 audioData.AudioProcessingSettings.ThresholdForDetection)
                 return true;
-            else
-                return false;
+            return false;
         }
     }
 }

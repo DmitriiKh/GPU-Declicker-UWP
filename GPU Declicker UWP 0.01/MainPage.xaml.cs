@@ -23,16 +23,16 @@ namespace GPU_Declicker_UWP_0._01
 
         public MainPage()
         {
-            this.InitializeComponent();
+            InitializeComponent();
 
             audioInputOutput = new AudioInputOutput();
             
             // initialize variables for subclasses to report progress and status 
             taskProgress = new Progress<double>(
-                (p) => { ProgressBar.Value = p; }
+                p => { ProgressBar.Value = p; }
                 );
             taskStatus = new Progress<string>(
-                (s) => { Status.Text = s; }
+                s => { Status.Text = s; }
                 );
         }
     
@@ -121,7 +121,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 await ShowErrorMessageAsync(
                     "AudioGraph creation error: "
-                    + initResult.Status.ToString()
+                    + initResult.Status
                     );
                 return null;
             }
@@ -384,7 +384,7 @@ namespace GPU_Declicker_UWP_0._01
                 SuggestedFileName = audioInputFile.Name
             };
 
-            filePicker.FileTypeChoices.Add("Audio file", new List<string>() { ".mp3", ".wav", ".wma", ".m4a" });
+            filePicker.FileTypeChoices.Add("Audio file", new List<string> { ".mp3", ".wav", ".wma", ".m4a" });
 
             return await filePicker.PickSaveFileAsync();
         }

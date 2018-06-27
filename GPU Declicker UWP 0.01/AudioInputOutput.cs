@@ -5,6 +5,7 @@ using Windows.Foundation;
 using Windows.Media;
 using Windows.Media.Audio;
 using Windows.Media.MediaProperties;
+using Windows.Media.Render;
 using Windows.Storage;
 
 namespace GPU_Declicker_UWP_0._01
@@ -54,7 +55,7 @@ namespace GPU_Declicker_UWP_0._01
             // initialize settings for AudioGraph
             AudioGraphSettings settings =
                 new AudioGraphSettings(
-                    Windows.Media.Render.AudioRenderCategory.Media
+                    AudioRenderCategory.Media
                     );
 
             // if audioGraph was previously created
@@ -78,6 +79,8 @@ namespace GPU_Declicker_UWP_0._01
         /// starts AudioGraph, waits till loading of samples is finished
         /// </summary>
         /// <param name="file"> Input audio file</param>
+        /// <param name="progress"></param>
+        /// <param name="status"></param>
         public async Task<CreateAudioFileInputNodeResult>
             LoadAudioFromFile(
             StorageFile file,
@@ -195,7 +198,7 @@ namespace GPU_Declicker_UWP_0._01
         /// <summary>
         /// Transfers samples from a frame to AudioData
         /// </summary>
-        unsafe private void ProcessInputFrame(AudioFrame frame)
+        private unsafe void ProcessInputFrame(AudioFrame frame)
         {
             
             using (AudioBuffer buffer =
@@ -339,7 +342,7 @@ namespace GPU_Declicker_UWP_0._01
 
         private MediaEncodingProfile CreateMediaEncodingProfile(StorageFile file)
         {
-            switch (file.FileType.ToString().ToLowerInvariant())
+            switch (file.FileType.ToLowerInvariant())
             {
                 case ".wma":
                     return MediaEncodingProfile.CreateWma(AudioEncodingQuality.High);
@@ -352,7 +355,7 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        unsafe private AudioFrame ProcessOutputFrame(int requiredSamples)
+        private unsafe AudioFrame ProcessOutputFrame(int requiredSamples)
         {
             uint bufferSize = (uint)requiredSamples * sizeof(float) *
                 fileOutputNode.EncodingProperties.ChannelCount; 
