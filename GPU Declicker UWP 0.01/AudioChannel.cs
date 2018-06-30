@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 
 namespace GPU_Declicker_UWP_0._01
 {
@@ -109,21 +108,9 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        public void ChangeClickAproved(int index)
-        {
-            _clicksList[index].ChangeAproved();
-        }
-
         public AudioClick GetClick(int index)
         {
             return _clicksList[index];
-        }
-
-        public AudioClick GetLastClick()
-        {
-            if (_clicksList.Count > 0) return _clicksList.Last();
-
-            return null;
         }
 
         internal void ClearAllClicks()

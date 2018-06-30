@@ -29,11 +29,6 @@
             CurrentAudioChannel.RestoreInitState(position, lenght);
         }
 
-        public float GetPredictionErrBackup(int position)
-        {
-            return CurrentAudioChannel.GetPredictionErrBackup(position);
-        }
-
         public void SetCurrentChannelIsPreprocessed()
         {
             CurrentAudioChannel.ChannelIsPreprocessed = true;
@@ -81,19 +76,9 @@
             return CurrentAudioChannel.GetNumberOfClicks();
         }
 
-        public void ChangeClickAproved(int index)
-        {
-            CurrentAudioChannel.ChangeClickAproved(index);
-        }
-
         public AudioClick GetClick(int index)
         {
             return CurrentAudioChannel.GetClick(index);
-        }
-
-        public AudioClick GetLastClick()
-        {
-            return CurrentAudioChannel.GetLastClick();
         }
 
         public float GetInputSample(int position)

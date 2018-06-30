@@ -9,7 +9,7 @@ namespace GPU_Declicker_UWP_0._01
         public float ThresholdLevelDetected { get; set; }
     }
 
-    public class AudioClick : IComparable<AudioClick>
+    public sealed class AudioClick : IComparable<AudioClick>
     {
         private const bool Shrinked = true;
         private const bool NotShrinked = false;
@@ -161,7 +161,7 @@ namespace GPU_Declicker_UWP_0._01
             OnClickChanged(NotShrinked);
         }
 
-        protected virtual void OnClickChanged(bool shrinked)
+        private void OnClickChanged(bool shrinked)
         {
             var e = new ClickEventArgs {Shrinked = shrinked};
 

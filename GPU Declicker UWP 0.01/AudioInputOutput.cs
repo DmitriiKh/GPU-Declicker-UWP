@@ -82,12 +82,10 @@ namespace GPU_Declicker_UWP_0._01
         ///     starts AudioGraph, waits till loading of samples is finished
         /// </summary>
         /// <param name="file"> Input audio file</param>
-        /// <param name="progress"></param>
         /// <param name="status"></param>
         public async Task<CreateAudioFileInputNodeResult>
             LoadAudioFromFile(
                 StorageFile file,
-                IProgress<double> progress,
                 IProgress<string> status)
         {
             _finished = false;
@@ -243,7 +241,6 @@ namespace GPU_Declicker_UWP_0._01
         public async Task<CreateAudioFileOutputNodeResult>
             SaveAudioToFile(
                 StorageFile file,
-                IProgress<double> progress,
                 IProgress<string> status)
         {
             _finished = false;
@@ -343,7 +340,8 @@ namespace GPU_Declicker_UWP_0._01
                 case ".wav":
                     return MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
                 default:
-                    throw new ArgumentException("Can't create MediaEncodingProfile for this file extention");
+                    throw new ArgumentException(
+                        "Can't create MediaEncodingProfile for this file extention");
             }
         }
 

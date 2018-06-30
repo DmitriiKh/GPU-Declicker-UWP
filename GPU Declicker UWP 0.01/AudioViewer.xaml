@@ -28,7 +28,6 @@
                   StrokeThickness="1" />
         <Polyline Grid.Row="1"
                   Points="{x:Bind RightChannelWaveFormPoints, Mode=OneWay}"
-                  Name="WaveFormRightCnannel"
                   Stroke="{Binding ElementName=WaveFormLeftChannel, Path=Stroke}"
                   StrokeThickness="{Binding ElementName=WaveFormLeftChannel, Path=StrokeThickness}" />
     </Grid>

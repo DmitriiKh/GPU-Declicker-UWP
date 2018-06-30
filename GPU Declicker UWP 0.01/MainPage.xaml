@@ -8,50 +8,50 @@
     mc:Ignorable="d"
     SizeChanged="PageSizeChangedEventHandler">
 
-    <Grid Name="MainGrid"
-          Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="15*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Name="TopGrid">
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="12*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Name="LeftButtonsGroup">
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Viewbox Grid.Row="0" Stretch="Fill">
-                    <Button Name="GoLeftBigStep" Click="GoLeftBigStep_Click" Content="&lt;&lt;" />
+                    <Button Click="GoLeftBigStep_Click" Content="&lt;&lt;" />
                 </Viewbox>
                 <Viewbox Grid.Row="1" Stretch="Fill">
-                    <Button Name="GoLeftSmallStep" Click="GoLeftSmallStep_Click" Content="&lt;" />
+                    <Button Click="GoLeftSmallStep_Click" Content="&lt;" />
                 </Viewbox>
             </Grid>
 
             <local:AudioViewer Grid.Column="1"
                                x:Name="AudioViewer" />
 
-            <Grid Grid.Column="2" Name="RightButtonsGroup">
+            <Grid Grid.Column="2">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Viewbox Grid.Row="0" Stretch="Fill">
-                    <Button Name="GoRightBigStep" Click="GoRightBigStep_Click" Content="&gt;&gt;" />
+                    <Button Click="GoRightBigStep_Click" Content="&gt;&gt;" />
                 </Viewbox>
                 <Viewbox Grid.Row="1" Stretch="Fill">
-                    <Button Name="GoRightSmallStep" Click="GoRightSmallStep_Click" Content="&gt;" />
+                    <Button Click="GoRightSmallStep_Click" Content="&gt;" />
                 </Viewbox>
             </Grid>
-            <Grid Grid.Column="3" Name="SpecialButtonsGroup">
+            <Grid Grid.Column="3">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -64,7 +64,7 @@
                 </Viewbox>
             </Grid>
         </Grid>
-        <Grid Name="ButtonsGrid" Grid.Row="1">
+        <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -98,7 +98,6 @@
                         SmallChange="0.1"
                         VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="0"
-                           Name="ThresholdVal"
                            Text="{Binding ElementName=ThresholdSlider,
                         Path=Value, 
                         Mode=TwoWay}"
@@ -123,7 +122,6 @@
                         SmallChange="1"
                         VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="0"
-                           Name="MaxLengthVal"
                            Text="{Binding ElementName=MaxLengthSlider, 
                     Path=Value}"
                            VerticalAlignment="Top"
@@ -144,7 +142,6 @@
                     HorizontalAlignment="Center"
                     IsEnabled="False" />
             <Button Grid.Column="6"
-                    Name="AboutButton"
                     Content="About"
                     Click="AboutDialog_ClickAsync"
                     VerticalAlignment="Center"
@@ -160,7 +157,7 @@
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
             <Grid Name="ClickWindowsGrid" />
         </ScrollViewer>
-        <Grid Grid.Row="3" Name="BottomGrid" VerticalAlignment="Bottom">
+        <Grid Grid.Row="3" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2*" />

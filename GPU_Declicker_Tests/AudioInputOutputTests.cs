@@ -41,7 +41,7 @@ namespace GPU_Declicker_Tests
             var audioOutputFile = await testFolder.GetFileAsync("test.wav");
 
             if (audioOutputFile != null)
-                await audioInputOutput.SaveAudioToFile(audioOutputFile, taskProgress, taskStatus);
+                await audioInputOutput.SaveAudioToFile(audioOutputFile, taskStatus);
         }
     }
 }

@@ -88,7 +88,6 @@ namespace GPU_Declicker_UWP_0._01
                 loadAudioResult =
                     await _audioInputOutput.LoadAudioFromFile(
                         _audioInputFile,
-                        _taskProgress,
                         _taskStatus);
             }
             catch (Exception ex)
@@ -372,7 +371,6 @@ namespace GPU_Declicker_UWP_0._01
                 saveAudioResult =
                     await _audioInputOutput.SaveAudioToFile(
                         _audioOutputFile,
-                        _taskProgress,
                         _taskStatus);
             }
             catch (Exception ex)
