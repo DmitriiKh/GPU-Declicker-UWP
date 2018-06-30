@@ -124,7 +124,7 @@
     <Compile Include="AudioViewer.xaml.cs">
       <DependentUpon>AudioViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AttemptToFixResult.cs" />
+    <Compile Include="FixResult.cs" />
     <Compile Include="BurgPredictionCalculator.cs" />
     <Compile Include="ClickDetector.cs" />
     <Compile Include="ClickLengthFinder.cs" />
