@@ -9,9 +9,9 @@
 
         public bool BetterThan(FixResult anotherResult)
         {
-            if ((Success && !anotherResult.Success) ||
-                (Length < anotherResult.Length) || 
-                (ErrSum / anotherResult.ErrSum < 0.01))
+            if (Success && !anotherResult.Success ||
+                Length < anotherResult.Length ||
+                ErrSum / anotherResult.ErrSum < 0.01)
                 return true;
             return false;
         }

@@ -5,21 +5,21 @@ namespace GPU_Declicker_UWP_0._01
     public static class BurgPredictionCalculator
     {
         /// <summary>
-        /// Calculates one prediction error value for one sample using CPU
-        /// For details please see 
-        /// "A tutorial on Burg's method, algorithm and recursion.pdf"
+        ///     Calculates one prediction error value for one sample using CPU
+        ///     For details please see
+        ///     "A tutorial on Burg's method, algorithm and recursion.pdf"
         /// </summary>
         public static void Calculate(
-            float[] inputaudio, 
+            float[] inputaudio,
             float[] forwardPredictions,
-            float[] backwardPredictions, 
+            float[] backwardPredictions,
             int position,
             int coefficientsNumber,
             int historyLengthSamples)
         {
             var b = new double[historyLengthSamples];
             var f = new double[historyLengthSamples];
-            var a = new double[(coefficientsNumber + 1)];
+            var a = new double[coefficientsNumber + 1];
 
             for (var I = 0; I < historyLengthSamples; I++)
             {
@@ -71,17 +71,17 @@ namespace GPU_Declicker_UWP_0._01
 
             var accum = 0.0;
             for (var I = 1; I <= coefficientsNumber; I++)
-                accum += inputaudio[position - I] * (-1) * a[I];
+                accum += inputaudio[position - I] * -1 * a[I];
 
-            forwardPredictions[position] = (float)accum;
+            forwardPredictions[position] = (float) accum;
 
             accum = 0.0;
             for (var I = 1; I <= coefficientsNumber; I++)
                 accum += inputaudio[position - historyLengthSamples + I] *
-                    (-1) * a[I];
+                         -1 * a[I];
 
             backwardPredictions[position - historyLengthSamples] =
-                (float)accum;
+                (float) accum;
         }
     }
 }

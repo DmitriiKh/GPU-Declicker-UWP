@@ -8,13 +8,13 @@ namespace GPU_Declicker_UWP_0._01
             AudioData audioData,
             int position)
         {
-            float error = (Math.Abs(audioData.GetPredictionErr(position)));
-            
-            float errorAverage = audioData.GetErrorAverage(position - 15);
+            var error = Math.Abs(audioData.GetPredictionErr(position));
 
-            float thresholdLevelDetected = error / errorAverage;
+            var errorAverage = audioData.GetErrorAverage(position - 15);
 
-            if (thresholdLevelDetected > 
+            var thresholdLevelDetected = error / errorAverage;
+
+            if (thresholdLevelDetected >
                 audioData.AudioProcessingSettings.ThresholdForDetection)
                 return true;
             return false;

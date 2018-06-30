@@ -1,14 +1,14 @@
 ﻿namespace GPU_Declicker_UWP_0._01
 {
     /// <summary>
-    /// Represents stereo audio samples and includes information 
-    /// about damaged samples
+    ///     Represents stereo audio samples and includes information
+    ///     about damaged samples
     /// </summary>
     public class AudioDataStereo : AudioData
     {
-        private ChannelType currentChannelType;
         private readonly AudioChannel leftChannel;
         private readonly AudioChannel rightChannel;
+        private ChannelType currentChannelType;
 
         public AudioDataStereo(float[] leftChannelSamples, float[] rightChannelSamples)
         {
@@ -21,8 +21,10 @@
             AudioProcessingSettings = new AudioProcessingSettings();
         }
 
-        public override ChannelType GetCurrentChannelType() =>
-            currentChannelType;
+        public override ChannelType GetCurrentChannelType()
+        {
+            return currentChannelType;
+        }
 
         public override void SetCurrentChannelType(ChannelType channelType)
         {

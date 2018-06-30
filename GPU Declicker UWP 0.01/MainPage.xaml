@@ -8,87 +8,87 @@
     mc:Ignorable="d"
     SizeChanged="PageSizeChangedEventHandler">
 
-    <Grid Name="mainGrid" 
+    <Grid Name="mainGrid"
           Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="15*"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="3*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="15*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid Grid.Row="0" Name="topGrid">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="12*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="12*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Grid Grid.Column="0" Name="leftButtonsGroup">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Viewbox  Grid.Row="0" Stretch="Fill">
-                    <Button Name="GoLeftBigStep" Click="GoLeftBigStep_Click" Content="&lt;&lt;"/>
+                <Viewbox Grid.Row="0" Stretch="Fill">
+                    <Button Name="GoLeftBigStep" Click="GoLeftBigStep_Click" Content="&lt;&lt;" />
                 </Viewbox>
                 <Viewbox Grid.Row="1" Stretch="Fill">
-                    <Button Name="GoLeftSmallStep" Click="GoLeftSmallStep_Click" Content="&lt;"/>
+                    <Button Name="GoLeftSmallStep" Click="GoLeftSmallStep_Click" Content="&lt;" />
                 </Viewbox>
             </Grid>
 
-            <local:AudioViewer Grid.Column="1" 
-                               x:Name="audioViewer"/>
-            
+            <local:AudioViewer Grid.Column="1"
+                               x:Name="audioViewer" />
+
             <Grid Grid.Column="2" Name="rightButtonsGroup">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Viewbox Grid.Row="0" Stretch="Fill">
-                    <Button Name="GoRightBigStep" Click="GoRightBigStep_Click" Content="&gt;&gt;"/>
+                    <Button Name="GoRightBigStep" Click="GoRightBigStep_Click" Content="&gt;&gt;" />
                 </Viewbox>
                 <Viewbox Grid.Row="1" Stretch="Fill">
-                    <Button Name="GoRightSmallStep" Click="GoRightSmallStep_Click" Content="&gt;"/>
+                    <Button Name="GoRightSmallStep" Click="GoRightSmallStep_Click" Content="&gt;" />
                 </Viewbox>
             </Grid>
             <Grid Grid.Column="3" Name="specialButtonsGroup">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Viewbox Grid.Row="0" Stretch="Fill">
-                    <Button Content="Mag+" Click="MagnifyMore_Click"/>
+                    <Button Content="Mag+" Click="MagnifyMore_Click" />
                 </Viewbox>
                 <Viewbox Grid.Row="1" Stretch="Fill">
-                    <Button Content="Mag-" Click="MagnifyLess_Click"/>
+                    <Button Content="Mag-" Click="MagnifyLess_Click" />
                 </Viewbox>
             </Grid>
         </Grid>
         <Grid Name="ButtonsGrid" Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="100" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" 
+            <Button Grid.Column="0"
                     Name="OpenButton"
-                    Content="Open" 
-                    Click="OpenAudioFile_ClickAsync" 
-                    VerticalAlignment="Center" 
-                    HorizontalAlignment="Center"/>
+                    Content="Open"
+                    Click="OpenAudioFile_ClickAsync"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center" />
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
-                    Text="Detection level"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Left"/>
+                           Text="Detection level"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left" />
                 <Slider Grid.Row="1"
                         Name="Threshold_Slider"
                         Value="10"
@@ -96,59 +96,59 @@
                         Maximum="50"
                         StepFrequency="0.1"
                         SmallChange="0.1"
-                        VerticalAlignment="Bottom"/>
+                        VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="0"
-                    Name="Threshold_val"
-                    Text="{Binding ElementName=Threshold_Slider,
+                           Name="Threshold_val"
+                           Text="{Binding ElementName=Threshold_Slider,
                         Path=Value, 
                         Mode=TwoWay}"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Right"/>
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Right" />
             </Grid>
             <Grid Grid.Column="3">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
-                    Text="Max length"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Left"/>
+                           Text="Max length"
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Left" />
                 <Slider Grid.Row="1"
-                    Name="Max_length_Slider"
-                    Value="250"
-                    Minimum="1"
-                    Maximum="500"
-                    StepFrequency="1"
-                    SmallChange="1"
-                    VerticalAlignment="Bottom"/>
+                        Name="Max_length_Slider"
+                        Value="250"
+                        Minimum="1"
+                        Maximum="500"
+                        StepFrequency="1"
+                        SmallChange="1"
+                        VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="0"
-                    Name="Max_length_val"
-                    Text="{Binding ElementName=Max_length_Slider, 
+                           Name="Max_length_val"
+                           Text="{Binding ElementName=Max_length_Slider, 
                     Path=Value}"
-                    VerticalAlignment="Top"
-                    HorizontalAlignment="Right"/>
+                           VerticalAlignment="Top"
+                           HorizontalAlignment="Right" />
             </Grid>
-            <Button Grid.Column="4" 
+            <Button Grid.Column="4"
                     Name="ScanButton"
-                    Content="Scan" 
-                    Click="Scan_ClickAsync" 
-                    VerticalAlignment="Center" 
+                    Content="Scan"
+                    Click="Scan_ClickAsync"
+                    VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    IsEnabled="False"/>
-            <Button Grid.Column="5" 
+                    IsEnabled="False" />
+            <Button Grid.Column="5"
                     Name="SaveButton"
-                    Content="Save" 
-                    Click="SaveAudioFile_ClickAsync" 
-                    VerticalAlignment="Center" 
+                    Content="Save"
+                    Click="SaveAudioFile_ClickAsync"
+                    VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    IsEnabled="False"/>
-            <Button Grid.Column="6" 
+                    IsEnabled="False" />
+            <Button Grid.Column="6"
                     Name="AboutButton"
-                    Content="About" 
-                    Click="AboutDialog_ClickAsync" 
-                    VerticalAlignment="Center" 
-                    HorizontalAlignment="Center"/>
+                    Content="About"
+                    Click="AboutDialog_ClickAsync"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center" />
             <!--<Button Grid.Column="4" 
                     Name="SaveClicksButton"
                     Content="Save Clicks" 
@@ -158,15 +158,16 @@
                     IsEnabled="True"/> -->
         </Grid>
         <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-            <Grid Name="ClickWindowsGrid"/>
+            <Grid Name="ClickWindowsGrid" />
         </ScrollViewer>
         <Grid Grid.Row="3" Name="BottomGrid" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Name="Status" HorizontalAlignment="Left"/>
-            <ProgressBar Grid.Column="1" Name="ProgressBar" Value="0" Maximum="100" Width="Auto" HorizontalAlignment="Stretch"/>
+            <TextBlock Grid.Column="0" Name="Status" HorizontalAlignment="Left" />
+            <ProgressBar Grid.Column="1" Name="ProgressBar" Value="0" Maximum="100" Width="Auto"
+                         HorizontalAlignment="Stretch" />
         </Grid>
     </Grid>
 </Page>

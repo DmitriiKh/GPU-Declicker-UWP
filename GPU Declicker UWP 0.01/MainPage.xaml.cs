@@ -13,45 +13,45 @@ namespace GPU_Declicker_UWP_0._01
     public sealed partial class MainPage : Page
     {
         private StorageFile audioInputFile;
+
+        private readonly AudioInputOutput audioInputOutput;
         private StorageFile audioOutputFile;
 
-        AudioInputOutput audioInputOutput;
-
         // variables for subclasses to report progress and status
-        Progress<double> taskProgress;
-        Progress<string> taskStatus;
+        private readonly Progress<double> taskProgress;
+        private readonly Progress<string> taskStatus;
 
         public MainPage()
         {
             InitializeComponent();
 
             audioInputOutput = new AudioInputOutput();
-            
+
             // initialize variables for subclasses to report progress and status 
             taskProgress = new Progress<double>(
                 p => { ProgressBar.Value = p; }
-                );
+            );
             taskStatus = new Progress<string>(
                 s => { Status.Text = s; }
-                );
+            );
         }
-    
+
         private async void OpenAudioFile_ClickAsync(object sender, RoutedEventArgs e)
         {
             // remove all clicks from display
             ClickWindowsGrid.Children.Clear();
 
-            CreateAudioGraphResult init_result = 
+            var init_result =
                 await InitAudioInputOutputAsync();
             if (init_result == null)
                 return;
-            
+
             audioInputFile = await PickInputFileAsync();
 
             // if file picked
             if (audioInputFile != null)
             {
-                CreateAudioFileInputNodeResult loadAudioResult =
+                var loadAudioResult =
                     await LoadAudioAsync();
 
                 await ProcessLoadAudioResultAsync(loadAudioResult);
@@ -61,7 +61,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 return;
             }
-            
+
             // enable Scan button but not Save button yet
             ScanButton.IsEnabled = true;
             SaveButton.IsEnabled = false;
@@ -70,7 +70,6 @@ namespace GPU_Declicker_UWP_0._01
         private async Task ProcessLoadAudioResultAsync(
             CreateAudioFileInputNodeResult loadAudioResult)
         {
-
             if (loadAudioResult == null)
                 return;
 
@@ -105,16 +104,16 @@ namespace GPU_Declicker_UWP_0._01
         private async Task ShowExeptionAsync(string str, Exception ex)
         {
             await ShowErrorMessageAsync(str + "\n" +
-               "Details:\n" +
-               "Message: " + ex.Message + "\n" +
-               "Source: " + ex.Source + "\n" +
-               "StackTrace: " + ex.StackTrace + "\n" +
-               "InnerExeption.Message: " + ex.InnerException?.Message);
+                                        "Details:\n" +
+                                        "Message: " + ex.Message + "\n" +
+                                        "Source: " + ex.Source + "\n" +
+                                        "StackTrace: " + ex.StackTrace + "\n" +
+                                        "InnerExeption.Message: " + ex.InnerException?.Message);
         }
 
         private async Task<CreateAudioGraphResult> InitAudioInputOutputAsync()
         {
-            CreateAudioGraphResult initResult =
+            var initResult =
                 await audioInputOutput.Init(taskProgress);
 
             if (initResult.Status != AudioGraphCreationStatus.Success)
@@ -122,7 +121,7 @@ namespace GPU_Declicker_UWP_0._01
                 await ShowErrorMessageAsync(
                     "AudioGraph creation error: "
                     + initResult.Status
-                    );
+                );
                 return null;
             }
 
@@ -131,7 +130,7 @@ namespace GPU_Declicker_UWP_0._01
 
         private async Task<StorageFile> PickInputFileAsync()
         {
-            FileOpenPicker filePicker = new FileOpenPicker
+            var filePicker = new FileOpenPicker
             {
                 SuggestedStartLocation = PickerLocationId.MusicLibrary
             };
@@ -151,28 +150,40 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         private void GoLeftBigStep_Click(object sender, RoutedEventArgs e)
-            => audioViewer.GoPrevBigStep();
+        {
+            audioViewer.GoPrevBigStep();
+        }
 
-        private void GoLeftSmallStep_Click(object sender, RoutedEventArgs e) 
-            => audioViewer.GoPrevSmalStep();
+        private void GoLeftSmallStep_Click(object sender, RoutedEventArgs e)
+        {
+            audioViewer.GoPrevSmalStep();
+        }
 
-        private void GoRightBigStep_Click(object sender, RoutedEventArgs e) 
-            => audioViewer.GoNextBigStep();
+        private void GoRightBigStep_Click(object sender, RoutedEventArgs e)
+        {
+            audioViewer.GoNextBigStep();
+        }
 
-        private void GoRightSmallStep_Click(object sender, RoutedEventArgs e) 
-            => audioViewer.GoNextSmalStep();
+        private void GoRightSmallStep_Click(object sender, RoutedEventArgs e)
+        {
+            audioViewer.GoNextSmalStep();
+        }
 
-        private void MagnifyLess_Click(object sender, RoutedEventArgs e) 
-            => audioViewer.MagnifyLess();
+        private void MagnifyLess_Click(object sender, RoutedEventArgs e)
+        {
+            audioViewer.MagnifyLess();
+        }
 
-        private void MagnifyMore_Click(object sender, RoutedEventArgs e) 
-            => audioViewer.MagnifyMore();
-        
-        
+        private void MagnifyMore_Click(object sender, RoutedEventArgs e)
+        {
+            audioViewer.MagnifyMore();
+        }
+
+
         private async void Scan_ClickAsync(object sender, RoutedEventArgs e)
         {
-            AudioData audioData = audioInputOutput.GetAudioData();
-            
+            var audioData = audioInputOutput.GetAudioData();
+
             // disable all buttons
             OpenButton.IsEnabled = false;
             ScanButton.IsEnabled = false;
@@ -180,10 +191,10 @@ namespace GPU_Declicker_UWP_0._01
             Threshold_Slider.IsEnabled = false;
             Max_length_Slider.IsEnabled = false;
 
-            audioData.AudioProcessingSettings.ThresholdForDetection = 
-                (float)Threshold_Slider.Value;
+            audioData.AudioProcessingSettings.ThresholdForDetection =
+                (float) Threshold_Slider.Value;
             audioData.AudioProcessingSettings.MaxLengthCorrection =
-                (int)Max_length_Slider.Value;
+                (int) Max_length_Slider.Value;
             await Task.Run(() => AudioProcessing.ProcessAudioAsync(
                 audioData, taskProgress, taskStatus));
 
@@ -193,13 +204,13 @@ namespace GPU_Declicker_UWP_0._01
             SaveButton.IsEnabled = true;
             Threshold_Slider.IsEnabled = true;
             Max_length_Slider.IsEnabled = true;
-            
+
             DisplayClicks();
         }
 
         private void DisplayClicks()
         {
-            AudioData audioData = audioInputOutput.GetAudioData();
+            var audioData = audioInputOutput.GetAudioData();
             if (audioData == null)
                 return;
 
@@ -207,7 +218,7 @@ namespace GPU_Declicker_UWP_0._01
             ClickWindowsGrid.Children.Clear();
             // initialize offset
             double cwOffsetY = 10;
-            
+
             if (audioData.IsStereo)
             {
                 AddLabelToClickWindow(
@@ -219,7 +230,7 @@ namespace GPU_Declicker_UWP_0._01
                 DisplayClicks_ForChannel(audioData, ref cwOffsetY);
 
                 AddLabelToClickWindow(
-                    "Right Channel Clicks", 
+                    "Right Channel Clicks",
                     ref cwOffsetY);
 
                 // insert right channel clicks
@@ -235,15 +246,15 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         private void AddLabelToClickWindow(
-            string str, 
+            string str,
             ref double cwOffsetY)
         {
-            TextBlock textBlock = new TextBlock{ Text = str };
+            var textBlock = new TextBlock {Text = str};
 
             // using margin to position textBlock
-            Thickness margin = textBlock.Margin;
-            margin.Left = 0;  // on the left side
-            margin.Top = cwOffsetY;  // at the bottom
+            var margin = textBlock.Margin;
+            margin.Left = 0; // on the left side
+            margin.Top = cwOffsetY; // at the bottom
             textBlock.Margin = margin;
 
             ClickWindowsGrid.Children.Add(textBlock);
@@ -252,20 +263,20 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         private void DisplayClicks_ForChannel(
-            AudioData audioData, 
+            AudioData audioData,
             ref double cwOffsetY)
         {
             const double distanceBetweenClickWindows = 10;
-            double cwOffsetX = distanceBetweenClickWindows;
+            var cwOffsetX = distanceBetweenClickWindows;
 
             // for every click in channel
-            for (int clicks_index = 0; 
-                clicks_index < audioData.CurrentChannelGetNumberOfClicks(); 
+            for (var clicks_index = 0;
+                clicks_index < audioData.CurrentChannelGetNumberOfClicks();
                 clicks_index++)
             {
                 // make new ClickWindow for a click
-                AudioClick click = audioData.GetClick(clicks_index);
-                ClickWindow clickWindow = new ClickWindow(click);
+                var click = audioData.GetClick(clicks_index);
+                var clickWindow = new ClickWindow(click);
 
                 // set ClickWindow margin to position ClickWindow
                 clickWindow.SetMargin(cwOffsetX, cwOffsetY);
@@ -274,7 +285,7 @@ namespace GPU_Declicker_UWP_0._01
                 ClickWindowsGrid.Children.Add(clickWindow);
 
                 SetOffsetsForNextClickWindow(
-                    ref cwOffsetX, 
+                    ref cwOffsetX,
                     ref cwOffsetY,
                     clickWindow.GetMainGridWidth(),
                     clickWindow.GetMainGridHeight(),
@@ -292,19 +303,19 @@ namespace GPU_Declicker_UWP_0._01
         {
             // use new ClickWindow to get height
             cwOffsetY += new ClickWindow(
-                new AudioClick(
-                    512, 1, 3f, 
-                    new AudioDataMono(new float[1024]), 
-                    ChannelType.Left))
-                .GetMainGridHeight() +
-                distanceBetweenClickWindows;
+                                 new AudioClick(
+                                     512, 1, 3f,
+                                     new AudioDataMono(new float[1024]),
+                                     ChannelType.Left))
+                             .GetMainGridHeight() +
+                         distanceBetweenClickWindows;
         }
 
         private void SetOffsetsForNextClickWindow(
-            ref double cwOffsetX, 
-            ref double cwOffsetY, 
-            double width, 
-            double height, 
+            ref double cwOffsetX,
+            ref double cwOffsetY,
+            double width,
+            double height,
             double distanceBetween)
         {
             cwOffsetX += width + distanceBetween;
@@ -325,8 +336,8 @@ namespace GPU_Declicker_UWP_0._01
 
         private async void SaveAudioFile_ClickAsync(object sender, RoutedEventArgs e)
         {
-            CreateAudioGraphResult init_result =
-                 await InitAudioInputOutputAsync();
+            var init_result =
+                await InitAudioInputOutputAsync();
             if (init_result == null)
                 return;
 
@@ -334,7 +345,7 @@ namespace GPU_Declicker_UWP_0._01
 
             if (audioOutputFile != null)
             {
-                CreateAudioFileOutputNodeResult saveAudioResult =
+                var saveAudioResult =
                     await SaveAudioAsync();
 
                 await ProcessSaveAudioResultAsync(saveAudioResult);
@@ -348,10 +359,8 @@ namespace GPU_Declicker_UWP_0._01
 
             if (saveAudioResult.Status !=
                 AudioFileNodeCreationStatus.Success)
-            {
                 await ShowErrorMessageAsync(
                     saveAudioResult.Status.ToString());
-            }
         }
 
         private async Task<CreateAudioFileOutputNodeResult> SaveAudioAsync()
@@ -362,8 +371,8 @@ namespace GPU_Declicker_UWP_0._01
             {
                 saveAudioResult =
                     await audioInputOutput.SaveAudioToFile(
-                        audioOutputFile, 
-                        taskProgress, 
+                        audioOutputFile,
+                        taskProgress,
                         taskStatus);
             }
             catch (Exception ex)
@@ -378,20 +387,20 @@ namespace GPU_Declicker_UWP_0._01
 
         private async Task<StorageFile> PickOutputFileAsync()
         {
-            FileSavePicker filePicker = new FileSavePicker
+            var filePicker = new FileSavePicker
             {
                 SuggestedStartLocation = PickerLocationId.MusicLibrary,
                 SuggestedFileName = audioInputFile.Name
             };
 
-            filePicker.FileTypeChoices.Add("Audio file", new List<string> { ".mp3", ".wav", ".wma", ".m4a" });
+            filePicker.FileTypeChoices.Add("Audio file", new List<string> {".mp3", ".wav", ".wma", ".m4a"});
 
             return await filePicker.PickSaveFileAsync();
         }
 
         private async void AboutDialog_ClickAsync(object sender, RoutedEventArgs e)
         {
-            AboutDialog aboutDialog = new AboutDialog();
+            var aboutDialog = new AboutDialog();
             await aboutDialog.ShowAsync();
         }
     }

@@ -1,9 +1,8 @@
 ﻿namespace GPU_Declicker_UWP_0._01
 {
-
     /// <summary>
-    /// Represents mono audio samples and includes information 
-    /// about damaged samples
+    ///     Represents mono audio samples and includes information
+    ///     about damaged samples
     /// </summary>
     public class AudioDataMono : AudioData
     {
@@ -18,19 +17,24 @@
             AudioProcessingSettings = new AudioProcessingSettings();
         }
 
-        public override ChannelType GetCurrentChannelType() =>
-            // always answers Left for mono
-            ChannelType.Left;
+        public override ChannelType GetCurrentChannelType()
+        {
+            return ChannelType.Left;
+        }
 
         public override void SetCurrentChannelType(ChannelType channelType)
         {
             // doing nothing because it's mono
         }
 
-        public override void ClearAllClicks() =>
+        public override void ClearAllClicks()
+        {
             monoChannel.ClearAllClicks();
+        }
 
-        public override void SortClicks() =>
+        public override void SortClicks()
+        {
             monoChannel.SortClicks();
+        }
     }
 }

@@ -2,7 +2,6 @@
     x:Class="GPU_Declicker_UWP_0._01.AboutDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:GPU_Declicker_UWP_0._01"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
@@ -11,17 +10,19 @@
     <Grid>
         <TextBlock TextWrapping="Wrap">
             This app is freeware that automaticaly repair damaged samples
-            (clicks) in audio files. <LineBreak/>
-            Here is a short tutorial on how to  
-            <Hyperlink 
+            (clicks) in audio files. <LineBreak />
+            Here is a short tutorial on how to
+            <Hyperlink
                 NavigateUri="https://youtu.be/x4GdLuM7mfA">
                 use this app
-            </Hyperlink> <LineBreak/>
-            You can find Privacy policy 
-            <Hyperlink 
+            </Hyperlink>
+            <LineBreak />
+            You can find Privacy policy
+            <Hyperlink
                 NavigateUri="https://drive.google.com/file/d/1e_lXbDBJrIcif7X79OS5pfGpEO-HBU_H/view?usp=sharing">
                 here
-            </Hyperlink> <LineBreak/>
+            </Hyperlink>
+            <LineBreak />
             Press Ecs to exit
         </TextBlock>
     </Grid>

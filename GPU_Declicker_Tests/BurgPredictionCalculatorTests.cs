@@ -14,20 +14,18 @@ namespace GPU_Declicker_Tests
             const int historyLength = 512;
             const int numberOfSamplesToCheck = 10;
 
-            float[] input_audio =
+            var input_audio =
                 new float[historyLength + numberOfSamplesToCheck];
-            float[] forwardPredictions =
+            var forwardPredictions =
                 new float[historyLength + numberOfSamplesToCheck];
-            float[] backwardPredictions =
+            var backwardPredictions =
                 new float[historyLength + numberOfSamplesToCheck];
 
-            for (int i = 0; i < input_audio.Length; i++)
-            {
-                input_audio[i] = (float)Math.Sin(
+            for (var i = 0; i < input_audio.Length; i++)
+                input_audio[i] = (float) Math.Sin(
                     2 * Math.PI * i / (historyLength / 5.2));
-            }
 
-            for (int index = historyLength;
+            for (var index = historyLength;
                 index < historyLength + numberOfSamplesToCheck;
                 index++)
             {

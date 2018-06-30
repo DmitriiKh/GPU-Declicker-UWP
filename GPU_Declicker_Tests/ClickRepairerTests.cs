@@ -12,24 +12,20 @@ namespace GPU_Declicker_Tests
         {
             const int history_length = 512;
 
-            float[] input_audio = new float[history_length + 1];
+            var input_audio = new float[history_length + 1];
 
-            for (int i = 0; i < input_audio.Length; i++)
-            {
-                input_audio[i] = (float)Math.Sin(2 * Math.PI * i / (history_length / 5.2));
-            }
+            for (var i = 0; i < input_audio.Length; i++)
+                input_audio[i] = (float) Math.Sin(2 * Math.PI * i / (history_length / 5.2));
 
             AudioData audioData =
                 new AudioDataMono(input_audio);
 
-            for (int index = 0; index < audioData.LengthSamples(); index++)
-            {
+            for (var index = 0; index < audioData.LengthSamples(); index++)
                 audioData.SetOutputSample(
                     index,
                     audioData.GetInputSample(index));
-            }
 
-            float prediction = ClickRepairer.CalcBurgPred(
+            var prediction = ClickRepairer.CalcBurgPred(
                 audioData,
                 history_length);
 
@@ -40,4 +36,3 @@ namespace GPU_Declicker_Tests
         }
     }
 }
-    

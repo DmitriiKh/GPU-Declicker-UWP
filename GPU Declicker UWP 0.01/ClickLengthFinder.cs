@@ -10,28 +10,28 @@ namespace GPU_Declicker_UWP_0._01
             int maxLength,
             int positionOfLastProcessedSample)
         {
-            FixResult bestResult = new FixResult
+            var bestResult = new FixResult
             {
                 Success = false
             };
 
-            int position = initPosition;
-            int minPosition = GetMinPosition(
-                position, 
-                positionOfLastProcessedSample, 
+            var position = initPosition;
+            var minPosition = GetMinPosition(
+                position,
+                positionOfLastProcessedSample,
                 10);
-            
+
             while (position > minPosition)
             {
-                float[] backup = BackupPredictionErrAverage(
+                var backup = BackupPredictionErrAverage(
                     audioData,
-                    position, 
+                    position,
                     audioData.AudioProcessingSettings.HistoryLengthSamples + maxLength);
 
-                FixResult result = TryToFix(audioData,
-                        position,
-                        maxLength,
-                        initPosition - position);
+                var result = TryToFix(audioData,
+                    position,
+                    maxLength,
+                    initPosition - position);
 
                 if (result.BetterThan(bestResult))
                     bestResult = result;
@@ -50,8 +50,8 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         private static int GetMinPosition(
-            int position, 
-            int positionOfLastProcessedSample, 
+            int position,
+            int positionOfLastProcessedSample,
             int maxDepth)
         {
             // if last processed sample is closer 
@@ -63,24 +63,24 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         private static void RestorePredictionErrAverage(
-            AudioData audioData, 
-            int position, 
-            int length, 
+            AudioData audioData,
+            int position,
+            int length,
             float[] backup)
         {
-            for (int index = 0; index < length * 2; index++)
+            for (var index = 0; index < length * 2; index++)
                 audioData.SetErrorAverage(
                     position - length + index,
                     backup[index]);
         }
 
         private static float[] BackupPredictionErrAverage(
-            AudioData audioData, 
-            int position, 
+            AudioData audioData,
+            int position,
             int length)
         {
-            float[] backup = new float[length * 2];
-            for (int index = 0; index < length * 2; index++)
+            var backup = new float[length * 2];
+            for (var index = 0; index < length * 2; index++)
                 backup[index] = audioData.GetErrorAverage(
                     position - length + index);
 
@@ -88,12 +88,12 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         private static FixResult TryToFix(
-            AudioData audioData, 
-            int index, 
+            AudioData audioData,
+            int index,
             int maxLength,
             int minLength)
         {
-            FixResult result = new FixResult
+            var result = new FixResult
             {
                 Success = false,
                 Position = index,
@@ -113,15 +113,13 @@ namespace GPU_Declicker_UWP_0._01
                 {
                     result.ErrSum = CalcErrSum(
                         audioData, index + result.Length, 4);
-                    
+
                     // if click fixed
                     if (result.ErrSum < 0.01F) //0.005F //0.03F
                     {
                         result.Success = true;
                         break;
                     }
-
-                  
                 }
             }
 
@@ -131,25 +129,23 @@ namespace GPU_Declicker_UWP_0._01
         private static float CalcErrSum(AudioData audioData, int position, int length)
         {
             float errSum = 0;
-            
-            for (int index = position; index < position + length; index++)
+
+            for (var index = position; index < position + length; index++)
                 errSum += Math.Abs(audioData.GetPredictionErr(index));
 
             return errSum;
         }
 
         private static bool SeveralSamplesInARowAreSuspicious(
-            AudioData audioData, 
-            int position, 
+            AudioData audioData,
+            int position,
             int length)
         {
-            for (int index = position; index < position + length; index++)
-            {
+            for (var index = position; index < position + length; index++)
                 if (ClickDetector.IsSampleSuspicious(
-                        audioData,
-                        index))
+                    audioData,
+                    index))
                     return true;
-            }
 
             return false;
         }

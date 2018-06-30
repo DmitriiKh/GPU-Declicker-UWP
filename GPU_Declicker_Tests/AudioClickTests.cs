@@ -6,15 +6,15 @@ namespace GPU_Declicker_Tests
     [TestClass]
     public class AudioClickTests
     {
-        private AudioClick _audioClickFirst;
-        private AudioClick _audioClickTheSame;
-        private AudioClick _audioClickEqual;
-        private AudioClick _audioClickSecond;
         private AudioClick _audioClickDifferentChannel;
         private AudioClick _audioClickDifferentLength;
         private AudioClick _audioClickDifferentPosition;
+        private AudioClick _audioClickEqual;
+        private AudioClick _audioClickFirst;
         private AudioClick _audioClickLargerPosition;
         private AudioClick _audioClickLesserPosition;
+        private AudioClick _audioClickSecond;
+        private AudioClick _audioClickTheSame;
 
         [TestInitialize]
         public void AudioClickBeforeRunningTests()
@@ -62,7 +62,7 @@ namespace GPU_Declicker_Tests
 
         [TestMethod]
         public void CompareTo_TheSameClick_ReturnsZero()
-        { 
+        {
             Assert.IsTrue(_audioClickFirst.CompareTo(_audioClickTheSame) == 0,
                 "Failed CompareTo: should be zero (the same)");
         }
@@ -112,7 +112,7 @@ namespace GPU_Declicker_Tests
         [TestMethod]
         public void GetHashCode_TheSameClick_ReturnsTheSameHashCode()
         {
-            Assert.AreEqual(_audioClickFirst.GetHashCode(), 
+            Assert.AreEqual(_audioClickFirst.GetHashCode(),
                 _audioClickTheSame.GetHashCode(),
                 "Failed GetHashCode: should be equal (the same)");
         }
@@ -120,7 +120,7 @@ namespace GPU_Declicker_Tests
         [TestMethod]
         public void GetHashCode_EqualClicks_ReturnsTheSameHashCode()
         {
-            Assert.AreEqual(_audioClickFirst.GetHashCode(), 
+            Assert.AreEqual(_audioClickFirst.GetHashCode(),
                 _audioClickEqual.GetHashCode(),
                 "Failed GetHashCode: should be equal (equal)");
         }
@@ -128,7 +128,7 @@ namespace GPU_Declicker_Tests
         [TestMethod]
         public void GetHashCode_ClicksWithDifferentPositions_ReturnDifferentHashCodes()
         {
-            Assert.AreNotEqual(_audioClickFirst.GetHashCode(), 
+            Assert.AreNotEqual(_audioClickFirst.GetHashCode(),
                 _audioClickDifferentPosition.GetHashCode(),
                 "Failed GetHashCode: should be not equal (different position)");
         }
@@ -378,11 +378,11 @@ namespace GPU_Declicker_Tests
         [TestMethod]
         public void ChangeAproved_SwitchingTwice_SwitchesAproved()
         {
-            bool aprovedState = _audioClickFirst.Aproved;
+            var aprovedState = _audioClickFirst.Aproved;
             // first change
             _audioClickFirst.ChangeAproved();
-            Assert.AreNotEqual(_audioClickFirst.Aproved, aprovedState, 
-                "Failed ChangeAproved (first change): should not be " 
+            Assert.AreNotEqual(_audioClickFirst.Aproved, aprovedState,
+                "Failed ChangeAproved (first change): should not be "
                 + aprovedState);
             // second change
             _audioClickFirst.ChangeAproved();

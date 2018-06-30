@@ -11,22 +11,22 @@ using Windows.UI.Xaml.Media;
 namespace GPU_Declicker_UWP_0._01
 {
     /// <summary>
-    /// User interface element to show one particular click.
-    /// Shows initial (audio input) state and repaired (audio output) samples.
-    /// Also shows some technical data as position of the click etc.
-    /// Provides user ability to change position and length of corrected arrea
-    /// or turn the correction off
+    ///     User interface element to show one particular click.
+    ///     Shows initial (audio input) state and repaired (audio output) samples.
+    ///     Also shows some technical data as position of the click etc.
+    ///     Provides user ability to change position and length of corrected arrea
+    ///     or turn the correction off
     /// </summary>
     public sealed partial class ClickWindow : UserControl
     {
-        private AudioClick audioClickBinded;
-        private bool IsPointerPressedInTheMidle;
-        private Point pointerLastPosition;
-        private Point pointPointerPressedInTheMidle;
-        private bool IsPointerPressedInTheRightArea;
-        private Point pointPointerPressedInTheRightArea;
+        private readonly AudioClick audioClickBinded;
         private bool IsPointerPressedInTheLeftArea;
+        private bool IsPointerPressedInTheMidle;
+        private bool IsPointerPressedInTheRightArea;
+        private Point pointerLastPosition;
         private Point pointPointerPressedInTheLeftArea;
+        private Point pointPointerPressedInTheMidle;
+        private Point pointPointerPressedInTheRightArea;
 
         public ClickWindow(AudioClick audioClick)
         {
@@ -47,7 +47,7 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         /// <summary>
-        /// Forms polylines that show input and output audio samples
+        ///     Forms polylines that show input and output audio samples
         /// </summary>
         private void SetPolylines()
         {
@@ -56,50 +56,43 @@ namespace GPU_Declicker_UWP_0._01
             Output.Points.Clear();
             // calculate position in audio track to show click 
             //in the center of this CW
-            int cwStartPos = (int)(
-                audioClickBinded.Position + 
-                audioClickBinded.Length / 2 - 
+            var cwStartPos = (int) (
+                audioClickBinded.Position +
+                audioClickBinded.Length / 2 -
                 MainGrid.Width / 2);
             // set Input polylyne
-            for (int i = 0; i < MainGrid.Width; i++)
+            for (var i = 0; i < MainGrid.Width; i++)
             {
-                float s = audioClickBinded.GetInputSample(cwStartPos + i);
+                var s = audioClickBinded.GetInputSample(cwStartPos + i);
                 double y = 100 * (-s + 1) / 2;
                 Input.Points.Add(new Point(i, y));
             }
+
             // set Output polyline two samples wider than click
-            for (int i = audioClickBinded.Position - cwStartPos - 1; 
-                i <= audioClickBinded.Position - cwStartPos + audioClickBinded.Length + 1; 
+            for (var i = audioClickBinded.Position - cwStartPos - 1;
+                i <= audioClickBinded.Position - cwStartPos + audioClickBinded.Length + 1;
                 i++)
             {
-                float s = audioClickBinded.GetOutputSample(cwStartPos + i);
+                var s = audioClickBinded.GetOutputSample(cwStartPos + i);
                 double y = 100 * (-s + 1) / 2;
                 Output.Points.Add(new Point(i, y));
             }
         }
 
         /// <summary>
-        /// Areas of ClickWindow used to detect user actions
-        /// </summary>
-        enum Area
-        {
-            LeftExpand, LeftShrink, Midle, RightShrink, RightExpand
-        }
-
-        /// <summary>
-        /// Event handler processing mouse left button or touch screen 
-        /// user actions
+        ///     Event handler processing mouse left button or touch screen
+        ///     user actions
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Grid_PointerPressed(
-            object sender, 
+            object sender,
             PointerRoutedEventArgs e)
         {
-            Grid grid = sender as Grid;
+            var grid = sender as Grid;
             if (grid == null)
                 return;
-            Area areaPressed = PointerOnWhichArea(grid.ActualWidth, e);
+            var areaPressed = PointerOnWhichArea(grid.ActualWidth, e);
             if (areaPressed == Area.LeftExpand)
             {
                 // remember pointer position
@@ -108,6 +101,7 @@ namespace GPU_Declicker_UWP_0._01
                 pointerLastPosition = e.GetCurrentPoint(this).Position;
                 pointPointerPressedInTheLeftArea = pointerLastPosition;
             }
+
             if (areaPressed == Area.LeftShrink)
             {
                 // shrink marked damaged sample sequence on left
@@ -115,6 +109,7 @@ namespace GPU_Declicker_UWP_0._01
                 Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
+
             if (areaPressed == Area.Midle)
             {
                 // remember pointer position
@@ -123,6 +118,7 @@ namespace GPU_Declicker_UWP_0._01
                 pointerLastPosition = e.GetCurrentPoint(this).Position;
                 pointPointerPressedInTheMidle = pointerLastPosition;
             }
+
             if (areaPressed == Area.RightShrink)
             {
                 // shrink marked damaged sample sequence on right
@@ -130,6 +126,7 @@ namespace GPU_Declicker_UWP_0._01
                 Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
+
             if (areaPressed == Area.RightExpand)
             {
                 // remember pointer position
@@ -142,7 +139,7 @@ namespace GPU_Declicker_UWP_0._01
 
         private Area PointerOnWhichArea(double width, PointerRoutedEventArgs e)
         {
-            Point point = e.GetCurrentPoint(this).Position;
+            var point = e.GetCurrentPoint(this).Position;
             if (point.X < width / 6)
                 return Area.LeftExpand;
             if (point.X >= width / 6 && point.X < width / 3)
@@ -157,43 +154,45 @@ namespace GPU_Declicker_UWP_0._01
 
         private void Grid_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            Point point = e.GetCurrentPoint(this).Position;
+            var point = e.GetCurrentPoint(this).Position;
 
             if (IsPointerPressedInTheLeftArea ||
                 IsPointerPressedInTheMidle ||
                 IsPointerPressedInTheRightArea)
-            {
                 GestProcessing(point);
-            }
 
-            Grid grid = sender as Grid;
+            var grid = sender as Grid;
             if (grid == null)
                 return;
-            Area areaNavigated = PointerOnWhichArea(grid.ActualWidth, e);
+            var areaNavigated = PointerOnWhichArea(grid.ActualWidth, e);
             if (areaNavigated == Area.LeftExpand)
             {
                 // show left arrow in LeftExpand area
                 ActionNotification.Text = "\u21A4";
                 ActionNotification.HorizontalAlignment = HorizontalAlignment.Left;
             }
+
             if (areaNavigated == Area.LeftShrink)
             {
                 // show right arrow in LeftShrink area
                 ActionNotification.Text = "\u21A6";
                 ActionNotification.HorizontalAlignment = HorizontalAlignment.Left;
             }
+
             if (areaNavigated == Area.Midle)
             {
                 // show on/off in Midle area
                 ActionNotification.Text = "On/Off";
                 ActionNotification.HorizontalAlignment = HorizontalAlignment.Center;
             }
+
             if (areaNavigated == Area.RightShrink)
             {
                 // show left arrow in RightShrink area
                 ActionNotification.Text = "\u21A4";
                 ActionNotification.HorizontalAlignment = HorizontalAlignment.Right;
             }
+
             if (areaNavigated == Area.RightExpand)
             {
                 // show right arrow in RightExpand area
@@ -204,8 +203,8 @@ namespace GPU_Declicker_UWP_0._01
 
         private void GestProcessing(Point point)
         {
-            int minMovement = 3;
-            bool changed = false;
+            var minMovement = 3;
+            var changed = false;
 
             if (IsPointerPressedInTheMidle)
             {
@@ -216,6 +215,7 @@ namespace GPU_Declicker_UWP_0._01
                     Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                     changed = true;
                 }
+
                 if (point.X - pointerLastPosition.X < -minMovement)
                 {
                     // expand marked damaged sample sequence to right
@@ -248,13 +248,19 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        internal double GetMainGridWidth() => MainGrid.Width;
+        internal double GetMainGridWidth()
+        {
+            return MainGrid.Width;
+        }
 
-        internal double GetMainGridHeight() => MainGrid.Height;
+        internal double GetMainGridHeight()
+        {
+            return MainGrid.Height;
+        }
 
         internal void SetMargin(double cwOffsetX, double cwOffsetY)
         {
-            Thickness margin = Margin;
+            var margin = Margin;
             margin.Left = cwOffsetX;
             margin.Top = cwOffsetY;
             Margin = margin;
@@ -267,20 +273,18 @@ namespace GPU_Declicker_UWP_0._01
             if (IsPointerPressedInTheLeftArea ||
                 IsPointerPressedInTheMidle ||
                 IsPointerPressedInTheRightArea)
-            {
                 Grid_PointerReleased(sender, e);
-            }
         }
 
         /// <summary>
-        /// Event handler processing mouse left button or touch screen 
-        /// user actions
+        ///     Event handler processing mouse left button or touch screen
+        ///     user actions
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Grid_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
-            Point point = e.GetCurrentPoint(this).Position;
+            var point = e.GetCurrentPoint(this).Position;
 
             if (IsPointerPressedInTheMidle &&
                 Math.Abs(point.X - pointPointerPressedInTheMidle.X) < 1 &&
@@ -314,6 +318,18 @@ namespace GPU_Declicker_UWP_0._01
             IsPointerPressedInTheMidle = false;
             IsPointerPressedInTheRightArea = false;
             IsPointerPressedInTheLeftArea = false;
+        }
+
+        /// <summary>
+        ///     Areas of ClickWindow used to detect user actions
+        /// </summary>
+        private enum Area
+        {
+            LeftExpand,
+            LeftShrink,
+            Midle,
+            RightShrink,
+            RightExpand
         }
     }
 }

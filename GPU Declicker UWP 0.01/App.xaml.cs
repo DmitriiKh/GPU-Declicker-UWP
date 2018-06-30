@@ -7,21 +7,21 @@ using Windows.UI.Xaml.Navigation;
 
 namespace GPU_Declicker_UWP_0._01
 {
-    sealed partial class App : Application
+    internal sealed partial class App : Application
     {
         public App()
         {
             InitializeComponent();
             Suspending += OnSuspending;
         }
-        
+
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
-            
+            var rootFrame = Window.Current.Content as Frame;
+
             if (rootFrame == null)
             {
-                 rootFrame = new Frame();
+                rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
@@ -29,26 +29,23 @@ namespace GPU_Declicker_UWP_0._01
                 {
                     //TODO: load previous state of the window from last launch
                 }
-                
+
                 Window.Current.Content = rootFrame;
             }
 
             if (args.PrelaunchActivated == false)
             {
-                if (rootFrame.Content == null)
-                {
-                    rootFrame.Navigate(typeof(MainPage), args.Arguments);
-                }
+                if (rootFrame.Content == null) rootFrame.Navigate(typeof(MainPage), args.Arguments);
 
                 Window.Current.Activate();
             }
         }
-        
-        void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
+
+        private void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
-        
+
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();

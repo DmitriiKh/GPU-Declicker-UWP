@@ -13,14 +13,14 @@ namespace GPU_Declicker_Tests
             const int historyLength = 512;
             const int signalLength = 5 * historyLength;
             const int damageLength = 10;
-            const int damageStartPosition = signalLength / 2 ;
+            const int damageStartPosition = signalLength / 2;
 
-            float[] inputAudio = new float[signalLength];
+            var inputAudio = new float[signalLength];
 
-            for (int index = 0; index < inputAudio.Length; index++)
+            for (var index = 0; index < inputAudio.Length; index++)
                 inputAudio[index] = 0.5f;
 
-            for (int index = damageStartPosition;
+            for (var index = damageStartPosition;
                 index < damageStartPosition + damageLength;
                 index++)
                 inputAudio[index] = 0;
@@ -28,13 +28,13 @@ namespace GPU_Declicker_Tests
             AudioData audioData =
                 new AudioDataMono(inputAudio);
 
-            for (int index = historyLength; index < audioData.LengthSamples() - historyLength; index++)
+            for (var index = historyLength; index < audioData.LengthSamples() - historyLength; index++)
             {
                 audioData.SetOutputSample(
                     index,
                     audioData.GetInputSample(index));
 
-                float prediction = ClickRepairer.CalcBurgPred(
+                var prediction = ClickRepairer.CalcBurgPred(
                     audioData,
                     index);
 
@@ -73,15 +73,15 @@ namespace GPU_Declicker_Tests
             const int historyLength = 512;
             const int signalLength = 5 * historyLength;
             const int damageLength = 10;
-            int damageStartPosition = signalLength / 2 + shift;
+            var damageStartPosition = signalLength / 2 + shift;
 
-            float[] inputAudio = new float[signalLength];
+            var inputAudio = new float[signalLength];
 
-            for (int index = 0; index < inputAudio.Length; index++)
-                inputAudio[index] = 
-                    (float)Math.Sin(2 * Math.PI * index / (historyLength / 5.2));
+            for (var index = 0; index < inputAudio.Length; index++)
+                inputAudio[index] =
+                    (float) Math.Sin(2 * Math.PI * index / (historyLength / 5.2));
 
-            for (int index = damageStartPosition;
+            for (var index = damageStartPosition;
                 index < damageStartPosition + damageLength;
                 index++)
                 inputAudio[index] = 0;
@@ -89,15 +89,15 @@ namespace GPU_Declicker_Tests
             AudioData audioData =
                 new AudioDataMono(inputAudio);
 
-            for (int index = historyLength; 
-                index < audioData.LengthSamples() - historyLength; 
+            for (var index = historyLength;
+                index < audioData.LengthSamples() - historyLength;
                 index++)
             {
                 audioData.SetOutputSample(
                     index,
                     audioData.GetInputSample(index));
 
-                float prediction = ClickRepairer.CalcBurgPred(
+                var prediction = ClickRepairer.CalcBurgPred(
                     audioData,
                     index);
 
@@ -118,6 +118,5 @@ namespace GPU_Declicker_Tests
 
             Assert.AreEqual(damageLength, result.Length);
         }
-
     }
 }

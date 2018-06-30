@@ -3,15 +3,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:GPU_Declicker_UWP_0._01">
 
-    <Style TargetType="local:ClickWindow" >
+    <Style TargetType="local:ClickWindow">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="local:ClickWindow">
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}">
-                    </Border>
+                        BorderThickness="{TemplateBinding BorderThickness}" />
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

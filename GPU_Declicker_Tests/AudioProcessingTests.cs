@@ -5,6 +5,5 @@ namespace GPU_Declicker_Tests
     [TestClass]
     public class AudioProcessingTests
     {
-        
     }
 }

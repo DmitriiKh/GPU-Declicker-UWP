@@ -5,10 +5,10 @@ namespace GPU_Declicker_UWP_0._01
     public static class HelperCalculator
     {
         /// <summary>
-        /// Calculates average prediction errors level using algorithm:
-        /// First: find max error in each block of 16 prediction errors
-        /// Second: find average of maximums over all blocks
-        /// (blocks number is _base/16)
+        ///     Calculates average prediction errors level using algorithm:
+        ///     First: find max error in each block of 16 prediction errors
+        ///     Second: find average of maximums over all blocks
+        ///     (blocks number is _base/16)
         /// </summary>
         /// <param name="audioData"></param>
         /// <param name="startPosition"></param>
@@ -20,14 +20,14 @@ namespace GPU_Declicker_UWP_0._01
             int endPosition,
             int _base)
         {
-            float errorAverage =
+            var errorAverage =
                 CalcErrorAverageForOneSample(audioData, startPosition);
             // set one average error sample 
             audioData.SetErrorAverage(startPosition, errorAverage);
 
             // Fast version of CalcErrorAverageForOneSample
             // Keep sliding to next block of 16 Burg prediction errors
-            for (int index = startPosition;
+            for (var index = startPosition;
                 index < endPosition - 15;
                 index += 16)
             {
@@ -35,12 +35,12 @@ namespace GPU_Declicker_UWP_0._01
                 float maxErrorInExcludedBlock = 0,
                     maxErrorInIncludedBlock = 0;
 
-                for (int indexCurrent = index;
+                for (var indexCurrent = index;
                     indexCurrent < index + 16;
                     indexCurrent++)
                 {
                     float tempExcludedBlock = 0,
-                    tempIncludedBlock = 0;
+                        tempIncludedBlock = 0;
                     // find max in the block which will be excluded
                     tempExcludedBlock = Math.Abs(
                         audioData.GetPredictionErr(indexCurrent - _base));
@@ -52,17 +52,18 @@ namespace GPU_Declicker_UWP_0._01
                     if (maxErrorInIncludedBlock < tempIncludedBlock)
                         maxErrorInIncludedBlock = tempIncludedBlock;
                 }
+
                 // correction based on previously calculated errorAverage
                 errorAverage = errorAverage +
-                    (maxErrorInIncludedBlock - maxErrorInExcludedBlock) /
-                    (_base / 16);
+                               (maxErrorInIncludedBlock - maxErrorInExcludedBlock) /
+                               (_base / 16);
 
                 // minimum result to return is 0.0001
                 if (errorAverage < 0.0001)
                     errorAverage = 0.0001F;
 
                 // all 16 results in block are the same
-                for (int l = index; l < index + 16; l++)
+                for (var l = index; l < index + 16; l++)
                     audioData.SetErrorAverage(l,
                         errorAverage);
             }
@@ -70,23 +71,25 @@ namespace GPU_Declicker_UWP_0._01
 
         private static float CalcErrorAverageForOneSample(AudioData audioData, int position)
         {
-            int Base = audioData.AudioProcessingSettings.HistoryLengthSamples;
+            var Base = audioData.AudioProcessingSettings.HistoryLengthSamples;
             float errorAverage = 0;
 
-            for (int blockIndex = 0; blockIndex < Base - 16; blockIndex += 16)
+            for (var blockIndex = 0; blockIndex < Base - 16; blockIndex += 16)
             {
                 // check each period of 16 errors to find maximum
                 float maxErrorInBlock = 0;
-                for (int indexInBlock = 0; indexInBlock < 16; indexInBlock++)
+                for (var indexInBlock = 0; indexInBlock < 16; indexInBlock++)
                 {
-                    float temp = Math.Abs(audioData.GetPredictionErr(
+                    var temp = Math.Abs(audioData.GetPredictionErr(
                         position - Base + blockIndex + indexInBlock
-                        ));
+                    ));
                     if (maxErrorInBlock < temp) maxErrorInBlock = temp;
                 }
+
                 // sum up maximums 
                 errorAverage = errorAverage + maxErrorInBlock;
             }
+
             // find average
             errorAverage = errorAverage / (Base / 16) + 0.0000001F;
             // minimum result to return is 0.0001
@@ -100,9 +103,9 @@ namespace GPU_Declicker_UWP_0._01
         {
             float threshold_level_detected = 0;
             // use original input samples 
-            float error = (Math.Abs(CalcBurgPredFromInput(audioData, position)));
+            var error = Math.Abs(CalcBurgPredFromInput(audioData, position));
             // find average error value on the LEFT of the current sample
-            float errorAverage = audioData.GetErrorAverage(position - 16);
+            var errorAverage = audioData.GetErrorAverage(position - 16);
             threshold_level_detected = error / errorAverage;
 
             return threshold_level_detected;
@@ -113,24 +116,22 @@ namespace GPU_Declicker_UWP_0._01
             AudioData audioData,
             int position)
         {
-            int historyLengthSamples =
+            var historyLengthSamples =
                 audioData.AudioProcessingSettings.HistoryLengthSamples;
 
             // use output audio as an input because it already contains
             // fixed samples before sample at position
-            float[] audioShort = new float[historyLengthSamples + 1];
-            for (int index = 0; index < historyLengthSamples + 1; index++)
-            {
+            var audioShort = new float[historyLengthSamples + 1];
+            for (var index = 0; index < historyLengthSamples + 1; index++)
                 audioShort[index] = audioData.GetInputSample(position -
-                    historyLengthSamples + index);
-            }
+                                                             historyLengthSamples + index);
 
             // array for results
-            float[] forwardPredictionsShort =
+            var forwardPredictionsShort =
                 new float[historyLengthSamples + 1];
 
             // we need this array for calling CalculateBurgPredictionThread
-            float[] backwardPredictionsShort =
+            var backwardPredictionsShort =
                 new float[historyLengthSamples + 1];
 
             BurgPredictionCalculator.Calculate(
@@ -146,28 +147,29 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         /// <summary>
-        /// Predicts max length of damaged samples sequence 
+        ///     Predicts max length of damaged samples sequence
         /// </summary>
         /// <param name="audioData"></param>
         /// <param name="position"></param>
         /// <returns></returns>
         public static int GetMaxLength(AudioData audioData, int position)
         {
-            int lenght = 0;
-            float error = (Math.Abs(audioData.GetPredictionErr(position)));
-            float errorAverage = audioData.GetErrorAverage(position - 15);
-            float rate = error /
-                (audioData.AudioProcessingSettings.ThresholdForDetection *
-                errorAverage);
+            var lenght = 0;
+            var error = Math.Abs(audioData.GetPredictionErr(position));
+            var errorAverage = audioData.GetErrorAverage(position - 15);
+            var rate = error /
+                       (audioData.AudioProcessingSettings.ThresholdForDetection *
+                        errorAverage);
             while (error > errorAverage)
             {
                 lenght = lenght + 3;
                 error = (Math.Abs(audioData.GetPredictionErr(position + lenght)) +
-                    Math.Abs(audioData.GetPredictionErr(position + 1 + lenght)) +
-                    Math.Abs(audioData.GetPredictionErr(position + 2 + lenght))) / 3;
+                         Math.Abs(audioData.GetPredictionErr(position + 1 + lenght)) +
+                         Math.Abs(audioData.GetPredictionErr(position + 2 + lenght))) / 3;
             }
+
             // the result is multiplication lenght and rate (doubled)
-            int max_length = (int)(lenght * rate * 2);
+            var max_length = (int) (lenght * rate * 2);
 
             // follow user's limit
             if (max_length > audioData.AudioProcessingSettings.MaxLengthCorrection)
