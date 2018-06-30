@@ -42,7 +42,7 @@ namespace GPU_Declicker_Tests
                     prediction - audioData.GetInputSample(index));
             }
 
-            HelperCalculator.CalculateErrorAverageCPU(
+            HelperCalculator.CalculateErrorAverageCpu(
                 audioData,
                 historyLength,
                 audioData.LengthSamples(),
@@ -105,7 +105,7 @@ namespace GPU_Declicker_Tests
                     prediction - audioData.GetInputSample(index));
             }
 
-            HelperCalculator.CalculateErrorAverageCPU(
+            HelperCalculator.CalculateErrorAverageCpu(
                 audioData,
                 historyLength,
                 audioData.LengthSamples(),

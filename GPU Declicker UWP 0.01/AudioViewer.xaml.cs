@@ -1,7 +1,6 @@
 ﻿using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 
@@ -9,22 +8,22 @@ using Windows.UI.Xaml.Media;
 
 namespace GPU_Declicker_UWP_0._01
 {
-    public sealed partial class AudioViewer : UserControl
+    public sealed partial class AudioViewer
     {
         // this timer creates a delay between WaveForm size changing and its redrawing
         // to make resizing faster
         private readonly DispatcherTimer _redrawingTimer;
 
         // audio samples to view
-        private AudioData audioData;
+        private AudioData _audioData;
 
         // magnification ratio
         // when set to 1, waveForm is most detailed
         // when set to R, waveForm drops each R-1 from R audioData samples
-        private double audioDataToWaveFormRatio = 1;
+        private double _audioDataToWaveFormRatio = 1;
 
         // offset from beginning of audioData to beginning waveForm
-        private int OffsetPosition;
+        private int _offsetPosition;
 
         public AudioViewer()
         {
@@ -38,8 +37,8 @@ namespace GPU_Declicker_UWP_0._01
 
         // These two collections of points are Binded to Polylines 
         // in XAML that represent WaveForms on screen
-        public PointCollection LeftChannelWaveFormPoints { get; set; }
-        public PointCollection RightChannelWaveFormPoints { get; set; }
+        public PointCollection LeftChannelWaveFormPoints { get; }
+        public PointCollection RightChannelWaveFormPoints { get; }
 
         // These are updated every time when WaveForm's size changed
         // by event handler WaveFormLeftChannel_SizeChanged
@@ -48,10 +47,10 @@ namespace GPU_Declicker_UWP_0._01
 
         // Last mouse pointer position touching waveForms
         // Used to calculate new OffsetPosition when user slides waveForms
-        public Point PointerLastPosition { get; internal set; }
+        private Point PointerLastPosition { get; set; }
 
         // True when when user slides waveForms
-        public bool IsMovingByMouse { get; internal set; }
+        private bool IsMovingByMouse { get; set; }
 
         private void _redrawingTimer_Tick(object sender, object e)
         {
@@ -64,12 +63,12 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         public void Fill(AudioData audioDataInput)
         {
-            OffsetPosition = 0;
+            _offsetPosition = 0;
 
             // Sets Ratio to show whole audio track
-            audioDataToWaveFormRatio =
+            _audioDataToWaveFormRatio =
                 audioDataInput.LengthSamples() / WaveFormWidth;
-            audioData = audioDataInput;
+            _audioData = audioDataInput;
 
             DrawWaveForm();
         }
@@ -79,7 +78,7 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         public void GoNextBigStep()
         {
-            if (audioData == null) return;
+            if (_audioData == null) return;
 
             var deltaX = (int) WaveFormWidth;
             GoNextX(deltaX);
@@ -88,7 +87,7 @@ namespace GPU_Declicker_UWP_0._01
         // move OffsetPositionX to the right for one tenth of waveForm length
         public void GoNextSmalStep()
         {
-            if (audioData == null) return;
+            if (_audioData == null) return;
 
             var deltaX = (int) WaveFormWidth / 10;
             GoNextX(deltaX);
@@ -97,25 +96,25 @@ namespace GPU_Declicker_UWP_0._01
         // move OffsetPositionX to the right for shiftX samples
         private void GoNextX(int deltaX)
         {
-            if (audioData == null) return;
+            if (_audioData == null) return;
             // Calculate number of samples to shift
-            var shift = (int) (deltaX * audioDataToWaveFormRatio);
+            var shift = (int) (deltaX * _audioDataToWaveFormRatio);
             // Calculate number of samples that waveForms show
             var samplesOnScrean = (int) (
                 WaveFormWidth
-                * audioDataToWaveFormRatio
+                * _audioDataToWaveFormRatio
             );
             // if there is enough room on the right than shift offsetPosition
-            if (OffsetPosition + shift + samplesOnScrean < audioData.LengthSamples())
+            if (_offsetPosition + shift + samplesOnScrean < _audioData.LengthSamples())
             {
-                OffsetPosition += shift;
+                _offsetPosition += shift;
             }
             else
             {
                 // set OffsetPosition to show the end of audioData
-                OffsetPosition = audioData.LengthSamples() - samplesOnScrean;
-                if (OffsetPosition < 0)
-                    OffsetPosition = 0;
+                _offsetPosition = _audioData.LengthSamples() - samplesOnScrean;
+                if (_offsetPosition < 0)
+                    _offsetPosition = 0;
             }
 
             DrawWaveForm();
@@ -124,7 +123,7 @@ namespace GPU_Declicker_UWP_0._01
         // move OffsetPositionX to the right for one waveForm length 
         public void GoPrevBigStep()
         {
-            if (audioData == null)
+            if (_audioData == null)
                 return;
 
             var deltaX = (int) WaveFormWidth;
@@ -134,7 +133,7 @@ namespace GPU_Declicker_UWP_0._01
         // move OffsetPositionX to the right for one tenth of waveForm length 
         public void GoPrevSmalStep()
         {
-            if (audioData == null)
+            if (_audioData == null)
                 return;
 
             var deltaX = (int) WaveFormWidth / 10;
@@ -142,16 +141,16 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         // move OffsetPositionX to the right for shiftX samples 
-        private void GoPrevX(int X)
+        private void GoPrevX(int x)
         {
-            if (audioData == null) return;
+            if (_audioData == null) return;
             // Calculate number of samples to shift
-            var shift = (int) (X * audioDataToWaveFormRatio);
+            var shift = (int) (x * _audioDataToWaveFormRatio);
             // if there is enough room on the left than shift offsetPositionX
-            if (OffsetPosition > shift) OffsetPosition -= shift;
+            if (_offsetPosition > shift) _offsetPosition -= shift;
             else
                 // set OffsetPositionX to show the begining of audioData
-                OffsetPosition = 0;
+                _offsetPosition = 0;
 
             DrawWaveForm();
         }
@@ -161,7 +160,7 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         private void DrawWaveForm()
         {
-            if (audioData == null) return;
+            if (_audioData == null) return;
 
             LeftChannelWaveFormPoints.Clear();
             RightChannelWaveFormPoints.Clear();
@@ -169,12 +168,12 @@ namespace GPU_Declicker_UWP_0._01
             // for every x-axis position of waveForm
             for (var x = 0; x < WaveFormWidth; x++)
             {
-                audioData.SetCurrentChannelType(ChannelType.Left);
+                _audioData.SetCurrentChannelType(ChannelType.Left);
                 AddPointToWaveform(LeftChannelWaveFormPoints, x);
 
-                if (audioData.IsStereo)
+                if (_audioData.IsStereo)
                 {
-                    audioData.SetCurrentChannelType(ChannelType.Right);
+                    _audioData.SetCurrentChannelType(ChannelType.Right);
                     AddPointToWaveform(RightChannelWaveFormPoints, x);
                 }
             }
@@ -186,10 +185,10 @@ namespace GPU_Declicker_UWP_0._01
         private void AddPointToWaveform(PointCollection waveFormPoints, int x)
         {
             var offsetY = (int) WaveFormHeight / 2;
-            var start = OffsetPosition + (int) (x * audioDataToWaveFormRatio);
-            var length = (int) audioDataToWaveFormRatio;
+            var start = _offsetPosition + (int) (x * _audioDataToWaveFormRatio);
+            var length = (int) _audioDataToWaveFormRatio;
 
-            if (start < 0 || start + length >= audioData.LengthSamples()) return;
+            if (start < 0 || start + length >= _audioData.LengthSamples()) return;
 
             // looks for max and min among many samples represented by a point on wave form
             FindMinMax(start, length, out var min, out var max);
@@ -197,7 +196,7 @@ namespace GPU_Declicker_UWP_0._01
             // connect previous point to a new point
             var y = (int) (-0.5 * WaveFormHeight * max) + offsetY;
             waveFormPoints.Add(new Point(x, y));
-            if (min != max)
+            if (Math.Abs(min - max) > 0.01)
             {
                 // form vertical line connecting max and min
                 y = (int) (-0.5 * WaveFormHeight * min) + offsetY;
@@ -219,17 +218,17 @@ namespace GPU_Declicker_UWP_0._01
             out float minValue,
             out float maxValue)
         {
-            minValue = audioData.GetInputSample(begining);
-            maxValue = audioData.GetInputSample(begining);
+            minValue = _audioData.GetInputSample(begining);
+            maxValue = _audioData.GetInputSample(begining);
 
             for (var index = 0;
-                index < length && begining + index < audioData.LengthSamples();
+                index < length && begining + index < _audioData.LengthSamples();
                 index++)
             {
-                if (audioData.GetInputSample(begining + index) < minValue)
-                    minValue = audioData.GetInputSample(begining + index);
-                if (audioData.GetInputSample(begining + index) > maxValue)
-                    maxValue = audioData.GetInputSample(begining + index);
+                if (_audioData.GetInputSample(begining + index) < minValue)
+                    minValue = _audioData.GetInputSample(begining + index);
+                if (_audioData.GetInputSample(begining + index) > maxValue)
+                    maxValue = _audioData.GetInputSample(begining + index);
             }
         }
 
@@ -238,13 +237,13 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         public void MagnifyMore()
         {
-            if (audioData == null)
+            if (_audioData == null)
                 return;
 
-            if (audioDataToWaveFormRatio >= 2)
-                audioDataToWaveFormRatio /= 2;
+            if (_audioDataToWaveFormRatio >= 2)
+                _audioDataToWaveFormRatio /= 2;
             else
-                audioDataToWaveFormRatio = 1;
+                _audioDataToWaveFormRatio = 1;
 
             DrawWaveForm();
         }
@@ -254,15 +253,15 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         public void MagnifyLess()
         {
-            if (audioData == null)
+            if (_audioData == null)
                 return;
 
-            if (WaveFormWidth * audioDataToWaveFormRatio * 2
-                < audioData.LengthSamples())
-                audioDataToWaveFormRatio *= 2;
+            if (WaveFormWidth * _audioDataToWaveFormRatio * 2
+                < _audioData.LengthSamples())
+                _audioDataToWaveFormRatio *= 2;
             else
-                audioDataToWaveFormRatio =
-                    audioData.LengthSamples() / WaveFormWidth;
+                _audioDataToWaveFormRatio =
+                    _audioData.LengthSamples() / WaveFormWidth;
 
             DrawWaveForm();
         }
@@ -273,19 +272,19 @@ namespace GPU_Declicker_UWP_0._01
         /// <param name="pointerPosition"> pointer position on waveForm</param>
         private int PointerOffsetPosition(double pointerPosition)
         {
-            return (int) (pointerPosition * audioDataToWaveFormRatio)
-                   + OffsetPosition;
+            return (int) (pointerPosition * _audioDataToWaveFormRatio)
+                   + _offsetPosition;
         }
 
         /// <summary>
         ///     Adjusts OffsetPosition to make pointer point to Offset sample
         /// </summary>
-        /// <param name="Offset"> offset for pointer position</param>
+        /// <param name="offset"> offset for pointer position</param>
         /// <param name="pointerPosition"> X of pointer position on waveForm</param>
-        private void SetOffsetForPointer(int Offset, double pointerPosition)
+        private void SetOffsetForPointer(int offset, double pointerPosition)
         {
-            OffsetPosition = Offset - (int) (pointerPosition * audioDataToWaveFormRatio);
-            if (OffsetPosition < 0) OffsetPosition = 0;
+            _offsetPosition = offset - (int) (pointerPosition * _audioDataToWaveFormRatio);
+            if (_offsetPosition < 0) _offsetPosition = 0;
             DrawWaveForm();
         }
 
@@ -352,14 +351,14 @@ namespace GPU_Declicker_UWP_0._01
 
         private void WaveForm_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            WaveFormHeight = waveFormLeftChannel.ActualHeight;
-            WaveFormWidth = waveFormsGroup.ActualWidth;
+            WaveFormHeight = WaveFormLeftChannel.ActualHeight;
+            WaveFormWidth = WaveFormsGroup.ActualWidth;
 
-            OffsetPosition = 0;
+            _offsetPosition = 0;
             // Sets Ratio to show whole audio track
-            if (audioData != null)
-                audioDataToWaveFormRatio =
-                    audioData.LengthSamples() / WaveFormWidth;
+            if (_audioData != null)
+                _audioDataToWaveFormRatio =
+                    _audioData.LengthSamples() / WaveFormWidth;
 
             // DrawWaveForm function not called because it slows down significantly
             // It will start after a delay

@@ -10,15 +10,16 @@ namespace GPU_Declicker_Tests
         [TestMethod]
         public void CalcBurgPred_SinusoidalInput_ReturnsPrediction()
         {
-            const int history_length = 512;
+            const int historyLength = 512;
 
-            var input_audio = new float[history_length + 1];
+            var inputAudio = new float[historyLength + 1];
 
-            for (var i = 0; i < input_audio.Length; i++)
-                input_audio[i] = (float) Math.Sin(2 * Math.PI * i / (history_length / 5.2));
+            for (var i = 0; i < inputAudio.Length; i++)
+                inputAudio[i] = (float) Math.Sin(2 * Math.PI * i / 
+                                                 (historyLength / 5.2));
 
             AudioData audioData =
-                new AudioDataMono(input_audio);
+                new AudioDataMono(inputAudio);
 
             for (var index = 0; index < audioData.LengthSamples(); index++)
                 audioData.SetOutputSample(
@@ -27,11 +28,11 @@ namespace GPU_Declicker_Tests
 
             var prediction = ClickRepairer.CalcBurgPred(
                 audioData,
-                history_length);
+                historyLength);
 
             Assert.AreEqual(
                 prediction,
-                input_audio[input_audio.Length - 1],
+                inputAudio[inputAudio.Length - 1],
                 0.000001);
         }
     }

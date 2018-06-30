@@ -21,13 +21,14 @@ namespace GPU_Declicker_Tests
             await audioInputOutput.Init(taskProgress);
 
             var audioLength = 44100;
-            var input_audio = new float[audioLength];
+            var inputAudio = new float[audioLength];
 
-            for (var i = 0; i < input_audio.Length; i++)
-                input_audio[i] = (float) Math.Sin(2 * Math.PI * i / (audioLength / 5));
+            for (var i = 0; i < inputAudio.Length; i++)
+                inputAudio[i] = (float) Math.Sin(2 * Math.PI * i / 
+                                                 ((float) audioLength / 5));
 
             var audioData =
-                new AudioDataMono(input_audio);
+                new AudioDataMono(inputAudio);
 
             for (var index = 0; index < audioData.LengthSamples(); index++)
                 audioData.SetOutputSample(

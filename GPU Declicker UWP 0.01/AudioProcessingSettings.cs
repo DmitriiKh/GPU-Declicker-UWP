@@ -10,8 +10,8 @@
             MaxLengthCorrection = 250;
         }
 
-        public int HistoryLengthSamples { get; set; }
-        public int CoefficientsNumber { get; set; }
+        public int HistoryLengthSamples { get; }
+        public int CoefficientsNumber { get; }
         public float ThresholdForDetection { get; set; }
         public int MaxLengthCorrection { get; set; }
     }

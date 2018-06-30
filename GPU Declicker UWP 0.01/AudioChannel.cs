@@ -5,135 +5,135 @@ namespace GPU_Declicker_UWP_0._01
 {
     public class AudioChannel
     {
-        private readonly List<AudioClick> ClicksList = new List<AudioClick>();
-        private readonly float[] input;
-        private readonly float[] output;
-        private readonly float[] predictionErr;
-        private readonly float[] predictionErrAverage;
-        private readonly float[] predictionErrBackup;
+        private readonly List<AudioClick> _clicksList = new List<AudioClick>();
+        private readonly float[] _input;
+        private readonly float[] _output;
+        private readonly float[] _predictionErr;
+        private readonly float[] _predictionErrAverage;
+        private readonly float[] _predictionErrBackup;
 
         public AudioChannel(float[] inputSamples)
         {
             ChannelIsPreprocessed = false;
             var length = inputSamples.Length;
-            input = inputSamples;
-            output = new float[length];
-            predictionErr = new float[length];
-            predictionErrBackup = new float[length];
-            predictionErrAverage = new float[length];
+            _input = inputSamples;
+            _output = new float[length];
+            _predictionErr = new float[length];
+            _predictionErrBackup = new float[length];
+            _predictionErrAverage = new float[length];
         }
 
         public bool ChannelIsPreprocessed { get; set; }
 
         public int LengthSamples()
         {
-            return input.Length;
+            return _input.Length;
         }
 
         public float GetInputSample(int position)
         {
-            return input[position];
+            return _input[position];
         }
 
         public void SetInputSample(int position, float value)
         {
-            input[position] = value;
+            _input[position] = value;
         }
 
         public float GetOutputSample(int position)
         {
-            return output[position];
+            return _output[position];
         }
 
         public void SetOutputSample(int position, float value)
         {
-            output[position] = value;
+            _output[position] = value;
         }
 
         public float GetPredictionErr(int position)
         {
-            return predictionErr[position];
+            return _predictionErr[position];
         }
 
         public void SetPredictionErr(int position, float value)
         {
-            predictionErr[position] = value;
+            _predictionErr[position] = value;
         }
 
         public float GetPredictionErrBackup(int position)
         {
-            return predictionErrBackup[position];
+            return _predictionErrBackup[position];
         }
 
         public void SetPredictionErrBackup(int position, float value)
         {
-            predictionErrBackup[position] = value;
+            _predictionErrBackup[position] = value;
         }
 
         public float GetPredictionErrAverage(int position)
         {
-            return predictionErrAverage[position];
+            return _predictionErrAverage[position];
         }
 
         public void SetPredictionErrAverage(int position, float value)
         {
-            predictionErrAverage[position] = value;
+            _predictionErrAverage[position] = value;
         }
 
         public void AddClickToList(
             int position,
             int lenght,
-            float threshold_level_detected,
+            float thresholdLevelDetected,
             AudioData audioData,
             ChannelType channel)
         {
-            ClicksList.Add(new AudioClick(
+            _clicksList.Add(new AudioClick(
                 position,
                 lenght,
-                threshold_level_detected,
+                thresholdLevelDetected,
                 audioData,
                 channel));
         }
 
         public int GetNumberOfClicks()
         {
-            return ClicksList.Count;
+            return _clicksList.Count;
         }
 
         internal void RestoreInitState(int position, int lenght)
         {
             for (var index = position; index < position + lenght; index++)
             {
-                output[index] = input[index];
-                predictionErr[index] = predictionErrBackup[index];
+                _output[index] = _input[index];
+                _predictionErr[index] = _predictionErrBackup[index];
             }
         }
 
         public void ChangeClickAproved(int index)
         {
-            ClicksList[index].ChangeAproved();
+            _clicksList[index].ChangeAproved();
         }
 
         public AudioClick GetClick(int index)
         {
-            return ClicksList[index];
+            return _clicksList[index];
         }
 
         public AudioClick GetLastClick()
         {
-            if (ClicksList.Count > 0) return ClicksList.Last();
+            if (_clicksList.Count > 0) return _clicksList.Last();
 
             return null;
         }
 
         internal void ClearAllClicks()
         {
-            ClicksList.Clear();
+            _clicksList.Clear();
         }
 
         internal void SortClicks()
         {
-            ClicksList.Sort();
+            _clicksList.Sort();
         }
     }
 }

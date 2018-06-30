@@ -17,22 +17,23 @@ namespace GPU_Declicker_UWP_0._01
     ///     Provides user ability to change position and length of corrected arrea
     ///     or turn the correction off
     /// </summary>
-    public sealed partial class ClickWindow : UserControl
+    public sealed partial class ClickWindow
     {
-        private readonly AudioClick audioClickBinded;
-        private bool IsPointerPressedInTheLeftArea;
-        private bool IsPointerPressedInTheMidle;
-        private bool IsPointerPressedInTheRightArea;
-        private Point pointerLastPosition;
-        private Point pointPointerPressedInTheLeftArea;
-        private Point pointPointerPressedInTheMidle;
-        private Point pointPointerPressedInTheRightArea;
+        private readonly AudioClick _audioClickBinded;
+        private bool _isPointerPressedInTheLeftArea;
+        private bool _isPointerPressedInTheMidle;
+        private bool _isPointerPressedInTheRightArea;
+        private Point _pointerLastPosition;
+        private Point _pointPointerPressedInTheLeftArea;
+        private Point _pointPointerPressedInTheMidle;
+        private Point _pointPointerPressedInTheRightArea;
 
         public ClickWindow(AudioClick audioClick)
         {
             InitializeComponent();
-            audioClickBinded = audioClick;
-            Threshold_level_detected.Text = audioClick.ThresholdLevelDetected.ToString("0.0");
+            _audioClickBinded = audioClick;
+            ThresholdLevelDetected.Text = 
+                audioClick.ThresholdLevelDetected.ToString("0.0");
             Position.Text = audioClick.Position.ToString("0");
             SetBorderColour();
             SetPolylines();
@@ -40,10 +41,8 @@ namespace GPU_Declicker_UWP_0._01
 
         private void SetBorderColour()
         {
-            if (audioClickBinded.Aproved)
-                Border.Stroke = new SolidColorBrush(Colors.Aqua);
-            else
-                Border.Stroke = new SolidColorBrush(Colors.Yellow);
+            Border.Stroke = _audioClickBinded.Aproved ? 
+                new SolidColorBrush(Colors.Aqua) : new SolidColorBrush(Colors.Yellow);
         }
 
         /// <summary>
@@ -51,29 +50,32 @@ namespace GPU_Declicker_UWP_0._01
         /// </summary>
         private void SetPolylines()
         {
+            if (Input.Points is null || Output.Points is null)
+                return;
+
             // clear polylines
             Input.Points.Clear();
             Output.Points.Clear();
             // calculate position in audio track to show click 
             //in the center of this CW
             var cwStartPos = (int) (
-                audioClickBinded.Position +
-                audioClickBinded.Length / 2 -
+                _audioClickBinded.Position +
+                _audioClickBinded.Length / 2 -
                 MainGrid.Width / 2);
             // set Input polylyne
             for (var i = 0; i < MainGrid.Width; i++)
             {
-                var s = audioClickBinded.GetInputSample(cwStartPos + i);
+                var s = _audioClickBinded.GetInputSample(cwStartPos + i);
                 double y = 100 * (-s + 1) / 2;
                 Input.Points.Add(new Point(i, y));
             }
 
             // set Output polyline two samples wider than click
-            for (var i = audioClickBinded.Position - cwStartPos - 1;
-                i <= audioClickBinded.Position - cwStartPos + audioClickBinded.Length + 1;
+            for (var i = _audioClickBinded.Position - cwStartPos - 1;
+                i <= _audioClickBinded.Position - cwStartPos + _audioClickBinded.Length + 1;
                 i++)
             {
-                var s = audioClickBinded.GetOutputSample(cwStartPos + i);
+                var s = _audioClickBinded.GetOutputSample(cwStartPos + i);
                 double y = 100 * (-s + 1) / 2;
                 Output.Points.Add(new Point(i, y));
             }
@@ -97,16 +99,16 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // remember pointer position
                 // action will be taken when poiner released
-                IsPointerPressedInTheLeftArea = true;
-                pointerLastPosition = e.GetCurrentPoint(this).Position;
-                pointPointerPressedInTheLeftArea = pointerLastPosition;
+                _isPointerPressedInTheLeftArea = true;
+                _pointerLastPosition = e.GetCurrentPoint(this).Position;
+                _pointPointerPressedInTheLeftArea = _pointerLastPosition;
             }
 
             if (areaPressed == Area.LeftShrink)
             {
                 // shrink marked damaged sample sequence on left
-                audioClickBinded.ShrinkLeft();
-                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                _audioClickBinded.ShrinkLeft();
+                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
@@ -114,16 +116,16 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // remember pointer position
                 // action will be taken when poiner released
-                IsPointerPressedInTheMidle = true;
-                pointerLastPosition = e.GetCurrentPoint(this).Position;
-                pointPointerPressedInTheMidle = pointerLastPosition;
+                _isPointerPressedInTheMidle = true;
+                _pointerLastPosition = e.GetCurrentPoint(this).Position;
+                _pointPointerPressedInTheMidle = _pointerLastPosition;
             }
 
             if (areaPressed == Area.RightShrink)
             {
                 // shrink marked damaged sample sequence on right
-                audioClickBinded.ShrinkRight();
-                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                _audioClickBinded.ShrinkRight();
+                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
@@ -131,9 +133,9 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // remember pointer position
                 // action will be taken when poiner released
-                IsPointerPressedInTheRightArea = true;
-                pointerLastPosition = e.GetCurrentPoint(this).Position;
-                pointPointerPressedInTheRightArea = pointerLastPosition;
+                _isPointerPressedInTheRightArea = true;
+                _pointerLastPosition = e.GetCurrentPoint(this).Position;
+                _pointPointerPressedInTheRightArea = _pointerLastPosition;
             }
         }
 
@@ -156,9 +158,9 @@ namespace GPU_Declicker_UWP_0._01
         {
             var point = e.GetCurrentPoint(this).Position;
 
-            if (IsPointerPressedInTheLeftArea ||
-                IsPointerPressedInTheMidle ||
-                IsPointerPressedInTheRightArea)
+            if (_isPointerPressedInTheLeftArea ||
+                _isPointerPressedInTheMidle ||
+                _isPointerPressedInTheRightArea)
                 GestProcessing(point);
 
             var grid = sender as Grid;
@@ -206,45 +208,45 @@ namespace GPU_Declicker_UWP_0._01
             var minMovement = 3;
             var changed = false;
 
-            if (IsPointerPressedInTheMidle)
+            if (_isPointerPressedInTheMidle)
             {
-                if (point.X - pointerLastPosition.X > minMovement)
+                if (point.X - _pointerLastPosition.X > minMovement)
                 {
                     // expand marked damaged sample sequence to right
-                    audioClickBinded.ExpandRight();
-                    Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                    _audioClickBinded.ExpandRight();
+                    ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                     changed = true;
                 }
 
-                if (point.X - pointerLastPosition.X < -minMovement)
+                if (point.X - _pointerLastPosition.X < -minMovement)
                 {
                     // expand marked damaged sample sequence to right
-                    audioClickBinded.ExpandLeft();
-                    Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                    _audioClickBinded.ExpandLeft();
+                    ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                     changed = true;
                 }
             }
 
-            if (IsPointerPressedInTheRightArea && point.X - pointerLastPosition.X < -minMovement)
+            if (_isPointerPressedInTheRightArea && point.X - _pointerLastPosition.X < -minMovement)
             {
                 // shrink marked damaged sample sequence on right
-                audioClickBinded.ShrinkRight();
-                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                _audioClickBinded.ShrinkRight();
+                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 changed = true;
             }
 
-            if (IsPointerPressedInTheLeftArea && point.X - pointerLastPosition.X > minMovement)
+            if (_isPointerPressedInTheLeftArea && point.X - _pointerLastPosition.X > minMovement)
             {
                 // shrink marked damaged sample sequence on right
-                audioClickBinded.ShrinkLeft();
-                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                _audioClickBinded.ShrinkLeft();
+                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 changed = true;
             }
 
             if (changed)
             {
                 SetPolylines();
-                pointerLastPosition = point;
+                _pointerLastPosition = point;
             }
         }
 
@@ -270,9 +272,9 @@ namespace GPU_Declicker_UWP_0._01
         {
             ActionNotification.Text = "";
             // if we are modifying click lenght then fix changes
-            if (IsPointerPressedInTheLeftArea ||
-                IsPointerPressedInTheMidle ||
-                IsPointerPressedInTheRightArea)
+            if (_isPointerPressedInTheLeftArea ||
+                _isPointerPressedInTheMidle ||
+                _isPointerPressedInTheRightArea)
                 Grid_PointerReleased(sender, e);
         }
 
@@ -286,38 +288,38 @@ namespace GPU_Declicker_UWP_0._01
         {
             var point = e.GetCurrentPoint(this).Position;
 
-            if (IsPointerPressedInTheMidle &&
-                Math.Abs(point.X - pointPointerPressedInTheMidle.X) < 1 &&
-                Math.Abs(point.Y - pointPointerPressedInTheMidle.Y) < 1)
+            if (_isPointerPressedInTheMidle &&
+                Math.Abs(point.X - _pointPointerPressedInTheMidle.X) < 1 &&
+                Math.Abs(point.Y - _pointPointerPressedInTheMidle.Y) < 1)
             {
                 // change Aproved property of click
-                audioClickBinded.ChangeAproved();
+                _audioClickBinded.ChangeAproved();
                 SetBorderColour();
             }
 
-            if (IsPointerPressedInTheRightArea &&
-                Math.Abs(point.X - pointPointerPressedInTheRightArea.X) < 1 &&
-                Math.Abs(point.Y - pointPointerPressedInTheRightArea.Y) < 1)
+            if (_isPointerPressedInTheRightArea &&
+                Math.Abs(point.X - _pointPointerPressedInTheRightArea.X) < 1 &&
+                Math.Abs(point.Y - _pointPointerPressedInTheRightArea.Y) < 1)
             {
                 // expand marked damaged sample sequence to right
-                audioClickBinded.ExpandRight();
-                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                _audioClickBinded.ExpandRight();
+                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
-            if (IsPointerPressedInTheLeftArea &&
-                Math.Abs(point.X - pointPointerPressedInTheLeftArea.X) < 1 &&
-                Math.Abs(point.Y - pointPointerPressedInTheLeftArea.Y) < 1)
+            if (_isPointerPressedInTheLeftArea &&
+                Math.Abs(point.X - _pointPointerPressedInTheLeftArea.X) < 1 &&
+                Math.Abs(point.Y - _pointPointerPressedInTheLeftArea.Y) < 1)
             {
                 // expand marked damaged sample sequence to right
-                audioClickBinded.ExpandLeft();
-                Threshold_level_detected.Text = audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                _audioClickBinded.ExpandLeft();
+                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
-            IsPointerPressedInTheMidle = false;
-            IsPointerPressedInTheRightArea = false;
-            IsPointerPressedInTheLeftArea = false;
+            _isPointerPressedInTheMidle = false;
+            _isPointerPressedInTheRightArea = false;
+            _isPointerPressedInTheLeftArea = false;
         }
 
         /// <summary>

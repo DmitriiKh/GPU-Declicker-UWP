@@ -21,24 +21,27 @@ namespace GPU_Declicker_Tests
             // one sample on WaveForm
             var audioLength = (int) audioViewer.WaveFormWidth * 100;
 
-            var input_audio = new float[audioLength];
+            var inputAudio = new float[audioLength];
 
-            for (var i = 0; i < input_audio.Length; i++)
-                input_audio[i] = (float) Math.Sin(2 * Math.PI * i /
+            for (var i = 0; i < inputAudio.Length; i++)
+                inputAudio[i] = (float) Math.Sin(2 * Math.PI * i /
                                                   (audioLength /
-                                                   (audioViewer.WaveFormWidth * 5) // 5 waves per one sample 
+                                                   (audioViewer.WaveFormWidth * 5) 
+                                                      // 5 waves per one sample 
                                                       // on WaveForm
                                                   ));
 
             var audioData =
-                new AudioDataMono(input_audio);
+                new AudioDataMono(inputAudio);
 
             audioViewer.Fill(audioData);
 
             foreach (var p in audioViewer.LeftChannelWaveFormPoints)
                 // each point should be at max (top) 
                 // or at min (bottom of audioViewer)
-                Assert.IsTrue(p.Y == 0 || p.Y == audioViewer.WaveFormHeight);
+                Assert.IsTrue(
+                    Math.Abs(p.Y) < 0.001 || 
+                    Math.Abs(p.Y - audioViewer.WaveFormHeight) < 0.001);
         }
     }
 }

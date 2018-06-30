@@ -8,10 +8,10 @@
 
     public abstract class AudioData
     {
-        internal AudioChannel currentAudioChannel;
+        internal AudioChannel CurrentAudioChannel;
         internal bool IsStereo;
 
-        public AudioProcessingSettings AudioProcessingSettings { get; set; }
+        public AudioProcessingSettings AudioProcessingSettings { get; protected set; }
 
         public abstract ChannelType GetCurrentChannelType();
         public abstract void SetCurrentChannelType(ChannelType channelType);
@@ -20,120 +20,120 @@
 
         public int LengthSamples()
         {
-            return currentAudioChannel.LengthSamples();
+            return CurrentAudioChannel.LengthSamples();
         }
 
 
         public void CurrentChannelRestoreInitState(int position, int lenght)
         {
-            currentAudioChannel.RestoreInitState(position, lenght);
+            CurrentAudioChannel.RestoreInitState(position, lenght);
         }
 
         public float GetPredictionErrBackup(int position)
         {
-            return currentAudioChannel.GetPredictionErrBackup(position);
+            return CurrentAudioChannel.GetPredictionErrBackup(position);
         }
 
         public void SetCurrentChannelIsPreprocessed()
         {
-            currentAudioChannel.ChannelIsPreprocessed = true;
+            CurrentAudioChannel.ChannelIsPreprocessed = true;
         }
 
         public bool CurrentChannelIsPreprocessed()
         {
-            return currentAudioChannel.ChannelIsPreprocessed;
+            return CurrentAudioChannel.ChannelIsPreprocessed;
         }
 
         public void BackupCurrentChannelPredErrors()
         {
             for (var index = 0;
-                index < currentAudioChannel.LengthSamples();
+                index < CurrentAudioChannel.LengthSamples();
                 index++)
-                currentAudioChannel.SetPredictionErrBackup(
+                CurrentAudioChannel.SetPredictionErrBackup(
                     index,
-                    currentAudioChannel.GetPredictionErr(index));
+                    CurrentAudioChannel.GetPredictionErr(index));
         }
 
         public void RestoreCurrentChannelPredErrors()
         {
             for (var index = 0;
-                index < currentAudioChannel.LengthSamples();
+                index < CurrentAudioChannel.LengthSamples();
                 index++)
-                currentAudioChannel.SetPredictionErr(
+                CurrentAudioChannel.SetPredictionErr(
                     index,
-                    currentAudioChannel.GetPredictionErrBackup(index));
+                    CurrentAudioChannel.GetPredictionErrBackup(index));
         }
 
         public void AddClickToList(
             int position,
             int lenght,
-            float threshold_level_detected)
+            float thresholdLevelDetected)
         {
-            currentAudioChannel.AddClickToList(
+            CurrentAudioChannel.AddClickToList(
                 position, lenght,
-                threshold_level_detected,
+                thresholdLevelDetected,
                 this,
                 GetCurrentChannelType());
         }
 
         public int CurrentChannelGetNumberOfClicks()
         {
-            return currentAudioChannel.GetNumberOfClicks();
+            return CurrentAudioChannel.GetNumberOfClicks();
         }
 
         public void ChangeClickAproved(int index)
         {
-            currentAudioChannel.ChangeClickAproved(index);
+            CurrentAudioChannel.ChangeClickAproved(index);
         }
 
         public AudioClick GetClick(int index)
         {
-            return currentAudioChannel.GetClick(index);
+            return CurrentAudioChannel.GetClick(index);
         }
 
         public AudioClick GetLastClick()
         {
-            return currentAudioChannel.GetLastClick();
+            return CurrentAudioChannel.GetLastClick();
         }
 
         public float GetInputSample(int position)
         {
-            return currentAudioChannel.GetInputSample(position);
+            return CurrentAudioChannel.GetInputSample(position);
         }
 
         public void SetInputSample(int position, float sample)
         {
-            currentAudioChannel.SetInputSample(position, sample);
+            CurrentAudioChannel.SetInputSample(position, sample);
         }
 
         public float GetOutputSample(int position)
         {
-            return currentAudioChannel.GetOutputSample(position);
+            return CurrentAudioChannel.GetOutputSample(position);
         }
 
         public void SetOutputSample(int position, float sample)
         {
-            currentAudioChannel.SetOutputSample(position, sample);
+            CurrentAudioChannel.SetOutputSample(position, sample);
         }
 
         public float GetPredictionErr(int position)
         {
-            return currentAudioChannel.GetPredictionErr(position);
+            return CurrentAudioChannel.GetPredictionErr(position);
         }
 
         public void SetPredictionErr(int position, float prediction)
         {
-            currentAudioChannel.SetPredictionErr(position, prediction);
+            CurrentAudioChannel.SetPredictionErr(position, prediction);
         }
 
         public float GetErrorAverage(int position)
         {
-            return currentAudioChannel.GetPredictionErrAverage(position);
+            return CurrentAudioChannel.GetPredictionErrAverage(position);
         }
 
-        public void SetErrorAverage(int position, float a_average)
+        public void SetErrorAverage(int position, float aAverage)
         {
-            currentAudioChannel.SetPredictionErrAverage(position, a_average);
+            CurrentAudioChannel.SetPredictionErrAverage(position, aAverage);
         }
 
         public void OnClickChanged(object source, ClickEventArgs e)

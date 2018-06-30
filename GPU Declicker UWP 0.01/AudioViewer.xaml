@@ -8,7 +8,7 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
-    <Grid Name="waveFormsGroup"
+    <Grid Name="WaveFormsGroup"
           Background="Transparent"
           PointerWheelChanged="WaveFormsGroup_PointerWheelChanged"
           PointerPressed="WaveFormsGroup_PointerPressed"
@@ -23,13 +23,13 @@
         </Grid.RowDefinitions>
         <Polyline Grid.Row="0"
                   Points="{x:Bind LeftChannelWaveFormPoints, Mode=OneWay}"
-                  Name="waveFormLeftChannel"
+                  Name="WaveFormLeftChannel"
                   Stroke="{StaticResource ApplicationForegroundThemeBrush}"
                   StrokeThickness="1" />
         <Polyline Grid.Row="1"
                   Points="{x:Bind RightChannelWaveFormPoints, Mode=OneWay}"
-                  Name="waveFormRightCnannel"
-                  Stroke="{Binding ElementName=waveFormLeftChannel, Path=Stroke}"
-                  StrokeThickness="{Binding ElementName=waveFormLeftChannel, Path=StrokeThickness}" />
+                  Name="WaveFormRightCnannel"
+                  Stroke="{Binding ElementName=WaveFormLeftChannel, Path=Stroke}"
+                  StrokeThickness="{Binding ElementName=WaveFormLeftChannel, Path=StrokeThickness}" />
     </Grid>
 </UserControl>

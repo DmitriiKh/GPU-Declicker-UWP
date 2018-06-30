@@ -6,13 +6,13 @@
     /// </summary>
     public class AudioDataMono : AudioData
     {
-        private readonly AudioChannel monoChannel;
+        private readonly AudioChannel _monoChannel;
 
         public AudioDataMono(float[] leftChannelSamples)
         {
             IsStereo = false;
-            monoChannel = new AudioChannel(leftChannelSamples);
-            currentAudioChannel = monoChannel;
+            _monoChannel = new AudioChannel(leftChannelSamples);
+            CurrentAudioChannel = _monoChannel;
 
             AudioProcessingSettings = new AudioProcessingSettings();
         }
@@ -29,12 +29,12 @@
 
         public override void ClearAllClicks()
         {
-            monoChannel.ClearAllClicks();
+            _monoChannel.ClearAllClicks();
         }
 
         public override void SortClicks()
         {
-            monoChannel.SortClicks();
+            _monoChannel.SortClicks();
         }
     }
 }

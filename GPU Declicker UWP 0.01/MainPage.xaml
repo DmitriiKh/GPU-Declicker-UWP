@@ -8,7 +8,7 @@
     mc:Ignorable="d"
     SizeChanged="PageSizeChangedEventHandler">
 
-    <Grid Name="mainGrid"
+    <Grid Name="MainGrid"
           Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="3*" />
@@ -16,14 +16,14 @@
             <RowDefinition Height="15*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <Grid Grid.Row="0" Name="topGrid">
+        <Grid Grid.Row="0" Name="TopGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="12*" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0" Name="leftButtonsGroup">
+            <Grid Grid.Column="0" Name="LeftButtonsGroup">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -37,9 +37,9 @@
             </Grid>
 
             <local:AudioViewer Grid.Column="1"
-                               x:Name="audioViewer" />
+                               x:Name="AudioViewer" />
 
-            <Grid Grid.Column="2" Name="rightButtonsGroup">
+            <Grid Grid.Column="2" Name="RightButtonsGroup">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -51,7 +51,7 @@
                     <Button Name="GoRightSmallStep" Click="GoRightSmallStep_Click" Content="&gt;" />
                 </Viewbox>
             </Grid>
-            <Grid Grid.Column="3" Name="specialButtonsGroup">
+            <Grid Grid.Column="3" Name="SpecialButtonsGroup">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -90,7 +90,7 @@
                            VerticalAlignment="Top"
                            HorizontalAlignment="Left" />
                 <Slider Grid.Row="1"
-                        Name="Threshold_Slider"
+                        Name="ThresholdSlider"
                         Value="10"
                         Minimum="1"
                         Maximum="50"
@@ -98,8 +98,8 @@
                         SmallChange="0.1"
                         VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="0"
-                           Name="Threshold_val"
-                           Text="{Binding ElementName=Threshold_Slider,
+                           Name="ThresholdVal"
+                           Text="{Binding ElementName=ThresholdSlider,
                         Path=Value, 
                         Mode=TwoWay}"
                            VerticalAlignment="Top"
@@ -115,7 +115,7 @@
                            VerticalAlignment="Top"
                            HorizontalAlignment="Left" />
                 <Slider Grid.Row="1"
-                        Name="Max_length_Slider"
+                        Name="MaxLengthSlider"
                         Value="250"
                         Minimum="1"
                         Maximum="500"
@@ -123,8 +123,8 @@
                         SmallChange="1"
                         VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="0"
-                           Name="Max_length_val"
-                           Text="{Binding ElementName=Max_length_Slider, 
+                           Name="MaxLengthVal"
+                           Text="{Binding ElementName=MaxLengthSlider, 
                     Path=Value}"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Right" />

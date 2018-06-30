@@ -14,15 +14,15 @@ namespace GPU_Declicker_Tests
             const int historyLength = 512;
             const int numberOfSamplesToCheck = 10;
 
-            var input_audio =
+            var inputAudio =
                 new float[historyLength + numberOfSamplesToCheck];
             var forwardPredictions =
                 new float[historyLength + numberOfSamplesToCheck];
             var backwardPredictions =
                 new float[historyLength + numberOfSamplesToCheck];
 
-            for (var i = 0; i < input_audio.Length; i++)
-                input_audio[i] = (float) Math.Sin(
+            for (var i = 0; i < inputAudio.Length; i++)
+                inputAudio[i] = (float) Math.Sin(
                     2 * Math.PI * i / (historyLength / 5.2));
 
             for (var index = historyLength;
@@ -30,7 +30,7 @@ namespace GPU_Declicker_Tests
                 index++)
             {
                 BurgPredictionCalculator.Calculate(
-                    input_audio,
+                    inputAudio,
                     forwardPredictions,
                     backwardPredictions,
                     index,
@@ -39,7 +39,7 @@ namespace GPU_Declicker_Tests
 
                 Assert.AreEqual(
                     forwardPredictions[index],
-                    input_audio[index],
+                    inputAudio[index],
                     0.000001);
             }
         }

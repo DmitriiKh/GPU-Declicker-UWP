@@ -31,7 +31,7 @@
             var historyLengthSamples =
                 audioData.AudioProcessingSettings.HistoryLengthSamples;
 
-            HelperCalculator.CalculateErrorAverageCPU(
+            HelperCalculator.CalculateErrorAverageCpu(
                 audioData,
                 position - historyLengthSamples,
                 position + lenght + historyLengthSamples,

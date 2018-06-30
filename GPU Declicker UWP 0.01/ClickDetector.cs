@@ -14,10 +14,8 @@ namespace GPU_Declicker_UWP_0._01
 
             var thresholdLevelDetected = error / errorAverage;
 
-            if (thresholdLevelDetected >
-                audioData.AudioProcessingSettings.ThresholdForDetection)
-                return true;
-            return false;
+            return thresholdLevelDetected >
+                   audioData.AudioProcessingSettings.ThresholdForDetection;
         }
     }
 }

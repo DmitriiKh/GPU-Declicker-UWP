@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Navigation;
 
 namespace GPU_Declicker_UWP_0._01
 {
-    internal sealed partial class App : Application
+    public sealed partial class App
     {
         public App()
         {

@@ -66,7 +66,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public static bool operator ==(AudioClick left, AudioClick right)
         {
-            if (right is null)
+            if (left is null || right is null)
                 return false;
 
             return left.Position == right.Position &&
@@ -76,7 +76,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public static bool operator !=(AudioClick left, AudioClick right)
         {
-            if (right is null)
+            if (left is null || right is null)
                 return true;
 
             return left.Position != right.Position ||
@@ -118,10 +118,7 @@ namespace GPU_Declicker_UWP_0._01
 
         public void ChangeAproved()
         {
-            if (!Aproved)
-                Aproved = true;
-            else
-                Aproved = false;
+            Aproved = !Aproved;
         }
 
         public float GetInputSample(int position)

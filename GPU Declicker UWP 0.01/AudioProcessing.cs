@@ -8,7 +8,7 @@ namespace GPU_Declicker_UWP_0._01
         /// <summary>
         ///     Calculates prediction errors for a channel using CPU (Parallel.For)
         /// </summary>
-        private static void CalculateBurgPredictionErrCPU(
+        private static void CalculateBurgPredictionErrCpu(
             AudioData audioData,
             IProgress<double> progress)
         {
@@ -29,10 +29,10 @@ namespace GPU_Declicker_UWP_0._01
             {
                 progress.Report((double) 100 * index / audioData.LengthSamples());
 
-                var end_position = index + step;
-                if (end_position > audioData.LengthSamples()) end_position = audioData.LengthSamples();
+                var endPosition = index + step;
+                if (endPosition > audioData.LengthSamples()) endPosition = audioData.LengthSamples();
 
-                Parallel.For(index, end_position,
+                Parallel.For(index, endPosition,
                     indexParallelFor =>
                         BurgPredictionCalculator.Calculate(
                             inputaudio,
@@ -112,7 +112,7 @@ namespace GPU_Declicker_UWP_0._01
             }
             else
             {
-                CalculateBurgPredictionErrCPU(audioData, progress);
+                CalculateBurgPredictionErrCpu(audioData, progress);
                 audioData.SetCurrentChannelIsPreprocessed();
                 audioData.BackupCurrentChannelPredErrors();
             }
@@ -120,7 +120,7 @@ namespace GPU_Declicker_UWP_0._01
             for (var index = 0; index < historyLengthSamples + 16; index++)
                 audioData.SetErrorAverage(index, 0.001F);
 
-            HelperCalculator.CalculateErrorAverageCPU(
+            HelperCalculator.CalculateErrorAverageCpu(
                 audioData,
                 historyLengthSamples,
                 audioData.LengthSamples(),
@@ -199,7 +199,7 @@ namespace GPU_Declicker_UWP_0._01
                 await Task.Delay(50);
             }
 
-            for (var cpu_core = 0; cpu_core < cpuCoreNumber; cpu_core++) await tasks[cpu_core];
+            for (var cpuCore = 0; cpuCore < cpuCoreNumber; cpuCore++) await tasks[cpuCore];
 
             // when all threads finished clear progress bar
             progress.Report(0);
@@ -211,10 +211,10 @@ namespace GPU_Declicker_UWP_0._01
 
         private static void ScanSegment(
             AudioData audioData,
-            int segment_start,
-            int segment_end,
+            int segmentStart,
+            int segmentEnd,
             IProgress<double> progress,
-            int cpu_core
+            int cpuCore
         )
         {
             var result = new FixResult
@@ -222,31 +222,30 @@ namespace GPU_Declicker_UWP_0._01
                 Success = false
             };
 
-            var max_length = 0;
-            var last_processed_sample = 0;
+            var lastProcessedSample = 0;
 
             // cycle to check every sample
-            for (var index = segment_start; index < segment_end; index++)
+            for (var index = segmentStart; index < segmentEnd; index++)
             {
                 // only core #0 reports progress
-                if (cpu_core == 0 &&
+                if (cpuCore == 0 &&
                     // to not report too many times
                     index % 1000 == 0)
-                    progress?.Report((double) 100 * index / segment_end);
+                    progress?.Report((double) 100 * index / segmentEnd);
 
                 result.Success = false;
 
-                if (index > last_processed_sample &&
+                if (index > lastProcessedSample &&
                     ClickDetector.IsSampleSuspicious(
                         audioData,
                         index))
                 {
-                    max_length = HelperCalculator.GetMaxLength(audioData, index);
+                    var maxLength = HelperCalculator.GetMaxLength(audioData, index);
                     result = ClickLengthFinder.FindLengthOfClick(
                         audioData,
                         index,
-                        max_length,
-                        last_processed_sample);
+                        maxLength,
+                        lastProcessedSample);
                 }
 
                 if (result.Success)
@@ -257,7 +256,7 @@ namespace GPU_Declicker_UWP_0._01
                         result.Length,
                         HelperCalculator.CalculateDetectionLevel(audioData, result.Position));
 
-                    last_processed_sample = result.Position + result.Length + 1;
+                    lastProcessedSample = result.Position + result.Length + 1;
                 }
             }
         }
