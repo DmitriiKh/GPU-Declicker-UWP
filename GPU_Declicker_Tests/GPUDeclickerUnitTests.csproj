@@ -170,8 +170,6 @@
     <Content Include="Assets1\WideTile1.scale-150.png" />
     <Content Include="Assets1\WideTile1.scale-200.png" />
     <Content Include="Assets1\WideTile1.scale-400.png" />
-    <None Include="GPUDeclickerUnitTests_StoreKey.pfx" />
-    <None Include="Package.StoreAssociation.xml" />
     <Content Include="Properties\UnitTestApp.rd.xml" />
   </ItemGroup>
   <ItemGroup>
