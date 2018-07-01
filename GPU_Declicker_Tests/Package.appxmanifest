@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="14220DmitriiKhrustalev.GPUDeclicker" Publisher="CN=C8BBD50F-6C1B-4F6A-90E2-4AC347E86AB8" Version="1.1.0.0" />
+  <Identity Name="bcd8cdaf-ccc1-4bb8-934e-785607ac01d7" Publisher="CN=dimki" Version="1.1.0.0" />
   <mp:PhoneIdentity PhoneProductId="87604d80-8242-45f8-8c29-bed5b8155dda" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>GPU Declicker</DisplayName>
+    <DisplayName>GPUDeclickerUnitTests</DisplayName>
     <PublisherDisplayName>Dmitrii Khrustalev</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -14,8 +14,8 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="vstest.executionengine.universal.App" Executable="$targetnametoken$.exe" EntryPoint="UnitTestProject2.App">
-      <uap:VisualElements DisplayName="GPU Declicker" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="UnitTestProject2" BackgroundColor="transparent">
+    <Application Id="vstest.executionengine.universal.App" Executable="$targetnametoken$.exe" EntryPoint="GPU_Declicker_Tests.App">
+      <uap:VisualElements DisplayName="GPU Declicker" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="UnitTestProject" BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
