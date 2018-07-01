@@ -163,8 +163,7 @@ namespace GPU_Declicker_UWP_0._01
                 _isPointerPressedInTheRightArea)
                 GestProcessing(point);
 
-            var grid = sender as Grid;
-            if (grid == null)
+            if (!(sender is Grid grid))
                 return;
             var areaNavigated = PointerOnWhichArea(grid.ActualWidth, e);
             if (areaNavigated == Area.LeftExpand)

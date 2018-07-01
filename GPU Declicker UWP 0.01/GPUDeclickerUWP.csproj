@@ -90,7 +90,7 @@
     <Prefer32Bit>true</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EnableGatekeeperAnalysis>false</EnableGatekeeperAnalysis>
-    <UseDotNetNativeToolchain>true</UseDotNetNativeToolchain>
+    <UseDotNetNativeToolchain>false</UseDotNetNativeToolchain>
     <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -146,7 +146,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="GPU Declicker UWP 0.01_StoreKey.pfx" />
-    <None Include="GPU Declicker UWP 0.01_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Package.StoreAssociation.xml" />

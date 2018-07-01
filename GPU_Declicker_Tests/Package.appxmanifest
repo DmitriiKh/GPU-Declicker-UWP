@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="65ab27c9-6cc3-4b90-8009-23a65508392e" Publisher="CN=dimki" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="65ab27c9-6cc3-4b90-8009-23a65508392e" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="6f13767c-a24d-48b6-8a04-c5631a177dba" Publisher="CN=dimki" Version="1.0.0.0" />
+  <mp:PhoneIdentity PhoneProductId="6f13767c-a24d-48b6-8a04-c5631a177dba" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
-    <DisplayName>GPU_Declicker_Tests</DisplayName>
+    <DisplayName>UnitTestProject2</DisplayName>
     <PublisherDisplayName>dimki</PublisherDisplayName>
-    <Logo>Assets1\1PackageLogo.png</Logo>
+    <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
     <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
@@ -14,21 +14,17 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="vstest.executionengine.universal.App" Executable="$targetnametoken$.exe" EntryPoint="GPU_Declicker_Tests.App">
-      <uap:VisualElements DisplayName="GPU_Declicker_Tests" Square150x150Logo="Assets1\MediumTile1.png" Square44x44Logo="Assets1\AppIcon1.png" Description="GPU_Declicker_Tests" BackgroundColor="transparent">
-        <uap:DefaultTile Square310x310Logo="Assets1\LargeTile1.png" Wide310x150Logo="Assets1\WideTile1.png" Square71x71Logo="Assets1\SmallTile1.png">
-          <uap:ShowNameOnTiles>
-            <uap:ShowOn Tile="square150x150Logo" />
-            <uap:ShowOn Tile="wide310x150Logo" />
-            <uap:ShowOn Tile="square310x310Logo" />
-          </uap:ShowNameOnTiles>
+    <Application Id="vstest.executionengine.universal.App" Executable="$targetnametoken$.exe" EntryPoint="UnitTestProject2.App">
+      <uap:VisualElements DisplayName="UnitTestProject2" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="UnitTestProject2" BackgroundColor="transparent">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png">
         </uap:DefaultTile>
-        <uap:SplashScreen Image="Assets1\SplashScreen1.png" />
+        <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClientServer" />
+    <Capability Name="privateNetworkClientServer" />
     <uap:Capability Name="musicLibrary" />
   </Capabilities>
 </Package>

@@ -1,7 +1,8 @@
 ﻿<Application
-    x:Class="GPU_Declicker_Tests.App"
+    x:Class="UnitTestProject2.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UnitTestProject2"
     RequestedTheme="Light">
 
 </Application>
