@@ -79,19 +79,9 @@ namespace GPU_Declicker_UWP_0._01
             _predictionErrAverage[position] = value;
         }
 
-        public void AddClickToList(
-            int position,
-            int lenght,
-            float thresholdLevelDetected,
-            AudioData audioData,
-            ChannelType channel)
+        public void AddClickToList(AudioClick audioClick) 
         {
-            _clicksList.Add(new AudioClick(
-                position,
-                lenght,
-                thresholdLevelDetected,
-                audioData,
-                channel));
+            _clicksList.Add(audioClick);
         }
 
         public int GetNumberOfClicks()

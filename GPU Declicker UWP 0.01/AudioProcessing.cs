@@ -251,10 +251,12 @@ namespace GPU_Declicker_UWP_0._01
                 if (result.Success)
                 {
                     ClickRepairer.Repair(audioData, result.Position, result.Length);
-                    audioData.AddClickToList(
+                    audioData.AddClickToList( new AudioClick(
                         result.Position,
                         result.Length,
-                        HelperCalculator.CalculateDetectionLevel(audioData, result.Position));
+                        HelperCalculator.CalculateDetectionLevel(audioData, result.Position),
+                        audioData,
+                        audioData.GetCurrentChannelType()));
 
                     lastProcessedSample = result.Position + result.Length + 1;
                 }

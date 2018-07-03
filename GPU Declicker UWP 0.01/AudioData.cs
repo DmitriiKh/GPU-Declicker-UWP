@@ -59,16 +59,9 @@
                     CurrentAudioChannel.GetPredictionErrBackup(index));
         }
 
-        public void AddClickToList(
-            int position,
-            int lenght,
-            float thresholdLevelDetected)
+        public void AddClickToList(AudioClick audioClick)
         {
-            CurrentAudioChannel.AddClickToList(
-                position, lenght,
-                thresholdLevelDetected,
-                this,
-                GetCurrentChannelType());
+            CurrentAudioChannel.AddClickToList(audioClick);
         }
 
         public int CurrentChannelGetNumberOfClicks()
