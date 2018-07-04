@@ -227,31 +227,28 @@ namespace GPU_Declicker_UWP_0._01
                 if (cpuCore == 0)
                     ThrottledReportProgress(progress, index, segmentEnd);
 
-                if (index > lastProcessedSample &&
-                    ClickDetector.IsSampleSuspicious(
+                if (index <= lastProcessedSample || !ClickDetector.IsSampleSuspicious(
                         audioData,
-                        index))
-                {
-                    var maxLength = HelperCalculator.GetMaxLength(audioData, index);
-                    var result = ClickLengthFinder.FindLengthOfClick(
-                        audioData,
-                        index,
-                        maxLength,
-                        lastProcessedSample);
+                        index)) continue;
 
-                    if (result.Success)
-                    {
-                        ClickRepairer.Repair(audioData, result.Position, result.Length);
-                        audioData.AddClickToList(new AudioClick(
-                            result.Position,
-                            result.Length,
-                            HelperCalculator.CalculateDetectionLevel(audioData, result.Position),
-                            audioData,
-                            audioData.GetCurrentChannelType()));
+                var maxLength = HelperCalculator.GetMaxLength(audioData, index);
+                var result = ClickLengthFinder.FindLengthOfClick(
+                    audioData,
+                    index,
+                    maxLength,
+                    lastProcessedSample);
 
-                        lastProcessedSample = result.Position + result.Length + 1;
-                    }
-                }
+                if (!result.Success) continue;
+
+                ClickRepairer.Repair(audioData, result.Position, result.Length);
+                audioData.AddClickToList(new AudioClick(
+                    result.Position,
+                    result.Length,
+                    HelperCalculator.CalculateDetectionLevel(audioData, result.Position),
+                    audioData,
+                    audioData.GetCurrentChannelType()));
+
+                lastProcessedSample = result.Position + result.Length + 1;
             }
         }
 
