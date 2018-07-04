@@ -179,7 +179,7 @@ namespace GPU_Declicker_UWP_0._01
                 var segmentEnd = segmentBeginning + segmentLenght;
                 // for first segment shift beginning to the right
                 if (cpuCoreIndex == 0)
-                    segmentBeginning += 2 * historyLengthSamples + 16;
+                    segmentBeginning += 2 * historyLengthSamples;
                 // for last segment shift end to the left
                 if (cpuCoreIndex == cpuCoreNumber - 1)
                     segmentEnd -= 2 * historyLengthSamples +
