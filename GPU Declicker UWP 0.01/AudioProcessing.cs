@@ -216,14 +216,8 @@ namespace GPU_Declicker_UWP_0._01
             int segmentStart,
             int segmentEnd,
             IProgress<double> progress,
-            int cpuCore
-        )
+            int cpuCore)
         {
-            var result = new FixResult
-            {
-                Success = false
-            };
-
             var lastProcessedSample = 0;
 
             // cycle to check every sample
@@ -233,32 +227,30 @@ namespace GPU_Declicker_UWP_0._01
                 if (cpuCore == 0)
                     ThrottledReportProgress(progress, index, segmentEnd);
 
-                result.Success = false;
-
                 if (index > lastProcessedSample &&
                     ClickDetector.IsSampleSuspicious(
                         audioData,
                         index))
                 {
                     var maxLength = HelperCalculator.GetMaxLength(audioData, index);
-                    result = ClickLengthFinder.FindLengthOfClick(
+                    var result = ClickLengthFinder.FindLengthOfClick(
                         audioData,
                         index,
                         maxLength,
                         lastProcessedSample);
-                }
 
-                if (result.Success)
-                {
-                    ClickRepairer.Repair(audioData, result.Position, result.Length);
-                    audioData.AddClickToList( new AudioClick(
-                        result.Position,
-                        result.Length,
-                        HelperCalculator.CalculateDetectionLevel(audioData, result.Position),
-                        audioData,
-                        audioData.GetCurrentChannelType()));
+                    if (result.Success)
+                    {
+                        ClickRepairer.Repair(audioData, result.Position, result.Length);
+                        audioData.AddClickToList(new AudioClick(
+                            result.Position,
+                            result.Length,
+                            HelperCalculator.CalculateDetectionLevel(audioData, result.Position),
+                            audioData,
+                            audioData.GetCurrentChannelType()));
 
-                    lastProcessedSample = result.Position + result.Length + 1;
+                        lastProcessedSample = result.Position + result.Length + 1;
+                    }
                 }
             }
         }
