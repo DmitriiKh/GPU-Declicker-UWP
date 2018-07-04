@@ -185,6 +185,8 @@ namespace GPU_Declicker_UWP_0._01
                     segmentEnd -= 2 * historyLengthSamples +
                                   audioData.AudioProcessingSettings.MaxLengthCorrection;
                 {
+                    // need new variable to pass as a parameter
+                    // because cpuCoreIndex will be changed
                     var index = cpuCoreIndex;
                     tasks[cpuCoreIndex] = Task.Factory.StartNew(() =>
                         ScanSegment(
