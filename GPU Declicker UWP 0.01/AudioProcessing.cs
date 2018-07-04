@@ -230,10 +230,8 @@ namespace GPU_Declicker_UWP_0._01
             for (var index = segmentStart; index < segmentEnd; index++)
             {
                 // only core #0 reports progress
-                if (cpuCore == 0 &&
-                    // to not report too many times
-                    index % 1000 == 0)
-                    progress?.Report((double) 100 * index / segmentEnd);
+                if (cpuCore == 0)
+                    ThrottledReportProgress(progress, index, segmentEnd);
 
                 result.Success = false;
 
@@ -263,6 +261,12 @@ namespace GPU_Declicker_UWP_0._01
                     lastProcessedSample = result.Position + result.Length + 1;
                 }
             }
+        }
+
+        private static void ThrottledReportProgress(IProgress<double> progress, int index, int segmentEnd)
+        {
+            if (index % 1000 == 0)
+                progress?.Report((double)100 * index / segmentEnd);
         }
     }
 }
