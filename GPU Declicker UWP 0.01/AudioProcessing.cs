@@ -252,10 +252,10 @@ namespace GPU_Declicker_UWP_0._01
             }
         }
 
-        private static void ThrottledReportProgress(IProgress<double> progress, int index, int segmentEnd)
+        private static void ThrottledReportProgress(IProgress<double> progress, int index, int length)
         {
             if (index % 1000 == 0)
-                progress?.Report((double)100 * index / segmentEnd);
+                progress?.Report((double)100 * index / length);
         }
     }
 }
