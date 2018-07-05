@@ -1,10 +1,10 @@
-﻿using System;
+﻿using GPU_Declicker_UWP_0._01;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Threading.Tasks;
 using Windows.Storage;
-using GPU_Declicker_UWP_0._01;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GPU_Declicker_Tests
+namespace GPUDeclickerIntegrationTests
 {
     [TestClass]
     public class AudioInputOutputTests
