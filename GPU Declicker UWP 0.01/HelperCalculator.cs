@@ -114,9 +114,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             var historyLengthSamples =
                 audioData.AudioProcessingSettings.HistoryLengthSamples;
-
-            // use output audio as an input because it already contains
-            // fixed samples before sample at position
+            
             var audioShort = new double[historyLengthSamples + 1];
             for (var index = 0; index < historyLengthSamples + 1; index++)
                 audioShort[index] = audioData.GetInputSample(position -
