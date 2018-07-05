@@ -107,6 +107,24 @@ namespace GPU_Declicker_UWP_0._01
         }
 
         /// <summary>
+        ///     Returns backward prediction based on prediction coefficients that were
+        ///     previously calculated with Train() method
+        /// </summary>
+        /// <returns></returns>
+        public double GetBackwardPrediction()
+        {
+            double prediction = 0;
+            for (var index = 1; index <= _aPredictionCoefs.Length - 1; index++)
+                prediction -= _aPredictionCoefs[index] *
+                              _xInputSignal[_absolutePosition - 
+                                            _nHistoryLengthSamples + 
+                                            index];
+
+            return prediction;
+        }
+
+
+        /// <summary>
         ///     Returns prediction coefficients that were
         ///     previously calculated with Train() method
         /// </summary>

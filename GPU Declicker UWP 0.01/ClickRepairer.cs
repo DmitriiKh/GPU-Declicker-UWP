@@ -47,34 +47,23 @@
             AudioData audioData,
             int position)
         {
+
             var historyLengthSamples =
                 audioData.AudioProcessingSettings.HistoryLengthSamples;
 
             // use output audio as an input because it already contains
             // fixed samples before sample at position
-            var audioShort = new float[historyLengthSamples + 1];
+            var audioShort = new double[historyLengthSamples + 1];
             for (var index = 0; index < historyLengthSamples + 1; index++)
                 audioShort[index] = audioData.GetOutputSample(
                     position - historyLengthSamples + index);
 
-            // array for results
-            var forwardPredictionsShort =
-                new float[historyLengthSamples + 1];
-
-            // we need this array for calling CalculateBurgPredictionThread
-            var backwardPredictionsShort =
-                new float[historyLengthSamples + 1];
-
-            BurgPredictionCalculator.Calculate(
-                audioShort,
-                forwardPredictionsShort,
-                backwardPredictionsShort,
-                historyLengthSamples,
-                audioData.AudioProcessingSettings.CoefficientsNumber,
+            var fba = new FastBurgAlgorithm64(audioShort);
+            fba.Train(historyLengthSamples,
+                audioData.AudioProcessingSettings.CoefficientsNumber * 2,
                 historyLengthSamples);
 
-            // return prediction for sample at position
-            return forwardPredictionsShort[historyLengthSamples];
+            return (float)fba.GetForwardPrediction();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace GPU_Declicker_UWP_0._01
                 audioData.AudioProcessingSettings.HistoryLengthSamples;
             var forwardPredictions = new float[audioData.LengthSamples()];
             var backwardPredictions = new float[audioData.LengthSamples()];
-            var inputaudio = new float[audioData.LengthSamples()];
+            var inputaudio = new double[audioData.LengthSamples()];
 
             for (var index = 0; index < audioData.LengthSamples(); index++)
                 inputaudio[index] = audioData.GetInputSample(index);
@@ -31,17 +31,19 @@ namespace GPU_Declicker_UWP_0._01
 
                 var endPosition = index + step;
                 if (endPosition > audioData.LengthSamples()) endPosition = audioData.LengthSamples();
-
+                
                 Parallel.For(index, endPosition,
                     indexParallelFor =>
-
-                        BurgPredictionCalculator.Calculate(
-                            inputaudio,
-                            forwardPredictions,
-                            backwardPredictions,
-                            indexParallelFor,
-                            audioData.AudioProcessingSettings.CoefficientsNumber,
-                            audioData.AudioProcessingSettings.HistoryLengthSamples)
+                    {
+                        var fba = new FastBurgAlgorithm64(inputaudio);
+                        fba.Train(indexParallelFor, 
+                            audioData.AudioProcessingSettings.CoefficientsNumber, 
+                            audioData.AudioProcessingSettings.HistoryLengthSamples);
+                        forwardPredictions[indexParallelFor] = (float)fba.GetForwardPrediction();
+                        backwardPredictions[indexParallelFor - 
+                                            audioData.AudioProcessingSettings.HistoryLengthSamples] = 
+                            (float)fba.GetBackwardPrediction();
+                    }
                 );
             }
 
