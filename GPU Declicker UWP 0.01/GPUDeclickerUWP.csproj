@@ -127,6 +127,7 @@
     <Compile Include="AudioViewer.xaml.cs">
       <DependentUpon>AudioViewer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FastBurgAlgorithm64.cs" />
     <Compile Include="FixResult.cs" />
     <Compile Include="BurgPredictionCalculator.cs" />
     <Compile Include="ClickDetector.cs" />
