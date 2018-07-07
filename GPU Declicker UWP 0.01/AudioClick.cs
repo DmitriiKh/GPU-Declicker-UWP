@@ -9,6 +9,9 @@ namespace GPU_Declicker_UWP_0._01
         public float ThresholdLevelDetected { get; set; }
     }
 
+    /// <summary>
+    /// Contains information on sequences of damaged samples 
+    /// </summary>
     public sealed class AudioClick : IComparable<AudioClick>
     {
         private const bool Shrinked = true;
@@ -16,15 +19,28 @@ namespace GPU_Declicker_UWP_0._01
 
         private readonly AudioData _audioDataOwningThisClick;
 
+        /// <summary>
+        /// Creates new object containing information on sequence of damaged
+        /// samples such as position, length etc 
+        /// </summary>
+        /// <param name="position"> Position of begining of a sequence of
+        /// damaged samples in the input audio data </param>
+        /// <param name="length"> Length of sequence of damaged samles </param>
+        /// <param name="thresholdLevelDetected"> Prediction error to average
+        /// error ratio </param>
+        /// <param name="audioData"> Object of type of AudioData containing
+        /// audio containig this sequence of damaged samples</param>
+        /// <param name="fromChannel"> The channel (left, right) containing
+        /// this sequence of damaged samples</param>
         public AudioClick(
             int position,
-            int lenght,
+            int length,
             float thresholdLevelDetected,
             AudioData audioData,
             ChannelType fromChannel)
         {
             Position = position;
-            Length = lenght;
+            Length = length;
             ThresholdLevelDetected = thresholdLevelDetected;
             _audioDataOwningThisClick = audioData;
             ClickChanged += audioData.OnClickChanged;
