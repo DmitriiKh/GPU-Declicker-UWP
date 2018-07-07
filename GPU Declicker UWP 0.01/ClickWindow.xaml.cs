@@ -33,7 +33,7 @@ namespace GPU_Declicker_UWP_0._01
             InitializeComponent();
             _audioClickBinded = audioClick;
             ThresholdLevelDetected.Text = 
-                audioClick.ThresholdLevelDetected.ToString("0.0");
+                audioClick.ErrorLevelDetected.ToString("0.0");
             Position.Text = audioClick.Position.ToString("0");
             SetBorderColour();
             SetPolylines();
@@ -108,7 +108,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on left
                 _audioClickBinded.ShrinkLeft();
-                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                ThresholdLevelDetected.Text = _audioClickBinded.ErrorLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
@@ -125,7 +125,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on right
                 _audioClickBinded.ShrinkRight();
-                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                ThresholdLevelDetected.Text = _audioClickBinded.ErrorLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
@@ -213,7 +213,7 @@ namespace GPU_Declicker_UWP_0._01
                 {
                     // expand marked damaged sample sequence to right
                     _audioClickBinded.ExpandRight();
-                    ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                    ThresholdLevelDetected.Text = _audioClickBinded.ErrorLevelDetected.ToString("0.0");
                     changed = true;
                 }
 
@@ -221,7 +221,7 @@ namespace GPU_Declicker_UWP_0._01
                 {
                     // expand marked damaged sample sequence to right
                     _audioClickBinded.ExpandLeft();
-                    ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                    ThresholdLevelDetected.Text = _audioClickBinded.ErrorLevelDetected.ToString("0.0");
                     changed = true;
                 }
             }
@@ -230,7 +230,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on right
                 _audioClickBinded.ShrinkRight();
-                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                ThresholdLevelDetected.Text = _audioClickBinded.ErrorLevelDetected.ToString("0.0");
                 changed = true;
             }
 
@@ -238,7 +238,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // shrink marked damaged sample sequence on right
                 _audioClickBinded.ShrinkLeft();
-                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                ThresholdLevelDetected.Text = _audioClickBinded.ErrorLevelDetected.ToString("0.0");
                 changed = true;
             }
 
@@ -302,7 +302,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // expand marked damaged sample sequence to right
                 _audioClickBinded.ExpandRight();
-                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                ThresholdLevelDetected.Text = _audioClickBinded.ErrorLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 
@@ -312,7 +312,7 @@ namespace GPU_Declicker_UWP_0._01
             {
                 // expand marked damaged sample sequence to right
                 _audioClickBinded.ExpandLeft();
-                ThresholdLevelDetected.Text = _audioClickBinded.ThresholdLevelDetected.ToString("0.0");
+                ThresholdLevelDetected.Text = _audioClickBinded.ErrorLevelDetected.ToString("0.0");
                 SetPolylines();
             }
 

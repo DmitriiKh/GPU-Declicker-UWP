@@ -6,7 +6,7 @@ namespace GPU_Declicker_UWP_0._01
     public class ClickEventArgs : EventArgs
     {
         public bool Shrinked { get; set; }
-        public float ThresholdLevelDetected { get; set; }
+        public float ErrorLevelDetected { get; set; }
     }
 
     /// <summary>
@@ -26,7 +26,7 @@ namespace GPU_Declicker_UWP_0._01
         /// <param name="position"> Position of begining of a sequence of
         /// damaged samples in the input audio data </param>
         /// <param name="length"> Length of sequence of damaged samles </param>
-        /// <param name="thresholdLevelDetected"> Prediction error to average
+        /// <param name="errorLevelDetected"> Prediction error to average
         /// error ratio </param>
         /// <param name="audioData"> Object of type of AudioData containing
         /// audio containig this sequence of damaged samples</param>
@@ -35,13 +35,13 @@ namespace GPU_Declicker_UWP_0._01
         public AudioClick(
             int position,
             int length,
-            float thresholdLevelDetected,
+            float errorLevelDetected,
             AudioData audioData,
             ChannelType fromChannel)
         {
             Position = position;
             Length = length;
-            ThresholdLevelDetected = thresholdLevelDetected;
+            ErrorLevelDetected = errorLevelDetected;
             _audioDataOwningThisClick = audioData;
             ClickChanged += audioData.OnClickChanged;
             FromChannel = fromChannel;
@@ -50,26 +50,28 @@ namespace GPU_Declicker_UWP_0._01
 
         public int Position { get; private set; }
         public int Length { get; private set; }
-        public float ThresholdLevelDetected { get; private set; }
+        public float ErrorLevelDetected { get; private set; }
         public bool Aproved { get; private set; }
         private ChannelType FromChannel { get; }
 
+        /// <summary>
+        /// Comparision by position 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public int CompareTo(AudioClick other)
         {
-            if (other is null)
-                return 1;
+            return other is null ? 1 : Position.CompareTo(other.Position);
             // return the same result as for positions comparison
-            return Position.CompareTo(other.Position);
         }
 
         public event EventHandler<ClickEventArgs> ClickChanged;
 
         public override bool Equals(object obj)
         {
-            if (obj is null)
+            if (!(obj is AudioClick audioClick))
                 return false;
 
-            var audioClick = (AudioClick) obj;
             return Position == audioClick.Position;
         }
 
@@ -183,7 +185,7 @@ namespace GPU_Declicker_UWP_0._01
 
             ClickChanged?.Invoke(this, e);
 
-            ThresholdLevelDetected = e.ThresholdLevelDetected;
+            ErrorLevelDetected = e.ErrorLevelDetected;
         }
     }
 }

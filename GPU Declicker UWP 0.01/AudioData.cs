@@ -130,7 +130,7 @@
                     GetInputSample(click.Position + click.Length));
             }
 
-            e.ThresholdLevelDetected = ClickRepairer.Repair(
+            e.ErrorLevelDetected = ClickRepairer.Repair(
                 this,
                 click.Position,
                 click.Length);

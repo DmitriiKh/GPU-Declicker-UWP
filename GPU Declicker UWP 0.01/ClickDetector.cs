@@ -10,7 +10,7 @@ namespace GPU_Declicker_UWP_0._01
         {
             var error = Math.Abs(audioData.GetPredictionErr(position));
 
-            // usualy average prediction error is lower in 10-20
+            // usualy average prediction error is stable in 10-20
             // samples before click
             const int offset = 15;
             var errorAverage = audioData.GetErrorAverage(position - offset);
