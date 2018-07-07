@@ -10,11 +10,14 @@ namespace GPU_Declicker_UWP_0._01
         {
             var error = Math.Abs(audioData.GetPredictionErr(position));
 
-            var errorAverage = audioData.GetErrorAverage(position - 15);
+            // usualy average prediction error is lower in 10-20
+            // samples before click
+            const int offset = 15;
+            var errorAverage = audioData.GetErrorAverage(position - offset);
 
-            var thresholdLevelDetected = error / errorAverage;
+            var errorLevelDetected = error / errorAverage;
 
-            return thresholdLevelDetected >
+            return errorLevelDetected >
                    audioData.AudioProcessingSettings.ThresholdForDetection;
         }
     }
