@@ -1,8 +1,8 @@
 ﻿<Page
-    x:Class="GPU_Declicker_UWP_0._01.MainPage"
+    x:Class="GPUDeclickerUWP.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:GPU_Declicker_UWP_0._01"
+    xmlns:local="using:GPUDeclickerUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"

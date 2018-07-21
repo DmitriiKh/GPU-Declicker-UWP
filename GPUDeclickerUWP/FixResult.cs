@@ -1,4 +1,4 @@
-﻿namespace GPU_Declicker_UWP_0._01
+﻿namespace GPUDeclickerUWP
 {
     public class FixResult
     {

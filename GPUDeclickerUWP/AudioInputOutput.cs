@@ -7,7 +7,7 @@ using Windows.Media.MediaProperties;
 using Windows.Media.Render;
 using Windows.Storage;
 
-namespace GPU_Declicker_UWP_0._01
+namespace GPUDeclickerUWP
 {
     /// <summary>
     ///     Declare COM interface

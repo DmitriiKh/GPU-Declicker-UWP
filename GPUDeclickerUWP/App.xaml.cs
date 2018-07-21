@@ -5,7 +5,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 
-namespace GPU_Declicker_UWP_0._01
+namespace GPUDeclickerUWP
 {
     public sealed partial class App
     {

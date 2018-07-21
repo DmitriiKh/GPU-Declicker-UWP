@@ -136,7 +136,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GPU Declicker UWP 0.01\GPUDeclickerUWP.csproj">
+    <ProjectReference Include="..\GPUDeclickerUWP\GPUDeclickerUWP.csproj">
       <Project>{d58852a8-707d-466d-b4e6-74ad591b69e0}</Project>
       <Name>GPUDeclickerUWP</Name>
     </ProjectReference>

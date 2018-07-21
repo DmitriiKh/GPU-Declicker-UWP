@@ -7,8 +7,8 @@
     <ProjectGuid>{D58852A8-707D-466D-B4E6-74AD591B69E0}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>GPU_Declicker_UWP_0._01</RootNamespace>
-    <AssemblyName>GPU Declicker UWP 0.01</AssemblyName>
+    <RootNamespace>GPUDeclickerUWP</RootNamespace>
+    <AssemblyName>GPUDeclickerUWP</AssemblyName>
     <DefaultLanguage>ru-RU</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.15063.0</TargetPlatformVersion>

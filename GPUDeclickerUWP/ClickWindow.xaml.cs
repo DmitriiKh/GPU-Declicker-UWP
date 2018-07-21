@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Media;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=2minMovement42minMovement6
 
-namespace GPU_Declicker_UWP_0._01
+namespace GPUDeclickerUWP
 {
     /// <summary>
     ///     User interface element to show one particular click.

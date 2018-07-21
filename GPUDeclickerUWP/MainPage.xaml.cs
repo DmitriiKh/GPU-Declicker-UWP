@@ -8,7 +8,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace GPU_Declicker_UWP_0._01
+namespace GPUDeclickerUWP
 {
     public sealed partial class MainPage
     {
