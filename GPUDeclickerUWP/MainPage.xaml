@@ -5,6 +5,7 @@
     xmlns:local="using:GPUDeclickerUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:view="using:GPUDeclickerUWP.View"
     mc:Ignorable="d"
     SizeChanged="PageSizeChangedEventHandler">
 
@@ -36,7 +37,7 @@
                 </Viewbox>
             </Grid>
 
-            <local:AudioViewer Grid.Column="1"
+            <view:AudioViewerView Grid.Column="1"
                                x:Name="AudioViewer" />
 
             <Grid Grid.Column="2">

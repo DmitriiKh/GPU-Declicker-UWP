@@ -6,8 +6,9 @@ using Windows.Media.Audio;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
 using Windows.Storage;
+using GPUDeclickerUWP.Model.Data;
 
-namespace GPUDeclickerUWP
+namespace GPUDeclickerUWP.Model.InputOutput
 {
     /// <summary>
     ///     Declare COM interface

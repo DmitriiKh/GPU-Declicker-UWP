@@ -1,4 +1,4 @@
-﻿namespace GPUDeclickerUWP
+﻿namespace GPUDeclickerUWP.Model.Processing
 {
     public class FixResult
     {

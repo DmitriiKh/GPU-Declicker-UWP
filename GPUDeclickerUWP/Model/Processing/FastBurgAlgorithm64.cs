@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GPUDeclickerUWP
+namespace GPUDeclickerUWP.Model.Processing
 {
     /// <summary>
     ///     Fast implimentation of Burg algorithm for real signals.

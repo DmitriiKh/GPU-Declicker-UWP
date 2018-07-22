@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using GPUDeclickerUWP.Model.Data;
 
-namespace GPUDeclickerUWP
+namespace GPUDeclickerUWP.Model.Processing
 {
     public static class AudioProcessing
     {

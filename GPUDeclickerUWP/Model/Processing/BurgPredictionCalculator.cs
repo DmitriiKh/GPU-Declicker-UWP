@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace GPUDeclickerUWP
+namespace GPUDeclickerUWP.Model.Processing
 {
     public static class BurgPredictionCalculator
     {

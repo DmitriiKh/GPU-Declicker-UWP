@@ -1,4 +1,5 @@
 ﻿using GPUDeclickerUWP;
+using GPUDeclickerUWP.Model.Data;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GPU_Declicker_Tests

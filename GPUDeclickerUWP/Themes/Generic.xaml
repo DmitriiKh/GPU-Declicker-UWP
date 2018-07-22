@@ -1,12 +1,14 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:GPUDeclickerUWP">
+    xmlns:local="using:GPUDeclickerUWP"
+    xmlns:viewModel="using:GPUDeclickerUWP.ViewModel"
+    xmlns:view="using:GPUDeclickerUWP.View">
 
-    <Style TargetType="local:ClickWindow">
+    <Style TargetType="view:ClickWindow">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="local:ClickWindow">
+                <ControlTemplate TargetType="view:ClickWindow">
                     <Border
                         Background="{TemplateBinding Background}"
                         BorderBrush="{TemplateBinding BorderBrush}"

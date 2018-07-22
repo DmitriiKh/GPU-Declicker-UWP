@@ -1,4 +1,6 @@
-﻿namespace GPUDeclickerUWP
+﻿using GPUDeclickerUWP.Model.Processing;
+
+namespace GPUDeclickerUWP.Model.Data
 {
     /// <summary>
     ///     Represents stereo audio samples and includes information

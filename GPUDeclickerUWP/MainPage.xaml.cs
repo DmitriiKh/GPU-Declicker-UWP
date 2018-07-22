@@ -7,6 +7,10 @@ using Windows.Storage.Pickers;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using GPUDeclickerUWP.Model.Data;
+using GPUDeclickerUWP.Model.InputOutput;
+using GPUDeclickerUWP.Model.Processing;
+using GPUDeclickerUWP.View;
 
 namespace GPUDeclickerUWP
 {

@@ -3,12 +3,11 @@ using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using GPUDeclickerUWP.Model.Data;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
-namespace GPUDeclickerUWP
+namespace GPUDeclickerUWP.ViewModel
 {
-    public sealed partial class AudioViewer
+    public sealed partial class AudioViewerViewModel
     {
         // this timer creates a delay between WaveForm size changing and its redrawing
         // to make resizing faster
@@ -25,9 +24,8 @@ namespace GPUDeclickerUWP
         // offset from beginning of audioData to beginning waveForm
         private int _offsetPosition;
 
-        public AudioViewer()
+        public AudioViewerViewModel()
         {
-            InitializeComponent();
             LeftChannelWaveFormPoints = new PointCollection();
             RightChannelWaveFormPoints = new PointCollection();
             _redrawingTimer = new DispatcherTimer();

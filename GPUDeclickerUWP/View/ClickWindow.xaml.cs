@@ -5,10 +5,11 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using GPUDeclickerUWP.Model.Data;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=2minMovement42minMovement6
 
-namespace GPUDeclickerUWP
+namespace GPUDeclickerUWP.View
 {
     /// <summary>
     ///     User interface element to show one particular click.

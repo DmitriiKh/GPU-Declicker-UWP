@@ -1,7 +1,8 @@
-﻿using System;
-using GPUDeclickerUWP;
+﻿using GPUDeclickerUWP.Model.Data;
+using GPUDeclickerUWP.View;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.TestTools.UnitTesting.AppContainer;
+using System;
 
 namespace GPU_Declicker_Tests
 {
@@ -11,7 +12,7 @@ namespace GPU_Declicker_Tests
         [UITestMethod]
         public void Fill_HighFreqSignal_DrawsMaxAndMins()
         {
-            var audioViewer = new AudioViewer
+            var audioViewer = new AudioViewerView
             {
                 WaveFormWidth = 100,
                 WaveFormHeight = 100

@@ -1,4 +1,6 @@
-﻿namespace GPUDeclickerUWP
+﻿using GPUDeclickerUWP.Model.Processing;
+
+namespace GPUDeclickerUWP.Model.Data
 {
     public enum ChannelType
     {

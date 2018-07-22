@@ -1,4 +1,6 @@
-﻿namespace GPUDeclickerUWP
+﻿using GPUDeclickerUWP.Model.Data;
+
+namespace GPUDeclickerUWP.Model.Processing
 {
     public static class ClickRepairer
     {

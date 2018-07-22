@@ -1,6 +1,7 @@
 ﻿using System;
+using GPUDeclickerUWP.Model.Data;
 
-namespace GPUDeclickerUWP
+namespace GPUDeclickerUWP.Model.Processing
 {
     public static class ClickDetector
     {

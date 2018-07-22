@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;
 using Windows.Storage;
+using GPUDeclickerUWP.Model.Data;
+using GPUDeclickerUWP.Model.InputOutput;
 
 namespace GPUDeclickerIntegrationTests
 {

@@ -116,30 +116,31 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AudioChannel.cs" />
-    <Compile Include="AudioClick.cs" />
-    <Compile Include="AudioData.cs" />
-    <Compile Include="AudioDataMono.cs" />
-    <Compile Include="AudioDataStereo.cs" />
-    <Compile Include="AudioInputOutput.cs" />
-    <Compile Include="AudioProcessing.cs" />
-    <Compile Include="AudioProcessingSettings.cs" />
-    <Compile Include="AudioViewer.xaml.cs">
-      <DependentUpon>AudioViewer.xaml</DependentUpon>
+    <Compile Include="Model\Data\AudioChannel.cs" />
+    <Compile Include="Model\Data\AudioClick.cs" />
+    <Compile Include="Model\Data\AudioData.cs" />
+    <Compile Include="Model\Data\AudioDataMono.cs" />
+    <Compile Include="Model\Data\AudioDataStereo.cs" />
+    <Compile Include="Model\InputOutput\AudioInputOutput.cs" />
+    <Compile Include="Model\Processing\AudioProcessing.cs" />
+    <Compile Include="Model\Processing\AudioProcessingSettings.cs" />
+    <Compile Include="ViewModel\AudioViewerViewModel.cs" />
+    <Compile Include="View\AudioViewerView.xaml.cs">
+      <DependentUpon>AudioViewerView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="FastBurgAlgorithm64.cs" />
-    <Compile Include="FixResult.cs" />
-    <Compile Include="BurgPredictionCalculator.cs" />
-    <Compile Include="ClickDetector.cs" />
-    <Compile Include="ClickLengthFinder.cs" />
-    <Compile Include="ClickRepairer.cs" />
-    <Compile Include="ClickWindow.xaml.cs">
+    <Compile Include="Model\Processing\FastBurgAlgorithm64.cs" />
+    <Compile Include="Model\Processing\FixResult.cs" />
+    <Compile Include="Model\Processing\BurgPredictionCalculator.cs" />
+    <Compile Include="Model\Processing\ClickDetector.cs" />
+    <Compile Include="Model\Processing\ClickLengthFinder.cs" />
+    <Compile Include="Model\Processing\ClickRepairer.cs" />
+    <Compile Include="View\ClickWindow.xaml.cs">
       <DependentUpon>ClickWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="HelperCalculator.cs" />
+    <Compile Include="Model\Processing\HelperCalculator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -207,11 +208,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="AudioViewer.xaml">
+    <Page Include="View\AudioViewerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="ClickWindow.xaml">
+    <Page Include="View\ClickWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -233,6 +234,7 @@
       <Version>6.1.4</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

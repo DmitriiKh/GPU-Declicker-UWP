@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GPUDeclickerUWP
+namespace GPUDeclickerUWP.Model.Data
 {
     public class AudioChannel
     {
