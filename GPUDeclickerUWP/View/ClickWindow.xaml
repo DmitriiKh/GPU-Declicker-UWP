@@ -15,10 +15,10 @@
         VerticalAlignment="Top"
         HorizontalAlignment="Left"
         Background="Transparent"
-        PointerPressed="Grid_PointerPressed"
-        PointerReleased="Grid_PointerReleased"
-        PointerMoved="Grid_PointerMoved"
-        PointerExited="Grid_PointerExited">
+        PointerPressed="GridPointerPressed"
+        PointerReleased="GridPointerReleased"
+        PointerMoved="GridPointerMoved"
+        PointerExited="GridPointerExited">
         <TextBlock
             Name="ActionNotification"
             Foreground="Blue"

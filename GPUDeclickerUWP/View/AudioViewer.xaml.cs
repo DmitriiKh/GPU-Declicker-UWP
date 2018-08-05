@@ -1,20 +1,37 @@
-﻿using System;
+﻿using GPUDeclickerUWP.Model.Data;
+using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using GPUDeclickerUWP.Model.Data;
 
-namespace GPUDeclickerUWP.ViewModel
+namespace GPUDeclickerUWP.View
 {
-    public sealed partial class AudioViewerViewModel
+    public sealed partial class AudioViewer
     {
         // this timer creates a delay between WaveForm size changing and its redrawing
         // to make resizing faster
         private readonly DispatcherTimer _redrawingTimer;
 
         // audio samples to view
-        private AudioData _audioData;
+        public AudioData AudioData
+        {
+            private get { return (AudioData) GetValue(AudioDataProperty); }
+
+            set => SetValue(AudioDataProperty, value);
+        }
+
+        public static readonly DependencyProperty AudioDataProperty =
+            DependencyProperty.Register(
+                "AudioData", typeof(AudioData),
+                typeof(AudioViewer),
+                new PropertyMetadata(null, AudioDataPropertyCallBack));
+
+        private static void AudioDataPropertyCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var audioViewer = d as AudioViewer;
+            audioViewer?.Fill();
+        }
 
         // magnification ratio
         // when set to 1, waveForm is most detailed
@@ -24,13 +41,14 @@ namespace GPUDeclickerUWP.ViewModel
         // offset from beginning of audioData to beginning waveForm
         private int _offsetPosition;
 
-        public AudioViewerViewModel()
+        public AudioViewer()
         {
+            InitializeComponent();
             LeftChannelWaveFormPoints = new PointCollection();
             RightChannelWaveFormPoints = new PointCollection();
             _redrawingTimer = new DispatcherTimer();
             _redrawingTimer.Tick += _redrawingTimer_Tick;
-            _redrawingTimer.Interval = TimeSpan.FromSeconds(0.1);
+            _redrawingTimer.Interval = TimeSpan.FromSeconds(0.1); 
         }
 
         // These two collections of points are Binded to Polylines 
@@ -57,16 +75,15 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         /// <summary>
-        ///     Fills this with AudioData, sets Ratio and OffsetPosition
+        /// sets Ratio and OffsetPosition
         /// </summary>
-        public void Fill(AudioData audioDataInput)
+        public void Fill() 
         {
             _offsetPosition = 0;
 
             // Sets Ratio to show whole audio track
             _audioDataToWaveFormRatio =
-                audioDataInput.LengthSamples() / WaveFormWidth;
-            _audioData = audioDataInput;
+                AudioData.LengthSamples() / WaveFormWidth;
 
             DrawWaveForm();
         }
@@ -74,18 +91,20 @@ namespace GPUDeclickerUWP.ViewModel
         /// <summary>
         ///     move OffsetPositionX to the right for one waveForm length
         /// </summary>
-        public void GoNextBigStep()
+        private void GoNextBigStep()
         {
-            if (_audioData == null) return;
+            if (AudioData == null)
+                return;
 
             var deltaX = (int) WaveFormWidth;
             GoNextX(deltaX);
         }
 
         // move OffsetPositionX to the right for one tenth of waveForm length
-        public void GoNextSmalStep()
+        private void GoNextSmalStep()
         {
-            if (_audioData == null) return;
+            if (AudioData == null)
+                return;
 
             var deltaX = (int) WaveFormWidth / 10;
             GoNextX(deltaX);
@@ -94,7 +113,9 @@ namespace GPUDeclickerUWP.ViewModel
         // move OffsetPositionX to the right for shiftX samples
         private void GoNextX(int deltaX)
         {
-            if (_audioData == null) return;
+            if (AudioData == null)
+                return;
+
             // Calculate number of samples to shift
             var shift = (int) (deltaX * _audioDataToWaveFormRatio);
             // Calculate number of samples that waveForms show
@@ -103,14 +124,14 @@ namespace GPUDeclickerUWP.ViewModel
                 * _audioDataToWaveFormRatio
             );
             // if there is enough room on the right than shift offsetPosition
-            if (_offsetPosition + shift + samplesOnScrean < _audioData.LengthSamples())
+            if (_offsetPosition + shift + samplesOnScrean < AudioData.LengthSamples())
             {
                 _offsetPosition += shift;
             }
             else
             {
                 // set OffsetPosition to show the end of audioData
-                _offsetPosition = _audioData.LengthSamples() - samplesOnScrean;
+                _offsetPosition = AudioData.LengthSamples() - samplesOnScrean;
                 if (_offsetPosition < 0)
                     _offsetPosition = 0;
             }
@@ -119,9 +140,9 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         // move OffsetPositionX to the right for one waveForm length 
-        public void GoPrevBigStep()
+        private void GoPrevBigStep()
         {
-            if (_audioData == null)
+            if (AudioData == null)
                 return;
 
             var deltaX = (int) WaveFormWidth;
@@ -129,9 +150,9 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         // move OffsetPositionX to the right for one tenth of waveForm length 
-        public void GoPrevSmalStep()
+        private void GoPrevSmalStep()
         {
-            if (_audioData == null)
+            if (AudioData == null)
                 return;
 
             var deltaX = (int) WaveFormWidth / 10;
@@ -141,7 +162,9 @@ namespace GPUDeclickerUWP.ViewModel
         // move OffsetPositionX to the right for shiftX samples 
         private void GoPrevX(int x)
         {
-            if (_audioData == null) return;
+            if (AudioData == null)
+                return;
+
             // Calculate number of samples to shift
             var shift = (int) (x * _audioDataToWaveFormRatio);
             // if there is enough room on the left than shift offsetPositionX
@@ -158,22 +181,24 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         private void DrawWaveForm()
         {
-            if (_audioData == null) return;
+            if (AudioData == null)
+                return;
 
             LeftChannelWaveFormPoints.Clear();
             RightChannelWaveFormPoints.Clear();
 
+            var audioData = AudioData;
             // for every x-axis position of waveForm
             for (var x = 0; x < WaveFormWidth; x++)
             {
-                _audioData.SetCurrentChannelType(ChannelType.Left);
+                audioData.SetCurrentChannelType(ChannelType.Left);
                 AddPointToWaveform(LeftChannelWaveFormPoints, x);
 
-                if (_audioData.IsStereo)
-                {
-                    _audioData.SetCurrentChannelType(ChannelType.Right);
-                    AddPointToWaveform(RightChannelWaveFormPoints, x);
-                }
+                if (!audioData.IsStereo)
+                    continue;
+
+                audioData.SetCurrentChannelType(ChannelType.Right);
+                AddPointToWaveform(RightChannelWaveFormPoints, x);
             }
         }
 
@@ -186,7 +211,8 @@ namespace GPUDeclickerUWP.ViewModel
             var start = _offsetPosition + (int) (x * _audioDataToWaveFormRatio);
             var length = (int) _audioDataToWaveFormRatio;
 
-            if (start < 0 || start + length >= _audioData.LengthSamples()) return;
+            if (start < 0 || start + length >= AudioData.LengthSamples())
+                return;
 
             // looks for max and min among many samples represented by a point on wave form
             FindMinMax(start, length, out var min, out var max);
@@ -194,12 +220,12 @@ namespace GPUDeclickerUWP.ViewModel
             // connect previous point to a new point
             var y = (int) (-0.5 * WaveFormHeight * max) + offsetY;
             waveFormPoints.Add(new Point(x, y));
-            if (Math.Abs(min - max) > 0.01)
-            {
-                // form vertical line connecting max and min
-                y = (int) (-0.5 * WaveFormHeight * min) + offsetY;
-                waveFormPoints.Add(new Point(x, y));
-            }
+            if (!(Math.Abs(min - max) > 0.01))
+                return;
+
+            // form vertical line connecting max and min
+            y = (int) (-0.5 * WaveFormHeight * min) + offsetY;
+            waveFormPoints.Add(new Point(x, y));
         }
 
         /// <summary>
@@ -216,26 +242,28 @@ namespace GPUDeclickerUWP.ViewModel
             out float minValue,
             out float maxValue)
         {
-            minValue = _audioData.GetInputSample(begining);
-            maxValue = _audioData.GetInputSample(begining);
+            var audioData = AudioData;
+
+            minValue = audioData.GetInputSample(begining);
+            maxValue = audioData.GetInputSample(begining);
 
             for (var index = 0;
-                index < length && begining + index < _audioData.LengthSamples();
+                index < length && begining + index < audioData.LengthSamples();
                 index++)
             {
-                if (_audioData.GetInputSample(begining + index) < minValue)
-                    minValue = _audioData.GetInputSample(begining + index);
-                if (_audioData.GetInputSample(begining + index) > maxValue)
-                    maxValue = _audioData.GetInputSample(begining + index);
+                if (audioData.GetInputSample(begining + index) < minValue)
+                    minValue = audioData.GetInputSample(begining + index);
+                if (audioData.GetInputSample(begining + index) > maxValue)
+                    maxValue = audioData.GetInputSample(begining + index);
             }
         }
 
         /// <summary>
         ///     Increases detalization on waveForm
         /// </summary>
-        public void MagnifyMore()
+        private void MagnifyMore()
         {
-            if (_audioData == null)
+            if (AudioData == null)
                 return;
 
             if (_audioDataToWaveFormRatio >= 2)
@@ -249,17 +277,17 @@ namespace GPUDeclickerUWP.ViewModel
         /// <summary>
         ///     Decreases detalization on waveForm
         /// </summary>
-        public void MagnifyLess()
+        private void MagnifyLess()
         {
-            if (_audioData == null)
+            if (AudioData == null)
                 return;
 
             if (WaveFormWidth * _audioDataToWaveFormRatio * 2
-                < _audioData.LengthSamples())
+                < AudioData.LengthSamples())
                 _audioDataToWaveFormRatio *= 2;
             else
                 _audioDataToWaveFormRatio =
-                    _audioData.LengthSamples() / WaveFormWidth;
+                    AudioData.LengthSamples() / WaveFormWidth;
 
             DrawWaveForm();
         }
@@ -290,7 +318,7 @@ namespace GPUDeclickerUWP.ViewModel
         ///     MouseWheel events handler for wave forms
         ///     Magnification adjustment
         /// </summary>
-        private void WaveFormsGroup_PointerWheelChanged(object sender, PointerRoutedEventArgs e)
+        private void WaveFormsGroupPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(this);
             var pointerPosition = pointer.Position;
@@ -306,61 +334,125 @@ namespace GPUDeclickerUWP.ViewModel
             SetOffsetForPointer(offsetAtPointer, pointerPosition.X);
         }
 
-        private void WaveFormsGroup_PointerPressed(object sender, PointerRoutedEventArgs e)
+        /// <summary>
+        /// Sets the horizontal position of the pointer and IsMovingByMouse
+        /// state when the pointer pressed on AudioViewer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WaveFormsGroupPointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(this);
             PointerLastPosition = pointer.Position;
             IsMovingByMouse = true;
         }
 
-        private void WaveFormsGroup_PointerReleased(object sender, PointerRoutedEventArgs e)
+        /// <summary>
+        /// Sets IsMovingByMouse to false when pointer released
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WaveFormsGroupPointerReleased(object sender, PointerRoutedEventArgs e)
         {
             IsMovingByMouse = false;
         }
 
-        private void WaveFormsGroup_PointerMoved(object sender, PointerRoutedEventArgs e)
+        /// <summary>
+        /// Shifts wave form when pointer moved with left button pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WaveFormsGroupPointerMoved(object sender, PointerRoutedEventArgs e)
         {
-            if (IsMovingByMouse)
-            {
-                var pointer = e.GetCurrentPoint(this);
-                var shiftX = (int) (PointerLastPosition.X - pointer.Position.X);
-                if (shiftX > 0)
-                    GoNextX(Math.Abs(shiftX));
-                else
-                    GoPrevX(Math.Abs(shiftX));
+            if (!IsMovingByMouse)
+                return;
 
-                PointerLastPosition = pointer.Position;
-            }
+            var pointer = e.GetCurrentPoint(this);
+            var shiftX = (int) (PointerLastPosition.X - pointer.Position.X);
+            if (shiftX > 0)
+                GoNextX(Math.Abs(shiftX));
+            else
+                GoPrevX(Math.Abs(shiftX));
+
+            PointerLastPosition = pointer.Position;
         }
 
-        private void WaveFormsGroup_PointerExited(object sender, PointerRoutedEventArgs e)
+        /// <summary>
+        /// Releases pointer when it moves out of wave form
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WaveFormsGroupPointerExited(object sender, PointerRoutedEventArgs e)
         {
-            WaveFormsGroup_PointerReleased(sender, e);
+            WaveFormsGroupPointerReleased(sender, e);
             IsMovingByMouse = false;
         }
 
-        private void WaveFormsGroup_PointerEntered(object sender, PointerRoutedEventArgs e)
+        /// <summary>
+        /// Imitates pressing left button at enter position
+        /// when pointer moves into wave form zone with
+        /// left batton pressed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WaveFormsGroupPointerEntered(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(this);
             var pointerProperties = pointer.Properties;
             if (pointerProperties.IsLeftButtonPressed)
-                WaveFormsGroup_PointerPressed(sender, e);
+                WaveFormsGroupPointerPressed(sender, e);
         }
 
-        private void WaveForm_SizeChanged(object sender, SizeChangedEventArgs e)
+        /// <summary>
+        /// Changes wave form size variables and _audioDataToWaveFormRatio.
+        /// Also starts _redrawingTimer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void WaveFormSizeChanged(object sender, SizeChangedEventArgs e)
         {
             WaveFormHeight = WaveFormLeftChannel.ActualHeight;
             WaveFormWidth = WaveFormsGroup.ActualWidth;
 
             _offsetPosition = 0;
             // Sets Ratio to show whole audio track
-            if (_audioData != null)
+            if (AudioData != null)
                 _audioDataToWaveFormRatio =
-                    _audioData.LengthSamples() / WaveFormWidth;
+                    AudioData.LengthSamples() / WaveFormWidth;
 
-            // DrawWaveForm function not called because it slows down significantly
+            // DrawWaveForm function not called directly because it slows down 
             // It will start after a delay
             _redrawingTimer.Start();
+        }
+
+        private void GoLeftBigStepClick(object sender, RoutedEventArgs e)
+        {
+            GoPrevBigStep();
+        }
+
+        private void GoLeftSmallStepClick(object sender, RoutedEventArgs e)
+        {
+            GoPrevSmalStep();
+        }
+
+        private void GoRightBigStepClick(object sender, RoutedEventArgs e)
+        {
+            GoNextBigStep();
+        }
+
+        private void GoRightSmallStepClick(object sender, RoutedEventArgs e)
+        {
+            GoNextSmalStep();
+        }
+
+        private void MagnifyLessClick(object sender, RoutedEventArgs e)
+        {
+            MagnifyLess();
+        }
+
+        private void MagnifyMoreClick(object sender, RoutedEventArgs e)
+        {
+            MagnifyMore();
         }
     }
 }

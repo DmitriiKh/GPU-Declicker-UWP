@@ -12,7 +12,7 @@ namespace GPU_Declicker_Tests
         [UITestMethod]
         public void Fill_HighFreqSignal_DrawsMaxAndMins()
         {
-            var audioViewer = new AudioViewerView
+            var audioViewer = new AudioViewer
             {
                 WaveFormWidth = 100,
                 WaveFormHeight = 100
@@ -35,7 +35,7 @@ namespace GPU_Declicker_Tests
             var audioData =
                 new AudioDataMono(inputAudio);
 
-            audioViewer.Fill(audioData);
+            audioViewer.Fill(); ////////audioData);
 
             foreach (var p in audioViewer.LeftChannelWaveFormPoints)
                 // each point should be at max (top) 

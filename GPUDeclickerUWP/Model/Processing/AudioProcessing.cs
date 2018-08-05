@@ -74,6 +74,13 @@ namespace GPUDeclickerUWP.Model.Processing
                     forwardPredictions[index]);
         }
 
+        /// <summary>
+        /// Scans audio data to find damaged samples
+        /// </summary>
+        /// <param name="audioData"></param>
+        /// <param name="progress"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         public static async Task ProcessAudioAsync(
             AudioData audioData,
             IProgress<double> progress,
@@ -100,6 +107,13 @@ namespace GPUDeclickerUWP.Model.Processing
             }
         }
 
+        /// <summary>
+        /// Scans channel to find damaged samples
+        /// </summary>
+        /// <param name="audioData"></param>
+        /// <param name="progress"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
         private static async Task ProcessChannelAsync(
             AudioData audioData,
             IProgress<double> progress,
@@ -112,6 +126,7 @@ namespace GPUDeclickerUWP.Model.Processing
 
             if (audioData.CurrentChannelIsPreprocessed())
             {
+                // if prediction errors were previously calculated
                 audioData.RestoreCurrentChannelPredErrors();
             }
             else
@@ -143,6 +158,12 @@ namespace GPUDeclickerUWP.Model.Processing
             status.Report("");
         }
 
+        /// <summary>
+        /// Sets stutus report according to current channel and mesage
+        /// </summary>
+        /// <param name="audioData"></param>
+        /// <param name="status"></param>
+        /// <param name="message"></param>
         private static void SetStatus(
             AudioData audioData,
             IProgress<string> status,
@@ -187,7 +208,7 @@ namespace GPUDeclickerUWP.Model.Processing
                 // for last segment shift end to the left
                 if (cpuCoreIndex == cpuCoreNumber - 1)
                     segmentEnd -= 2 * historyLengthSamples +
-                                  audioData.AudioProcessingSettings.MaxLengthCorrection;
+                                  audioData.AudioProcessingSettings.MaxLengthOfCorrection;
                 {
                     // need new variable to pass as a parameter
                     // because cpuCoreIndex will be changed
@@ -205,7 +226,9 @@ namespace GPUDeclickerUWP.Model.Processing
                 await Task.Delay(50);
             }
 
-            for (var cpuCore = 0; cpuCore < cpuCoreNumber; cpuCore++) await tasks[cpuCore];
+            // wait for all tasks to be finished
+            for (var cpuCore = 0; cpuCore < cpuCoreNumber; cpuCore++)
+                await tasks[cpuCore];
 
             // when all threads finished clear progress bar
             progress.Report(0);
@@ -215,6 +238,15 @@ namespace GPUDeclickerUWP.Model.Processing
             audioData.SortClicks();
         }
 
+        /// <summary>
+        /// Scans segment of audio channel to find damaged samples
+        /// and repai them
+        /// </summary>
+        /// <param name="audioData"></param>
+        /// <param name="segmentStart"></param>
+        /// <param name="segmentEnd"></param>
+        /// <param name="progress"></param>
+        /// <param name="cpuCore"></param>
         private static void ScanSegment(
             AudioData audioData,
             int segmentStart,
@@ -256,6 +288,12 @@ namespace GPUDeclickerUWP.Model.Processing
             }
         }
 
+        /// <summary>
+        /// Throttled progress report
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <param name="index"></param>
+        /// <param name="length"></param>
         private static void ThrottledReportProgress(IProgress<double> progress, int index, int length)
         {
             if (index % 1000 == 0)

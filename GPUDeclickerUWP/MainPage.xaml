@@ -2,12 +2,15 @@
     x:Class="GPUDeclickerUWP.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:GPUDeclickerUWP"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="using:GPUDeclickerUWP.View"
-    mc:Ignorable="d"
-    SizeChanged="PageSizeChangedEventHandler">
+    xmlns:viewModel="using:GPUDeclickerUWP.ViewModel"
+    mc:Ignorable="d">
+    
+    <Page.DataContext>
+        <viewModel:MainViewModel/>
+    </Page.DataContext>
 
     <Grid
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -17,54 +20,11 @@
             <RowDefinition Height="15*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        <!-- AudioViewer section -->
         <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="12*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <Grid Grid.Column="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Viewbox Grid.Row="0" Stretch="Fill">
-                    <Button Click="GoLeftBigStep_Click" Content="&lt;&lt;" />
-                </Viewbox>
-                <Viewbox Grid.Row="1" Stretch="Fill">
-                    <Button Click="GoLeftSmallStep_Click" Content="&lt;" />
-                </Viewbox>
-            </Grid>
-
-            <view:AudioViewerView Grid.Column="1"
-                               x:Name="AudioViewer" />
-
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Viewbox Grid.Row="0" Stretch="Fill">
-                    <Button Click="GoRightBigStep_Click" Content="&gt;&gt;" />
-                </Viewbox>
-                <Viewbox Grid.Row="1" Stretch="Fill">
-                    <Button Click="GoRightSmallStep_Click" Content="&gt;" />
-                </Viewbox>
-            </Grid>
-            <Grid Grid.Column="3">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Viewbox Grid.Row="0" Stretch="Fill">
-                    <Button Content="Mag+" Click="MagnifyMore_Click" />
-                </Viewbox>
-                <Viewbox Grid.Row="1" Stretch="Fill">
-                    <Button Content="Mag-" Click="MagnifyLess_Click" />
-                </Viewbox>
-            </Grid>
+            <view:AudioViewer AudioData ="{Binding AudioData, Mode=OneWay}"/>
         </Grid>
+        <!-- Buttons and sliders section -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -76,9 +36,10 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
-                    Name="OpenButton"
-                    Content="Open"
-                    Click="OpenAudioFile_ClickAsync"
+                    Content="Open audio file"
+                    IsEnabled="{Binding IsReadyToOpenFile,
+                                        Mode=OneWay}"
+                    Command="{Binding OpenAudioFileClicked}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center" />
             <Grid Grid.Column="1">
@@ -92,7 +53,8 @@
                            HorizontalAlignment="Left" />
                 <Slider Grid.Row="1"
                         Name="ThresholdSlider"
-                        Value="10"
+                        Value="{Binding ThresholdForDetection, Mode=TwoWay}"
+                        IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
                         Minimum="1"
                         Maximum="50"
                         StepFrequency="0.1"
@@ -100,8 +62,8 @@
                         VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="0"
                            Text="{Binding ElementName=ThresholdSlider,
-                        Path=Value, 
-                        Mode=TwoWay}"
+                               Path=Value, 
+                               Mode=TwoWay}"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Right" />
             </Grid>
@@ -111,12 +73,13 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <TextBlock Grid.Row="0"
-                           Text="Max length"
+                           Text="Max correction length"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Left" />
                 <Slider Grid.Row="1"
                         Name="MaxLengthSlider"
-                        Value="250"
+                        Value="{Binding MaxLengthCorrection, Mode=TwoWay}"
+                        IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
                         Minimum="1"
                         Maximum="500"
                         StepFrequency="1"
@@ -124,47 +87,69 @@
                         VerticalAlignment="Bottom" />
                 <TextBlock Grid.Row="0"
                            Text="{Binding ElementName=MaxLengthSlider, 
-                    Path=Value}"
+                                Path=Value,
+                                Mode=TwoWay}"
                            VerticalAlignment="Top"
                            HorizontalAlignment="Right" />
             </Grid>
             <Button Grid.Column="4"
-                    Name="ScanButton"
                     Content="Scan"
-                    Click="Scan_ClickAsync"
+                    IsEnabled="{Binding IsReadyToScan,
+                                        Mode=OneWay}"
+                    Command="{Binding ScanClicked}"
                     VerticalAlignment="Center"
-                    HorizontalAlignment="Center"
-                    IsEnabled="False" />
+                    HorizontalAlignment="Center"/>
             <Button Grid.Column="5"
-                    Name="SaveButton"
-                    Content="Save"
-                    Click="SaveAudioFile_ClickAsync"
+                    Content="Save audio file"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    IsEnabled="False" />
+                    IsEnabled="{Binding IsReadyToSaveFile, Mode=OneWay}"
+                    Command="{Binding SaveAudioFileClicked}" />
             <Button Grid.Column="6"
-                    Content="About"
-                    Click="AboutDialog_ClickAsync"
+                    Content="About app"
                     VerticalAlignment="Center"
-                    HorizontalAlignment="Center" />
-            <!--<Button Grid.Column="4" 
-                    Name="SaveClicksButton"
-                    Content="Save Clicks" 
-                    Click="SaveClicks_Click" 
-                    VerticalAlignment="Center" 
                     HorizontalAlignment="Center"
-                    IsEnabled="True"/> -->
+                    Command="{Binding AboutClicked}" />
         </Grid>
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
-            <Grid Name="ClickWindowsGrid" />
+        <!-- Clicks display section -->
+        <ScrollViewer Grid.Row="2" 
+                      VerticalScrollBarVisibility="Auto" >
+            <StackPanel>
+                <TextBlock Visibility="{Binding IsReadyToSaveFile}">
+                    Left channel clicks
+                </TextBlock>
+                <ItemsControl ItemsSource="{Binding LeftChannelClickWindowsCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+                <TextBlock Visibility="{Binding IsReadyToSaveFile}">
+                    Right channel clicks
+                </TextBlock>
+                <ItemsControl ItemsSource="{Binding RightChannelClickWindowsCollection}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapGrid Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </StackPanel>
         </ScrollViewer>
+        <!-- Status and progress bar section -->
         <Grid Grid.Row="3" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Column="0" Name="Status" HorizontalAlignment="Left" />
-            <ProgressBar Grid.Column="1" Name="ProgressBar" Value="0" Maximum="100" Width="Auto"
+            <TextBlock Grid.Column="0" 
+                       HorizontalAlignment="Left" 
+                       Text="{Binding TaskStatus}"/>
+            <ProgressBar Grid.Column="1" 
+                         Value="{Binding TaskProgress}" 
+                         Maximum="100" 
+                         Width="Auto"
                          HorizontalAlignment="Stretch" />
         </Grid>
     </Grid>

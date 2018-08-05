@@ -124,9 +124,12 @@
     <Compile Include="Model\InputOutput\AudioInputOutput.cs" />
     <Compile Include="Model\Processing\AudioProcessing.cs" />
     <Compile Include="Model\Processing\AudioProcessingSettings.cs" />
-    <Compile Include="ViewModel\AudioViewerViewModel.cs" />
-    <Compile Include="View\AudioViewerView.xaml.cs">
-      <DependentUpon>AudioViewerView.xaml</DependentUpon>
+    <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModel\DeligateCommand.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+    <Compile Include="View\AudioViewer.xaml.cs">
+      <DependentUpon>AudioViewer.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Processing\FastBurgAlgorithm64.cs" />
     <Compile Include="Model\Processing\FixResult.cs" />
@@ -208,7 +211,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="View\AudioViewerView.xaml">
+    <Page Include="View\AudioViewer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

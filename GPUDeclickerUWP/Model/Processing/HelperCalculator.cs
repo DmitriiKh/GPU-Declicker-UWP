@@ -155,8 +155,8 @@ namespace GPUDeclickerUWP.Model.Processing
             var maxLength = (int) (lenght * rate * 2);
 
             // follow user's limit
-            if (maxLength > audioData.AudioProcessingSettings.MaxLengthCorrection)
-                maxLength = audioData.AudioProcessingSettings.MaxLengthCorrection;
+            if (maxLength > audioData.AudioProcessingSettings.MaxLengthOfCorrection)
+                maxLength = audioData.AudioProcessingSettings.MaxLengthOfCorrection;
 
             return maxLength;
         }
