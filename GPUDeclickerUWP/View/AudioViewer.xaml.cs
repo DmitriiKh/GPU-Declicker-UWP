@@ -77,7 +77,7 @@ namespace GPUDeclickerUWP.View
         /// <summary>
         /// sets Ratio and OffsetPosition
         /// </summary>
-        public void Fill() 
+        private void Fill() 
         {
             _offsetPosition = 0;
 

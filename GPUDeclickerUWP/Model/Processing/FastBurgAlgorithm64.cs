@@ -240,7 +240,7 @@ namespace GPUDeclickerUWP.Model.Processing
         private void ComputeReflectionCoef()
         {
             double nominator = 0;
-            double denominator = 0;
+            double denominator = double.Epsilon;
 
             for (var index = 0; index <= _iIterationCounter + 1; index++)
             {

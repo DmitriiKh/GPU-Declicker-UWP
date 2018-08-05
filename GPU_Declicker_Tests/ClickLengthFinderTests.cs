@@ -118,7 +118,7 @@ namespace GPU_Declicker_Tests
 
             var result = ClickLengthFinder.FindLengthOfClick(audioData, damageStartPosition, 250, 0);
 
-            Assert.AreEqual(damageLength, result.Length);
+            Assert.AreEqual(damageLength, result.Length, 1);
         }
     }
 }

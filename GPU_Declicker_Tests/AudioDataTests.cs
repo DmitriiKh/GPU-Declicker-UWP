@@ -9,18 +9,22 @@ namespace GPU_Declicker_Tests
     {
         private AudioClick _audioClick;
         private AudioData _audioData;
+        private float[] inputAudio;
 
         [TestInitialize]
         public void AudioDataBeforeRunningTest()
         {
-            var inputAudio = new float[4096];
+            inputAudio = new float[4096];
             for (var index = 0; index < inputAudio.Length; index++)
-                inputAudio[index] = 0.5f;
+                inputAudio[index] = (float)System.Math.Sin(
+                    2 * System.Math.PI * index / (512 / 5.2));
+            
+            _audioData = new AudioDataMono((float[])inputAudio.Clone());
+
+            // damages samples
             for (var index = 1051; index < 1059; index++)
-                inputAudio[index] = -0.5f;
+                _audioData.SetInputSample(index, -0.5f);
 
-
-            _audioData = new AudioDataMono(inputAudio);
             for (var index = 0; index < inputAudio.Length; index++)
                 _audioData.SetOutputSample(
                     index,
@@ -30,7 +34,7 @@ namespace GPU_Declicker_Tests
                 1051,
                 10,
                 111,
-                new AudioDataMono(inputAudio),
+                _audioData, //new AudioDataMono(inputAudio),
                 ChannelType.Left);
         }
 
@@ -46,8 +50,9 @@ namespace GPU_Declicker_Tests
 
             for (var index = 0; index < _audioData.LengthSamples(); index++)
                 Assert.AreEqual(
-                    0.5f,
+                    inputAudio[index],
                     _audioData.GetOutputSample(index),
+                    0.0001,
                     "error at index " + index);
         }
 
@@ -56,12 +61,13 @@ namespace GPU_Declicker_Tests
         {
             _audioData.OnClickChanged(
                 _audioClick,
-                new ClickEventArgs {Shrinked = true});
+                new ClickEventArgs {Shrinked = false});
 
             for (var index = 0; index < _audioData.LengthSamples(); index++)
                 Assert.AreEqual(
-                    0.5f,
+                    inputAudio[index],
                     _audioData.GetOutputSample(index),
+                    0.0001,
                     "error at index " + index);
         }
     }
