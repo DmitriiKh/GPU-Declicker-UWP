@@ -28,7 +28,7 @@ namespace GPUDeclickerUWP.Model.Processing
 
         // Naming: 
         // - first letter is the same as in the Koen Vos paper
-        // - the part after is my description
+        // - the part after underscore is my description
         private int _iIterationCounter;
         private double[] _kReflectionCoefs;
         private int _mCoefficientsNumber;
@@ -64,12 +64,8 @@ namespace GPUDeclickerUWP.Model.Processing
             _absolutePosition = position;
             _mCoefficientsNumber = coefficientsNumber;
             _nHistoryLengthSamples = historyLengthSamples;
-            _aPredictionCoefs = new double[_mCoefficientsNumber + 1];
-            _g = new double[_mCoefficientsNumber + 2];
-            _r = new double[_mCoefficientsNumber + 1];
-            _c = new double[_mCoefficientsNumber + 1];
-            _kReflectionCoefs = new double[_mCoefficientsNumber + 1];
-            _deltaRAndAProduct = new double[_mCoefficientsNumber + 1];
+
+            CreateInternalVariables();
 
             Initialization();
 
@@ -89,6 +85,19 @@ namespace GPUDeclickerUWP.Model.Processing
 
                 UpdateG();
             }
+        }
+
+        /// <summary>
+        ///     Creates internal variables with desirable length
+        /// </summary>
+        private void CreateInternalVariables()
+        {
+            _aPredictionCoefs = new double[_mCoefficientsNumber + 1];
+            _g = new double[_mCoefficientsNumber + 2];
+            _r = new double[_mCoefficientsNumber + 1];
+            _c = new double[_mCoefficientsNumber + 1];
+            _kReflectionCoefs = new double[_mCoefficientsNumber + 1];
+            _deltaRAndAProduct = new double[_mCoefficientsNumber + 1];
         }
 
         /// <summary>
@@ -116,13 +125,12 @@ namespace GPUDeclickerUWP.Model.Processing
             double prediction = 0;
             for (var index = 1; index <= _aPredictionCoefs.Length - 1; index++)
                 prediction -= _aPredictionCoefs[index] *
-                              _xInputSignal[_absolutePosition - 
-                                            _nHistoryLengthSamples + 
+                              _xInputSignal[_absolutePosition -
+                                            _nHistoryLengthSamples - 1 +
                                             index];
 
             return prediction;
         }
-
 
         /// <summary>
         ///     Returns prediction coefficients that were
@@ -131,7 +139,7 @@ namespace GPUDeclickerUWP.Model.Processing
         /// <returns></returns>
         public double[] GetPredictionCoefs()
         {
-            var predictionCoefs = (double[]) _aPredictionCoefs.Clone();
+            var predictionCoefs = (double[])_aPredictionCoefs.Clone();
 
             return predictionCoefs;
         }
@@ -143,7 +151,7 @@ namespace GPUDeclickerUWP.Model.Processing
         /// <returns></returns>
         public double[] GetReflectionCoefs()
         {
-            var reflectionCoefs = (double[]) _kReflectionCoefs.Clone();
+            var reflectionCoefs = (double[])_kReflectionCoefs.Clone();
 
             return reflectionCoefs;
         }
@@ -154,13 +162,13 @@ namespace GPUDeclickerUWP.Model.Processing
         /// </summary>
         private void UpdateG()
         {
-            var oldG = (double[]) _g.Clone();
+            var oldG = (double[])_g.Clone();
 
             // g.Length is i_iterationCounter + 1
             for (var index = 0; index <= _iIterationCounter; index++)
                 _g[index] =
                     oldG[index] +
-                    _kReflectionCoefs[_iIterationCounter - 1] * oldG[J_inversOrder(index, _iIterationCounter)] +
+                    _kReflectionCoefs[_iIterationCounter - 1] * oldG[JinversOrder(index, _iIterationCounter)] +
                     _deltaRAndAProduct[index];
 
             for (var index = 0; index <= _iIterationCounter; index++)
@@ -207,7 +215,7 @@ namespace GPUDeclickerUWP.Model.Processing
         /// </summary>
         private void UpdateR()
         {
-            var oldR = (double[]) _r.Clone();
+            var oldR = (double[])_r.Clone();
 
             for (var index = 0; index <= _iIterationCounter - 1; index++)
                 _r[index + 1] = oldR[index] -
@@ -225,12 +233,12 @@ namespace GPUDeclickerUWP.Model.Processing
         /// </summary>
         private void UpdatePredictionCoefs()
         {
-            var oldAPredictionCoefs = (double[]) _aPredictionCoefs.Clone();
+            var oldAPredictionCoefs = (double[])_aPredictionCoefs.Clone();
 
             for (var index = 0; index <= _iIterationCounter + 1; index++)
                 _aPredictionCoefs[index] = oldAPredictionCoefs[index] +
                                            _kReflectionCoefs[_iIterationCounter] *
-                                           oldAPredictionCoefs[J_inversOrder(index, _iIterationCounter + 1)];
+                                           oldAPredictionCoefs[JinversOrder(index, _iIterationCounter + 1)];
         }
 
         /// <summary>
@@ -240,12 +248,12 @@ namespace GPUDeclickerUWP.Model.Processing
         private void ComputeReflectionCoef()
         {
             double nominator = 0;
-            double denominator = double.Epsilon;
+            var denominator = double.Epsilon;
 
             for (var index = 0; index <= _iIterationCounter + 1; index++)
             {
                 nominator += _aPredictionCoefs[index] *
-                             _g[J_inversOrder(index, _iIterationCounter + 1)];
+                             _g[JinversOrder(index, _iIterationCounter + 1)];
                 denominator += _aPredictionCoefs[index] * _g[index];
             }
 
@@ -260,7 +268,7 @@ namespace GPUDeclickerUWP.Model.Processing
         /// <param name="index">from 0 to max</param>
         /// <param name="max">positive number</param>
         /// <returns></returns>
-        private int J_inversOrder(int index, int max)
+        private static int JinversOrder(int index, int max)
         {
             return max - index;
         }

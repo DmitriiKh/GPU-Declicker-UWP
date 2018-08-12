@@ -24,7 +24,7 @@ namespace GPUDeclickerUWP.Model.Processing
 
             // we will use steps to report progress
             var step = audioData.LengthSamples() / 100;
-            for (var index = historyLengthSamples;
+            for (var index = historyLengthSamples + 1;
                 index <= audioData.LengthSamples();
                 index += step)
             {
@@ -42,7 +42,8 @@ namespace GPUDeclickerUWP.Model.Processing
                             audioData.AudioProcessingSettings.HistoryLengthSamples);
                         forwardPredictions[indexParallelFor] = (float)fba.GetForwardPrediction();
                         backwardPredictions[indexParallelFor - 
-                                            audioData.AudioProcessingSettings.HistoryLengthSamples] = 
+                                            audioData.AudioProcessingSettings.HistoryLengthSamples -
+                                            1] = 
                             (float)fba.GetBackwardPrediction();
                     }
                 );
