@@ -1,13 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPUDeclickerUWP", "GPUDeclickerUWP\GPUDeclickerUWP.csproj", "{D58852A8-707D-466D-B4E6-74AD591B69E0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPUDeclickerUnitTests", "GPU_Declicker_Tests\GPUDeclickerUnitTests.csproj", "{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPUDeclickerIntegrationTests", "GPUDeclickerIntegrationTests\GPUDeclickerIntegrationTests.csproj", "{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,43 +41,6 @@ Global
 		{D58852A8-707D-466D-B4E6-74AD591B69E0}.Release|x86.ActiveCfg = Release|x86
 		{D58852A8-707D-466D-B4E6-74AD591B69E0}.Release|x86.Build.0 = Release|x86
 		{D58852A8-707D-466D-B4E6-74AD591B69E0}.Release|x86.Deploy.0 = Release|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|Any CPU.Build.0 = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|Any CPU.Deploy.0 = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|ARM.ActiveCfg = Debug|ARM
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|ARM.Build.0 = Debug|ARM
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|ARM.Deploy.0 = Debug|ARM
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|x64.ActiveCfg = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|x64.Build.0 = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|x64.Deploy.0 = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|x86.ActiveCfg = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|x86.Build.0 = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Debug|x86.Deploy.0 = Debug|x86
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Release|Any CPU.ActiveCfg = Release|x64
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Release|ARM.ActiveCfg = Release|ARM
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Release|x64.ActiveCfg = Release|x64
-		{9E893BA4-7F73-4BCA-A68D-8B5C3402420E}.Release|x86.ActiveCfg = Release|x86
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|ARM.ActiveCfg = Debug|ARM
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|ARM.Build.0 = Debug|ARM
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|ARM.Deploy.0 = Debug|ARM
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|x64.ActiveCfg = Debug|x64
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|x64.Build.0 = Debug|x64
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|x64.Deploy.0 = Debug|x64
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|x86.ActiveCfg = Debug|x86
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|x86.Build.0 = Debug|x86
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Debug|x86.Deploy.0 = Debug|x86
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|Any CPU.ActiveCfg = Release|x64
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|Any CPU.Build.0 = Release|x64
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|ARM.ActiveCfg = Release|ARM
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|ARM.Build.0 = Release|ARM
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|ARM.Deploy.0 = Release|ARM
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|x64.ActiveCfg = Release|x64
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|x64.Build.0 = Release|x64
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|x64.Deploy.0 = Release|x64
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|x86.ActiveCfg = Release|x86
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|x86.Build.0 = Release|x86
-		{3C0F8328-0D8E-4D5A-B20E-12F92AA9856E}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
