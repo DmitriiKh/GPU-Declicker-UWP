@@ -1,7 +1,5 @@
 ﻿using CarefulAudioRepair.Data;
-using GPUDeclickerUWP.Model.Data;
 using GPUDeclickerUWP.Model.InputOutput;
-using GPUDeclickerUWP.Model.Processing;
 using GPUDeclickerUWP.View;
 using System;
 using System.Collections.Generic;
@@ -320,7 +318,7 @@ namespace GPUDeclickerUWP.ViewModel
             
             //AudioData.SetCurrentChannelType(Model.Data.ChannelType.Left);
 
-            AddClicksForCurrentChannel(LeftChannelClickWindowsCollection, CarefulAudioRepair.Data.ChannelType.Left);
+            AddClicksForCurrentChannel(LeftChannelClickWindowsCollection, ChannelType.Left);
 
             if (!Audio.IsStereo)
                 return;
@@ -329,7 +327,7 @@ namespace GPUDeclickerUWP.ViewModel
             
             //AudioData.SetCurrentChannelType(Model.Data.ChannelType.Right);
 
-            AddClicksForCurrentChannel(RightChannelClickWindowsCollection, CarefulAudioRepair.Data.ChannelType.Right);
+            AddClicksForCurrentChannel(RightChannelClickWindowsCollection, ChannelType.Right);
         }
 
         /// <summary>
@@ -338,7 +336,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// <param name="clickWindowsCollection">ObservableCollection</param>
         private void AddClicksForCurrentChannel(
             ICollection<ClickWindow> clickWindowsCollection,
-            CarefulAudioRepair.Data.ChannelType channelType)
+            ChannelType channelType)
         {
             // for every click in channel
             //for (var clicksIndex = 0;
