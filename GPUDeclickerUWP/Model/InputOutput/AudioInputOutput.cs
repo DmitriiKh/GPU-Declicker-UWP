@@ -260,7 +260,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             SaveAudioToFile(
                 StorageFile file,
                 IProgress<string> status,
-                AudioData audioData)
+                IAudio audio)
         {
             _finished = false;
             status.Report("Saving audio to file");
@@ -268,16 +268,14 @@ namespace GPUDeclickerUWP.Model.InputOutput
             var mediaEncodingProfile =
                 CreateMediaEncodingProfile(file);
 
-            _audioDataToSaveIsStereo = audioData.IsStereo;
+            _audioDataToSaveIsStereo = audio.IsStereo;
 
-            audioData.SetCurrentChannelType(Data.ChannelType.Left);
-            _leftChannel = Enumerable.Range(0, audioData.LengthSamples())
-                .Select(i => audioData.GetOutputSample(i))
+            _leftChannel = Enumerable.Range(0, audio.LengthSamples)
+                .Select(i => (float) audio.GetOutputSample(CarefulAudioRepair.Data.ChannelType.Left, i))
                 .ToArray();
 
-            audioData.SetCurrentChannelType(Data.ChannelType.Right);
-            _rightChannel = Enumerable.Range(0, audioData.LengthSamples())
-                .Select(i => audioData.GetOutputSample(i))
+            _rightChannel = Enumerable.Range(0, audio.LengthSamples)
+                .Select(i => (float) audio.GetOutputSample(CarefulAudioRepair.Data.ChannelType.Left, i))
                 .ToArray();
 
             if (!_audioDataToSaveIsStereo && mediaEncodingProfile.Audio != null)

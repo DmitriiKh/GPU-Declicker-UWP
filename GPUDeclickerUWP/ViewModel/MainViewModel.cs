@@ -59,17 +59,6 @@ namespace GPUDeclickerUWP.ViewModel
         public int MaxLengthCorrection { get; set; } = 250;
         public double ThresholdForDetection { get; set; } = 10;
 
-        private AudioData _audioData;
-        public AudioData AudioData
-        {
-            get => _audioData;
-            private set
-            {
-                _audioData = value;
-                OnPropertyChanged(nameof(AudioData));
-            }
-        }
-
         public IAudio Audio 
         {
             get => _audio;
@@ -184,7 +173,6 @@ namespace GPUDeclickerUWP.ViewModel
                 return;
             }
 
-            AudioData = _audioInputOutput.GetAudioData();
             Audio = _audioInputOutput.GetAudio();
             
             // remove all clicks from display
@@ -304,19 +292,11 @@ namespace GPUDeclickerUWP.ViewModel
             LeftChannelClickWindowsCollection.Clear();
             RightChannelClickWindowsCollection.Clear();
 
-            // set parameters for scanning 
-            AudioData.AudioProcessingSettings.ThresholdForDetection =
-                (float) ThresholdForDetection;
-            AudioData.AudioProcessingSettings.MaxLengthOfCorrection =
-                MaxLengthCorrection;
+            // set parameters for scanning
             Audio.Settings.ThresholdForDetection = ThresholdForDetection;
             Audio.Settings.MaxLengthOfCorrection = MaxLengthCorrection;
 
             // scan and repair
-            await Task.Run(() => AudioProcessing.ProcessAudioAsync(
-                AudioData,
-                _progress, 
-                _status));
             await Audio.ScanAsync(_status, _progress);
 
 
@@ -333,7 +313,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         private void AddClicksToCollection()
         {
-            if (AudioData == null || Audio is null)
+            if (Audio is null)
                 return;
 
             // insert left channel clicks
@@ -342,7 +322,7 @@ namespace GPUDeclickerUWP.ViewModel
 
             AddClicksForCurrentChannel(LeftChannelClickWindowsCollection, CarefulAudioRepair.Data.ChannelType.Left);
 
-            if (!AudioData.IsStereo && !Audio.IsStereo)
+            if (!Audio.IsStereo)
                 return;
 
             // insert right channel clicks
@@ -421,7 +401,7 @@ namespace GPUDeclickerUWP.ViewModel
                     await _audioInputOutput.SaveAudioToFile(
                         audioOutputFile,
                         _status,
-                        _audioData);
+                        _audio);
             }
             catch (Exception exception)
             {
