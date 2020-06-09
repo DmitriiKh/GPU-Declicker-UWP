@@ -116,14 +116,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Data\AudioChannel.cs" />
-    <Compile Include="Model\Data\AudioClick.cs" />
-    <Compile Include="Model\Data\AudioData.cs" />
-    <Compile Include="Model\Data\AudioDataMono.cs" />
-    <Compile Include="Model\Data\AudioDataStereo.cs" />
     <Compile Include="Model\InputOutput\AudioInputOutput.cs" />
-    <Compile Include="Model\Processing\AudioProcessing.cs" />
-    <Compile Include="Model\Processing\AudioProcessingSettings.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="ViewModel\DeligateCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -131,19 +124,12 @@
     <Compile Include="View\AudioViewer.xaml.cs">
       <DependentUpon>AudioViewer.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Processing\FastBurgAlgorithm64.cs" />
-    <Compile Include="Model\Processing\FixResult.cs" />
-    <Compile Include="Model\Processing\BurgPredictionCalculator.cs" />
-    <Compile Include="Model\Processing\ClickDetector.cs" />
-    <Compile Include="Model\Processing\ClickLengthFinder.cs" />
-    <Compile Include="Model\Processing\ClickRepairer.cs" />
     <Compile Include="View\ClickWindow.xaml.cs">
       <DependentUpon>ClickWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="AboutDialog.xaml.cs">
       <DependentUpon>AboutDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Model\Processing\HelperCalculator.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
