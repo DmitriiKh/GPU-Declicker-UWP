@@ -1,5 +1,6 @@
 ﻿using GPUDeclickerUWP.Model.Data;
 using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.Media;
@@ -30,7 +31,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private float[] _leftChannel = null;
         private float[] _rightChannel = null;
 
-        private AudioData _audioData;
         private int _audioDataCurrentPosition;
         private AudioGraph _audioGraph;
         private AudioFileInputNode _fileInputNode;
@@ -39,6 +39,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private AudioFrameInputNode _frameInputNode;
         private AudioFrameOutputNode _frameOutputNode;
         private IProgress<double> _ioProgress;
+        private bool _audioDataToSaveIsStereo;
 
         public AudioData GetAudioData()
         {
@@ -218,21 +219,14 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 var channelCount = _fileInputNode.EncodingProperties.ChannelCount;
                 // Transfer audio samples from buffer into audioData
                 for (uint index = 0; index < capacityInFloat; index += channelCount)
-                    if (_audioDataCurrentPosition < GetAudioData().LengthSamples())
+                    if (_audioDataCurrentPosition < _leftChannel.Length)
                     {
-                        GetAudioData().SetCurrentChannelType(ChannelType.Left);
-                        GetAudioData().SetInputSample(
-                            _audioDataCurrentPosition,
-                            dataInFloat[index]
-                        );
+                            _leftChannel[_audioDataCurrentPosition] = dataInFloat[index];
+
                         // if it's stereo
                         if (channelCount == 2)
                         {
-                            GetAudioData().SetCurrentChannelType(ChannelType.Right);
-                            GetAudioData().SetInputSample(
-                                _audioDataCurrentPosition,
-                                dataInFloat[index + 1]
-                            );
+                            _leftChannel[_audioDataCurrentPosition] = dataInFloat[index + 1];
                         }
 
                         _audioDataCurrentPosition++;
@@ -243,7 +237,8 @@ namespace GPUDeclickerUWP.Model.InputOutput
         public async Task<CreateAudioFileOutputNodeResult>
             SaveAudioToFile(
                 StorageFile file,
-                IProgress<string> status)
+                IProgress<string> status,
+                AudioData audioData)
         {
             _finished = false;
             status.Report("Saving audio to file");
@@ -251,7 +246,19 @@ namespace GPUDeclickerUWP.Model.InputOutput
             var mediaEncodingProfile =
                 CreateMediaEncodingProfile(file);
 
-            if (!_audioData.IsStereo && mediaEncodingProfile.Audio != null)
+            _audioDataToSaveIsStereo = audioData.IsStereo;
+
+            audioData.SetCurrentChannelType(ChannelType.Left);
+            _leftChannel = Enumerable.Range(0, audioData.LengthSamples())
+                .Select(i => audioData.GetOutputSample(i))
+                .ToArray();
+
+            audioData.SetCurrentChannelType(ChannelType.Right);
+            _rightChannel = Enumerable.Range(0, audioData.LengthSamples())
+                .Select(i => audioData.GetOutputSample(i))
+                .ToArray();
+
+            if (!_audioDataToSaveIsStereo && mediaEncodingProfile.Audio != null)
                     mediaEncodingProfile.Audio.ChannelCount = 1;
 
             // Initialize FileOutputNode
@@ -284,14 +291,14 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _audioGraph.Start();
             // don't start fileOutputNode yet because it will record zeros
 
-            // because we initialised frameInputNode in Stop mode we need to start it
+            // because we initialized frameInputNode in Stop mode we need to start it
             _frameInputNode.Start();
 
             // didn't find a better way to wait for writing to file
             while (!_finished)
                 await Task.Delay(50);
 
-            // when audioData samples ended and audioGraph already stoped
+            // when audioData samples ended and audioGraph already stopped
             await _fileOutputNode.FinalizeAsync();
 
             // clean status and progress 
@@ -326,7 +333,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 var dProgress =
                     (double) 100 *
                     _audioDataCurrentPosition /
-                    _audioData.LengthSamples();
+                    _leftChannel.Length;
                 _ioProgress?.Report(dProgress);
             }
         }
@@ -343,7 +350,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                     return MediaEncodingProfile.CreateWav(AudioEncodingQuality.High);
                 default:
                     throw new ArgumentException(
-                        "Can't create MediaEncodingProfile for this file extention");
+                        "Can't create MediaEncodingProfile for this file extension");
             }
         }
 
@@ -371,22 +378,18 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
                 for (uint index = 0; index < capacityInFloat; index += channelCount)
                 {
-                    if (_audioDataCurrentPosition < _audioData.LengthSamples())
+                    if (_audioDataCurrentPosition < _leftChannel.Length)
                     {
-                        GetAudioData().SetCurrentChannelType(ChannelType.Left);
-                        dataInFloat[index] = _audioData.GetOutputSample(
-                            _audioDataCurrentPosition);
+                        dataInFloat[index] = _leftChannel[_audioDataCurrentPosition];
                     }
 
                     // if it's stereo
                     if (channelCount == 2)
                     {
-                        // if processed audio is sretero
-                        if (_audioData.IsStereo)
+                        // if processed audio is stereo
+                        if (_audioDataToSaveIsStereo)
                         {
-                            GetAudioData().SetCurrentChannelType(ChannelType.Right);
-                            dataInFloat[index + 1] = _audioData.GetOutputSample(
-                                _audioDataCurrentPosition);
+                            dataInFloat[index + 1] = _rightChannel[_audioDataCurrentPosition];
                         }
                         else
                         {
@@ -396,7 +399,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                     }
 
                     _audioDataCurrentPosition++;
-                    if (_audioDataCurrentPosition >= _audioData.LengthSamples())
+                    if (_audioDataCurrentPosition >= _leftChannel.Length)
                     {
                         // last frame may be not full
                         _finished = true;

@@ -396,12 +396,13 @@ namespace GPUDeclickerUWP.ViewModel
                 saveAudioResult =
                     await _audioInputOutput.SaveAudioToFile(
                         audioOutputFile,
-                        _status);
+                        _status,
+                        _audioData);
             }
             catch (Exception exception)
             {
                 await ShowExeptionAsync(
-                    "An error occured while trying to save file.",
+                    "An error occurred while trying to save file.",
                     exception);
             }
 
