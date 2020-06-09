@@ -27,8 +27,8 @@ namespace GPUDeclickerUWP.Model.InputOutput
     /// </summary>
     public class AudioInputOutput
     {
-        private float[] leftChannel = null;
-        private float[] rightChannel = null;
+        private float[] _leftChannel = null;
+        private float[] _rightChannel = null;
 
         private AudioData _audioData;
         private int _audioDataCurrentPosition;
@@ -42,7 +42,10 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
         public AudioData GetAudioData()
         {
-            return _audioData;
+            if (_rightChannel is null)
+                return new AudioDataMono(_leftChannel);
+            else
+                return new AudioDataStereo(_leftChannel, _rightChannel);
         }
 
         public void SetAudioData(AudioData value)
