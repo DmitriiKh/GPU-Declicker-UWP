@@ -317,6 +317,8 @@ namespace GPUDeclickerUWP.ViewModel
                 AudioData,
                 _progress, 
                 _status));
+            await Audio.ScanAsync(_status, _progress);
+
 
             // enable Scan, Save and Open buttons
             IsReadyToOpenFile = true;
