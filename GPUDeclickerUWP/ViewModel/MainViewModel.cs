@@ -309,6 +309,8 @@ namespace GPUDeclickerUWP.ViewModel
                 (float) ThresholdForDetection;
             AudioData.AudioProcessingSettings.MaxLengthOfCorrection =
                 MaxLengthCorrection;
+            Audio.Settings.ThresholdForDetection = ThresholdForDetection;
+            Audio.Settings.MaxLengthOfCorrection = MaxLengthCorrection;
 
             // scan and repair
             await Task.Run(() => AudioProcessing.ProcessAudioAsync(
