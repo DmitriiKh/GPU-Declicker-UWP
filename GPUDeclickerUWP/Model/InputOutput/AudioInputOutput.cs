@@ -48,11 +48,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 return new AudioDataStereo(_leftChannel, _rightChannel);
         }
 
-        public void SetAudioData(AudioData value)
-        {
-            _audioData = value;
-        }
-
         /// <summary>
         ///     Creates an instance of AudioGraph and sets io_progress
         /// </summary>
