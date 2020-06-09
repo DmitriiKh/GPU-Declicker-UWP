@@ -262,11 +262,11 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _audioDataToSaveIsStereo = audio.IsStereo;
 
             _leftChannel = Enumerable.Range(0, audio.LengthSamples)
-                .Select(i => (float) audio.GetOutputSample(CarefulAudioRepair.Data.ChannelType.Left, i))
+                .Select(i => (float) audio.GetOutputSample(ChannelType.Left, i))
                 .ToArray();
 
             _rightChannel = Enumerable.Range(0, audio.LengthSamples)
-                .Select(i => (float) audio.GetOutputSample(CarefulAudioRepair.Data.ChannelType.Left, i))
+                .Select(i => (float) audio.GetOutputSample(ChannelType.Left, i))
                 .ToArray();
 
             if (!_audioDataToSaveIsStereo && mediaEncodingProfile.Audio != null)
