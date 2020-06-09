@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
         <!-- AudioViewer section -->
         <Grid Grid.Row="0">
-            <view:AudioViewer Audio ="{Binding AudioData, Mode=OneWay}"/>
+            <view:AudioViewer Audio ="{Binding Audio, Mode=OneWay}"/>
         </Grid>
         <!-- Buttons and sliders section -->
         <Grid Grid.Row="1">
