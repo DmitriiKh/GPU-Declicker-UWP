@@ -1,4 +1,5 @@
-﻿using GPUDeclickerUWP.Model.Data;
+﻿using CarefulAudioRepair.Data;
+using GPUDeclickerUWP.Model.Data;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -47,6 +48,24 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 return new AudioDataMono(_leftChannel);
             else
                 return new AudioDataStereo(_leftChannel, _rightChannel);
+        }
+
+        public IAudio GetAudio()
+        {
+            var settings = new AudioProcessingSettings()
+                {
+                    SampleRate = (int)_fileInputNode.EncodingProperties.SampleRate
+                };
+
+            if (_rightChannel is null)
+                return new Mono(
+                    _leftChannel.Select(s => (double) s).ToArray(), 
+                    settings);
+            else
+                return new Stereo(
+                    _leftChannel.Select(s => (double)s).ToArray(),
+                    _rightChannel.Select(s => (double)s).ToArray(),
+                    settings);
         }
 
         /// <summary>
@@ -248,12 +267,12 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             _audioDataToSaveIsStereo = audioData.IsStereo;
 
-            audioData.SetCurrentChannelType(ChannelType.Left);
+            audioData.SetCurrentChannelType(Data.ChannelType.Left);
             _leftChannel = Enumerable.Range(0, audioData.LengthSamples())
                 .Select(i => audioData.GetOutputSample(i))
                 .ToArray();
 
-            audioData.SetCurrentChannelType(ChannelType.Right);
+            audioData.SetCurrentChannelType(Data.ChannelType.Right);
             _rightChannel = Enumerable.Range(0, audioData.LengthSamples())
                 .Select(i => audioData.GetOutputSample(i))
                 .ToArray();
