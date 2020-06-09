@@ -1,5 +1,4 @@
 ﻿using CarefulAudioRepair.Data;
-using GPUDeclickerUWP.Model.Data;
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -42,14 +41,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private IProgress<double> _ioProgress;
         private bool _audioDataToSaveIsStereo;
         private int _sampleRate;
-
-        public AudioData GetAudioData()
-        {
-            if (_rightChannel is null)
-                return new AudioDataMono(_leftChannel);
-            else
-                return new AudioDataStereo(_leftChannel, _rightChannel);
-        }
 
         public IAudio GetAudio()
         {
