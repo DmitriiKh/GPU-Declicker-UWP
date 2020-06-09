@@ -1,4 +1,5 @@
-﻿using GPUDeclickerUWP.Model.Data;
+﻿using CarefulAudioRepair.Data;
+using GPUDeclickerUWP.Model.Data;
 using GPUDeclickerUWP.Model.InputOutput;
 using GPUDeclickerUWP.Model.Processing;
 using GPUDeclickerUWP.View;
@@ -69,6 +70,16 @@ namespace GPUDeclickerUWP.ViewModel
             }
         }
 
+        public IAudio Audio 
+        {
+            get => _audio;
+            private set
+            {
+                _audio = value;
+                OnPropertyChanged(nameof(Audio));
+            }
+        }
+
         private ObservableCollection<ClickWindow> _leftChannelClickWindowsCollection;
         public ObservableCollection<ClickWindow> LeftChannelClickWindowsCollection
         {
@@ -114,6 +125,8 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         private bool _isReadyToSaveFile;
+        private IAudio _audio;
+
         public bool IsReadyToSaveFile
         {
             get => _isReadyToSaveFile;
@@ -162,8 +175,8 @@ namespace GPUDeclickerUWP.ViewModel
                 // file not picked
                 return;
 
-            var loadAudioResult =
-                await LoadAudioAsync();
+            var loadAudioResult = await LoadAudioAsync();
+
             if (loadAudioResult.Status != AudioFileNodeCreationStatus.Success)
             {
                 // creation of audio file Node failed
@@ -172,6 +185,7 @@ namespace GPUDeclickerUWP.ViewModel
             }
 
             AudioData = _audioInputOutput.GetAudioData();
+            Audio = _audioInputOutput.GetAudio();
             
             // remove all clicks from display
             LeftChannelClickWindowsCollection.Clear();
@@ -319,14 +333,14 @@ namespace GPUDeclickerUWP.ViewModel
                 return;
 
             // insert left channel clicks
-            AudioData.SetCurrentChannelType(ChannelType.Left);
+            AudioData.SetCurrentChannelType(Model.Data.ChannelType.Left);
             AddClicksForCurrentChannel(LeftChannelClickWindowsCollection);
 
             if (!AudioData.IsStereo)
                 return;
 
             // insert right channel clicks
-            AudioData.SetCurrentChannelType(ChannelType.Right);
+            AudioData.SetCurrentChannelType(Model.Data.ChannelType.Right);
             AddClicksForCurrentChannel(RightChannelClickWindowsCollection);
         }
 
