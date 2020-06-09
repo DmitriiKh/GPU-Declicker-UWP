@@ -27,6 +27,9 @@ namespace GPUDeclickerUWP.Model.InputOutput
     /// </summary>
     public class AudioInputOutput
     {
+        private float[] leftChannel = null;
+        private float[] rightChannel = null;
+
         private AudioData _audioData;
         private int _audioDataCurrentPosition;
         private AudioGraph _audioGraph;
