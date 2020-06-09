@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GPUDeclickerUWP.Model.Data;
+using System;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Windows.Media;
@@ -6,7 +7,6 @@ using Windows.Media.Audio;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
 using Windows.Storage;
-using GPUDeclickerUWP.Model.Data;
 
 namespace GPUDeclickerUWP.Model.InputOutput
 {
@@ -116,7 +116,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _frameOutputNode.Stop();
             _fileInputNode.AddOutgoingConnection(_frameOutputNode);
 
-            // Add a handler for achiving the end of a file
+            // Add a handler for achieving the end of a file
             _fileInputNode.FileCompleted += FileInput_FileCompleted;
             // Add a handler which will transfer every audio frame into audioData 
             _audioGraph.QuantumStarted += FileInput_QuantumStarted;
@@ -127,11 +127,11 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 * _fileInputNode.Duration.Ticks
                 * _fileInputNode.EncodingProperties.SampleRate
             );
-            if (audioEncodingProperties.ChannelCount == 1)
-                SetAudioData(new AudioDataMono(new float[numOfSamples]));
-            else
-                SetAudioData(new AudioDataStereo(new float[numOfSamples],
-                    new float[numOfSamples]));
+
+            _leftChannel = new float[numOfSamples];
+
+            if (audioEncodingProperties.ChannelCount == 2)
+                _rightChannel = new float[numOfSamples];
 
             _audioDataCurrentPosition = 0;
 
@@ -143,7 +143,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             while (!_finished)
                 await Task.Delay(50);
 
-            // crear status line
+            // clear status line
             status.Report("");
 
             return inputNodeCreationResult;
