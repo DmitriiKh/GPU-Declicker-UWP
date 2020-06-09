@@ -333,14 +333,14 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         private void AddClicksToCollection()
         {
-            if (AudioData == null)
+            if (AudioData == null || Audio is null)
                 return;
 
             // insert left channel clicks
             AudioData.SetCurrentChannelType(Model.Data.ChannelType.Left);
             AddClicksForCurrentChannel(LeftChannelClickWindowsCollection);
 
-            if (!AudioData.IsStereo)
+            if (!AudioData.IsStereo && !Audio.IsStereo)
                 return;
 
             // insert right channel clicks
