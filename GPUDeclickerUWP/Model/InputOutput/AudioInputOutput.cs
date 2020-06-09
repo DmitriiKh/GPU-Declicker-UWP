@@ -239,7 +239,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                         // if it's stereo
                         if (channelCount == 2)
                         {
-                            _leftChannel[_audioDataCurrentPosition] = dataInFloat[index + 1];
+                            _rightChannel[_audioDataCurrentPosition] = dataInFloat[index + 1];
                         }
 
                         _audioDataCurrentPosition++;
