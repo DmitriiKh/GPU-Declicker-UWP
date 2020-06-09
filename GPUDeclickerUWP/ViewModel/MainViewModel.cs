@@ -264,7 +264,7 @@ namespace GPUDeclickerUWP.ViewModel
             catch (Exception ex)
             {
                 await ShowExeptionAsync(
-                    "An error occured while trying to read file.",
+                    "An error occurred while trying to read file.",
                     ex);
             }
 
@@ -337,15 +337,19 @@ namespace GPUDeclickerUWP.ViewModel
                 return;
 
             // insert left channel clicks
-            AudioData.SetCurrentChannelType(Model.Data.ChannelType.Left);
-            AddClicksForCurrentChannel(LeftChannelClickWindowsCollection);
+            
+            //AudioData.SetCurrentChannelType(Model.Data.ChannelType.Left);
+
+            AddClicksForCurrentChannel(LeftChannelClickWindowsCollection, CarefulAudioRepair.Data.ChannelType.Left);
 
             if (!AudioData.IsStereo && !Audio.IsStereo)
                 return;
 
             // insert right channel clicks
-            AudioData.SetCurrentChannelType(Model.Data.ChannelType.Right);
-            AddClicksForCurrentChannel(RightChannelClickWindowsCollection);
+            
+            //AudioData.SetCurrentChannelType(Model.Data.ChannelType.Right);
+
+            AddClicksForCurrentChannel(RightChannelClickWindowsCollection, CarefulAudioRepair.Data.ChannelType.Right);
         }
 
         /// <summary>
@@ -353,16 +357,18 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         /// <param name="clickWindowsCollection">ObservableCollection</param>
         private void AddClicksForCurrentChannel(
-            ICollection<ClickWindow> clickWindowsCollection)
+            ICollection<ClickWindow> clickWindowsCollection,
+            CarefulAudioRepair.Data.ChannelType channelType)
         {
             // for every click in channel
-            for (var clicksIndex = 0;
-                clicksIndex < AudioData.CurrentChannelGetNumberOfClicks();
-                clicksIndex++)
+            //for (var clicksIndex = 0;
+            //    clicksIndex < AudioData.CurrentChannelGetNumberOfClicks();
+            //    clicksIndex++)
+            foreach (var click in Audio.GetPatches(channelType))
             {
                 // make new ClickWindow for a click
-                var click = AudioData.GetClick(clicksIndex);
-                var clickWindow = new ClickWindow(click);
+                //var click = AudioData.GetClick(clicksIndex);
+                var clickWindow = new ClickWindow(click, Audio, channelType);
 
                 // set ClickWindow margin to space ClickWindow
                 clickWindow.SetMargin(10, 10);

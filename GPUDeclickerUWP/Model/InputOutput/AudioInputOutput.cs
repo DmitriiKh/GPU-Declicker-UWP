@@ -41,6 +41,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private AudioFrameOutputNode _frameOutputNode;
         private IProgress<double> _ioProgress;
         private bool _audioDataToSaveIsStereo;
+        private int _sampleRate;
 
         public AudioData GetAudioData()
         {
@@ -54,7 +55,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         {
             var settings = new AudioProcessingSettings()
                 {
-                    SampleRate = (int)_fileInputNode.EncodingProperties.SampleRate
+                    SampleRate = _sampleRate
                 };
 
             if (_rightChannel is null)
@@ -128,6 +129,8 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             var audioEncodingProperties =
                 _fileInputNode.EncodingProperties;
+
+            _sampleRate = (int) audioEncodingProperties.SampleRate;
 
             // Initialize FrameOutputNode and connect it to fileInputNode
             _frameOutputNode = _audioGraph.CreateFrameOutputNode(
