@@ -280,6 +280,12 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 return result;
 
             _fileOutputNode = result.FileOutputNode;
+
+            _fileOutputNode.EncodingProperties.SampleRate = (uint)audio.Settings.SampleRate;
+
+            if (!_audioToSaveIsStereo && _fileOutputNode != null)
+                _fileOutputNode.EncodingProperties.ChannelCount = 1;
+
             _fileOutputNode.Stop();
 
             // Initialize FrameInputNode and connect it to fileOutputNode
