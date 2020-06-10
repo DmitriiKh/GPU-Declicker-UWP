@@ -249,9 +249,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         }
 
         public async Task<CreateAudioFileOutputNodeResult>
-            SaveAudioToFile(
-                StorageFile file,
-                IAudio audio)
+            SaveAudioToFile(StorageFile file, IAudio audio)
         {
             _finished = false;
             _ioStatus.Report("Saving audio to file");
@@ -268,6 +266,8 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _rightChannel = Enumerable.Range(0, audio.LengthSamples)
                 .Select(i => (float) audio.GetOutputSample(ChannelType.Left, i))
                 .ToArray();
+
+            mediaEncodingProfile.Audio.SampleRate = (uint) audio.Settings.SampleRate;
 
             if (!_audioToSaveIsStereo && mediaEncodingProfile.Audio != null)
                     mediaEncodingProfile.Audio.ChannelCount = 1;
