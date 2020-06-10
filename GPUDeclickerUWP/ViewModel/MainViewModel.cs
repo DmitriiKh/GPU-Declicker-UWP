@@ -54,8 +54,8 @@ namespace GPUDeclickerUWP.ViewModel
 
         private readonly AudioInputOutput _audioInputOutput;
 
-        public int MaxLengthCorrection { get; set; } = 250;
-        public double ThresholdForDetection { get; set; } = 10;
+        public int MaxLengthCorrection { get; set; } = 150;
+        public double ThresholdForDetection { get; set; } = 7;
 
         public IAudio Audio 
         {
