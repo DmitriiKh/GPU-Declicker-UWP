@@ -40,14 +40,14 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private AudioFrameOutputNode _frameOutputNode;
         private IProgress<double> _ioProgress;
         private IProgress<string> _ioStatus;
-        private bool _audioDataToSaveIsStereo;
-        private int _sampleRate;
+        private bool _audioToSaveIsStereo;
+        private int _audioToReadSampleRate;
 
         public IAudio GetAudio()
         {
             var settings = new AudioProcessingSettings()
                 {
-                    SampleRate = _sampleRate
+                    SampleRate = _audioToReadSampleRate
                 };
 
             if (_rightChannel is null)
@@ -122,7 +122,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             var audioEncodingProperties =
                 _fileInputNode.EncodingProperties;
 
-            _sampleRate = (int) audioEncodingProperties.SampleRate;
+            _audioToReadSampleRate = (int) audioEncodingProperties.SampleRate;
 
             // Initialize FrameOutputNode and connect it to fileInputNode
             _frameOutputNode = _audioGraph.CreateFrameOutputNode(
@@ -259,7 +259,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             var mediaEncodingProfile =
                 CreateMediaEncodingProfile(file);
 
-            _audioDataToSaveIsStereo = audio.IsStereo;
+            _audioToSaveIsStereo = audio.IsStereo;
 
             _leftChannel = Enumerable.Range(0, audio.LengthSamples)
                 .Select(i => (float) audio.GetOutputSample(ChannelType.Left, i))
@@ -269,7 +269,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 .Select(i => (float) audio.GetOutputSample(ChannelType.Left, i))
                 .ToArray();
 
-            if (!_audioDataToSaveIsStereo && mediaEncodingProfile.Audio != null)
+            if (!_audioToSaveIsStereo && mediaEncodingProfile.Audio != null)
                     mediaEncodingProfile.Audio.ChannelCount = 1;
 
             // Initialize FileOutputNode
@@ -398,7 +398,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                     if (channelCount == 2)
                     {
                         // if processed audio is stereo
-                        if (_audioDataToSaveIsStereo)
+                        if (_audioToSaveIsStereo)
                         {
                             dataInFloat[index + 1] = _rightChannel[_audioDataCurrentPosition];
                         }
