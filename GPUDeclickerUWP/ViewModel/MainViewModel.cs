@@ -190,7 +190,7 @@ namespace GPUDeclickerUWP.ViewModel
         private async Task<CreateAudioGraphResult> InitAudioInputOutputAsync()
         {
             var initResult =
-                await _audioInputOutput.Init(_progress);
+                await _audioInputOutput.Init(_progress, _status);
 
             if (initResult.Status == AudioGraphCreationStatus.Success)
                 return initResult;
@@ -243,9 +243,7 @@ namespace GPUDeclickerUWP.ViewModel
             try
             {
                 loadAudioResult =
-                    await _audioInputOutput.LoadAudioFromFile(
-                        _audioInputFile,
-                        _status);
+                    await _audioInputOutput.LoadAudioFromFile(_audioInputFile);
             }
             catch (Exception ex)
             {
@@ -396,10 +394,7 @@ namespace GPUDeclickerUWP.ViewModel
             try
             {
                 saveAudioResult =
-                    await _audioInputOutput.SaveAudioToFile(
-                        audioOutputFile,
-                        _status,
-                        _audio);
+                    await _audioInputOutput.SaveAudioToFile(audioOutputFile, _audio);
             }
             catch (Exception exception)
             {

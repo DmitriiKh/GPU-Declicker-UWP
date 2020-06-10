@@ -39,6 +39,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private AudioFrameInputNode _frameInputNode;
         private AudioFrameOutputNode _frameOutputNode;
         private IProgress<double> _ioProgress;
+        private IProgress<string> _ioStatus;
         private bool _audioDataToSaveIsStereo;
         private int _sampleRate;
 
@@ -64,10 +65,12 @@ namespace GPUDeclickerUWP.Model.InputOutput
         ///     Creates an instance of AudioGraph and sets io_progress
         /// </summary>
         public async Task<CreateAudioGraphResult> Init(
-            Progress<double> progress)
+            Progress<double> progress,
+            IProgress<string> status)
         {
             // set io_progress var to show progress of input-output
             _ioProgress = progress;
+            _ioStatus = status;
 
             // initialize settings for AudioGraph
             var settings =
@@ -98,12 +101,10 @@ namespace GPUDeclickerUWP.Model.InputOutput
         /// <param name="file"> Input audio file</param>
         /// <param name="status"></param>
         public async Task<CreateAudioFileInputNodeResult>
-            LoadAudioFromFile(
-                StorageFile file,
-                IProgress<string> status)
+            LoadAudioFromFile(StorageFile file)
         {
             _finished = false;
-            status.Report("Reading audio file");
+            _ioStatus.Report("Reading audio file");
 
             // Initialize FileInputNode
             var inputNodeCreationResult =
@@ -158,7 +159,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 await Task.Delay(50);
 
             // clear status line
-            status.Report("");
+            _ioStatus.Report("");
 
             return inputNodeCreationResult;
         }
@@ -250,11 +251,10 @@ namespace GPUDeclickerUWP.Model.InputOutput
         public async Task<CreateAudioFileOutputNodeResult>
             SaveAudioToFile(
                 StorageFile file,
-                IProgress<string> status,
                 IAudio audio)
         {
             _finished = false;
-            status.Report("Saving audio to file");
+            _ioStatus.Report("Saving audio to file");
 
             var mediaEncodingProfile =
                 CreateMediaEncodingProfile(file);
@@ -313,7 +313,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             await _fileOutputNode.FinalizeAsync();
 
             // clean status and progress 
-            status.Report("");
+            _ioStatus.Report("");
             _ioProgress.Report(0);
 
             return result;
