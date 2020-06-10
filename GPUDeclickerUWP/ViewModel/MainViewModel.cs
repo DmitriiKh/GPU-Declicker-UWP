@@ -313,18 +313,12 @@ namespace GPUDeclickerUWP.ViewModel
                 return;
 
             // insert left channel clicks
-            
-            //AudioData.SetCurrentChannelType(Model.Data.ChannelType.Left);
-
             AddClicksForCurrentChannel(LeftChannelClickWindowsCollection, ChannelType.Left);
 
             if (!Audio.IsStereo)
                 return;
 
             // insert right channel clicks
-            
-            //AudioData.SetCurrentChannelType(Model.Data.ChannelType.Right);
-
             AddClicksForCurrentChannel(RightChannelClickWindowsCollection, ChannelType.Right);
         }
 
@@ -337,13 +331,9 @@ namespace GPUDeclickerUWP.ViewModel
             ChannelType channelType)
         {
             // for every click in channel
-            //for (var clicksIndex = 0;
-            //    clicksIndex < AudioData.CurrentChannelGetNumberOfClicks();
-            //    clicksIndex++)
             foreach (var click in Audio.GetPatches(channelType))
             {
                 // make new ClickWindow for a click
-                //var click = AudioData.GetClick(clicksIndex);
                 var clickWindow = new ClickWindow(click, Audio, channelType);
 
                 // set ClickWindow margin to space ClickWindow

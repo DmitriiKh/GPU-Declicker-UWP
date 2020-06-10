@@ -31,7 +31,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private float[] _leftChannel = null;
         private float[] _rightChannel = null;
 
-        private int _audioDataCurrentPosition;
+        private int _audioCurrentPosition;
         private AudioGraph _audioGraph;
         private AudioFileInputNode _fileInputNode;
         private AudioFileOutputNode _fileOutputNode;
@@ -148,7 +148,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             if (audioEncodingProperties.ChannelCount == 2)
                 _rightChannel = new float[numOfSamples];
 
-            _audioDataCurrentPosition = 0;
+            _audioCurrentPosition = 0;
 
             // Start process which will read audio file frame by frame
             // and will generated events QuantumStarted when a frame is in memory
@@ -197,7 +197,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 _ioProgress?.Report(dProgress);
             }
 
-            if (_audioDataCurrentPosition == 0) _frameOutputNode.Start();
+            if (_audioCurrentPosition == 0) _frameOutputNode.Start();
 
             var frame = _frameOutputNode.GetFrame();
             ProcessInputFrame(frame);
@@ -233,17 +233,17 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 var channelCount = _fileInputNode.EncodingProperties.ChannelCount;
                 // Transfer audio samples from buffer into audioData
                 for (uint index = 0; index < capacityInFloat; index += channelCount)
-                    if (_audioDataCurrentPosition < _leftChannel.Length)
+                    if (_audioCurrentPosition < _leftChannel.Length)
                     {
-                            _leftChannel[_audioDataCurrentPosition] = dataInFloat[index];
+                            _leftChannel[_audioCurrentPosition] = dataInFloat[index];
 
                         // if it's stereo
                         if (channelCount == 2)
                         {
-                            _rightChannel[_audioDataCurrentPosition] = dataInFloat[index + 1];
+                            _rightChannel[_audioCurrentPosition] = dataInFloat[index + 1];
                         }
 
-                        _audioDataCurrentPosition++;
+                        _audioCurrentPosition++;
                     }
             }
         }
@@ -295,7 +295,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             // Add a handler which will transfer every audioData sample to audio frame
             _frameInputNode.QuantumStarted += FrameInputNode_QuantumStarted;
 
-            _audioDataCurrentPosition = 0;
+            _audioCurrentPosition = 0;
 
             // Start process which will write audio file frame by frame
             // and will generated events QuantumStarted 
@@ -324,7 +324,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             AudioFrameInputNode sender,
             FrameInputNodeQuantumStartedEventArgs args)
         {
-            if (_audioDataCurrentPosition == 0) _fileOutputNode.Start();
+            if (_audioCurrentPosition == 0) _fileOutputNode.Start();
 
             // doesn't matter how many samples requested
             var frame = ProcessOutputFrame(_audioGraph.SamplesPerQuantum);
@@ -343,7 +343,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             {
                 var dProgress =
                     (double) 100 *
-                    _audioDataCurrentPosition /
+                    _audioCurrentPosition /
                     _leftChannel.Length;
                 _ioProgress?.Report(dProgress);
             }
@@ -389,9 +389,9 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
                 for (uint index = 0; index < capacityInFloat; index += channelCount)
                 {
-                    if (_audioDataCurrentPosition < _leftChannel.Length)
+                    if (_audioCurrentPosition < _leftChannel.Length)
                     {
-                        dataInFloat[index] = _leftChannel[_audioDataCurrentPosition];
+                        dataInFloat[index] = _leftChannel[_audioCurrentPosition];
                     }
 
                     // if it's stereo
@@ -400,7 +400,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                         // if processed audio is stereo
                         if (_audioToSaveIsStereo)
                         {
-                            dataInFloat[index + 1] = _rightChannel[_audioDataCurrentPosition];
+                            dataInFloat[index + 1] = _rightChannel[_audioCurrentPosition];
                         }
                         else
                         {
@@ -409,8 +409,8 @@ namespace GPUDeclickerUWP.Model.InputOutput
                         }
                     }
 
-                    _audioDataCurrentPosition++;
-                    if (_audioDataCurrentPosition >= _leftChannel.Length)
+                    _audioCurrentPosition++;
+                    if (_audioCurrentPosition >= _leftChannel.Length)
                     {
                         // last frame may be not full
                         _finished = true;
