@@ -229,6 +229,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AudioInputOutput_NAudio\AudioInputOutput_NAudio\AudioInputOutput_NAudio.csproj">
+      <Project>{bc163b55-4f32-4574-91e1-d9b5d7be70ad}</Project>
+      <Name>AudioInputOutput_NAudio</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CarefulAudioRepair\CarefulAudioRepair\CarefulAudioRepair.csproj">
       <Project>{58421ad3-0f72-4083-b556-f0e78905a144}</Project>
       <Name>CarefulAudioRepair</Name>
