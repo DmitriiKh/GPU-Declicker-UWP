@@ -288,11 +288,17 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             _fileOutputNode.Stop();
 
+            var frameInputNodeProperties = _audioGraph.EncodingProperties;
+
+            frameInputNodeProperties.SampleRate = (uint)audio.Settings.SampleRate;
+
+            if (!_audioToSaveIsStereo && _fileOutputNode != null)
+                frameInputNodeProperties.ChannelCount = 1;
+
             // Initialize FrameInputNode and connect it to fileOutputNode
             _frameInputNode = _audioGraph.CreateFrameInputNode(
                 // EncodingProprties are different than for input file
-                _fileOutputNode.EncodingProperties
-                //audioEncodingProperties
+                frameInputNodeProperties
             );
 
             _frameInputNode.AddOutgoingConnection(_fileOutputNode);
