@@ -128,7 +128,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _frameOutputNode = _audioGraph.CreateFrameOutputNode(
                 audioEncodingProperties
             );
-            _frameOutputNode.Stop();
+
             _fileInputNode.AddOutgoingConnection(_frameOutputNode);
 
             // Add a handler for achieving the end of a file
@@ -170,7 +170,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private void FileInput_FileCompleted(AudioFileInputNode sender, object args)
         {
             _audioGraph.Stop();
-            _frameOutputNode?.Stop();
             _audioGraph.Dispose();
             _audioGraph = null;
             _finished = true;
@@ -197,14 +196,11 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 _ioProgress?.Report(dProgress);
             }
 
-            if (_audioCurrentPosition == 0) _frameOutputNode.Start();
-
             var frame = _frameOutputNode.GetFrame();
             ProcessInputFrame(frame);
 
             if (_finished)
             {
-                _frameOutputNode?.Stop();
                 _audioGraph?.Stop();
             }
         }
