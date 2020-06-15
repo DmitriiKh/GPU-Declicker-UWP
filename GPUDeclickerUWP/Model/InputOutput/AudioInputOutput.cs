@@ -274,13 +274,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             _fileOutputNode = result.FileOutputNode;
 
-            _fileOutputNode.EncodingProperties.SampleRate = (uint)audio.Settings.SampleRate;
-
-            if (!_audioToSaveIsStereo && _fileOutputNode != null)
-                _fileOutputNode.EncodingProperties.ChannelCount = 1;
-
-            _fileOutputNode.Stop();
-
             var frameInputNodeProperties = _audioGraph.EncodingProperties;
 
             frameInputNodeProperties.SampleRate = (uint)audio.Settings.SampleRate;
@@ -295,7 +288,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
             );
 
             _frameInputNode.AddOutgoingConnection(_fileOutputNode);
-            _frameInputNode.Stop();
 
             // Add a handler which will transfer every audioData sample to audio frame
             _frameInputNode.QuantumStarted += FrameInputNode_QuantumStarted;
@@ -305,10 +297,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
             // Start process which will write audio file frame by frame
             // and will generated events QuantumStarted 
             _audioGraph.Start();
-            // don't start fileOutputNode yet because it will record zeros
-
-            // because we initialized frameInputNode in Stop mode we need to start it
-            _frameInputNode.Start();
 
             // didn't find a better way to wait for writing to file
             while (!_finished)
@@ -329,8 +317,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
             AudioFrameInputNode sender,
             FrameInputNodeQuantumStartedEventArgs args)
         {
-            if (_audioCurrentPosition == 0) _fileOutputNode.Start();
-
             var numSamplesNeeded = args.RequiredSamples;
 
             if (numSamplesNeeded == 0)
@@ -341,7 +327,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             if (_finished)
             {
-                _fileOutputNode?.Stop();
                 _audioGraph?.Stop();
             }
 
