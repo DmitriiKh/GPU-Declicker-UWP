@@ -380,7 +380,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private unsafe AudioFrame ProcessOutputFrame(int requiredSamples)
         {
             var bufferSize = (uint) requiredSamples * sizeof(float) *
-                             _fileOutputNode.EncodingProperties.ChannelCount;
+                             _frameInputNode.EncodingProperties.ChannelCount;
 
             var frame = new AudioFrame(bufferSize);
 
@@ -397,7 +397,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 var capacityInFloat = capacityInBytes / sizeof(float);
 
                 // Number of channels defines step between samples in buffer
-                var channelCount = _fileOutputNode.EncodingProperties.ChannelCount;
+                var channelCount = _frameInputNode.EncodingProperties.ChannelCount;
 
                 for (uint index = 0; index < capacityInFloat; index += channelCount)
                 {
