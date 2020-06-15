@@ -42,6 +42,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private IProgress<string> _ioStatus;
         private bool _audioToSaveIsStereo;
         private int _audioToReadSampleRate;
+        private TaskCompletionSource<bool> _readSuccess;
 
         public IAudio GetAudio()
         {
@@ -99,9 +100,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         ///     starts AudioGraph, waits till loading of samples is finished
         /// </summary>
         /// <param name="file"> Input audio file</param>
-        /// <param name="status"></param>
-        public async Task<CreateAudioFileInputNodeResult>
-            LoadAudioFromFile(StorageFile file)
+        public async Task<bool> LoadAudioFromFile(StorageFile file)
         {
             _finished = false;
             _ioStatus.Report("Reading audio file");
@@ -111,7 +110,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 await _audioGraph.CreateFileInputNodeAsync(file);
 
             if (inputNodeCreationResult.Status != AudioFileNodeCreationStatus.Success)
-                return inputNodeCreationResult;
+                return false;
 
             _fileInputNode = inputNodeCreationResult.FileInputNode;
 
@@ -149,18 +148,13 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             _audioCurrentPosition = 0;
 
+            _readSuccess = new TaskCompletionSource<bool>();
+
             // Start process which will read audio file frame by frame
             // and will generated events QuantumStarted when a frame is in memory
             _audioGraph.Start();
 
-            // didn't find a better way to wait for data
-            while (!_finished)
-                await Task.Delay(50);
-
-            // clear status line
-            _ioStatus.Report("");
-
-            return inputNodeCreationResult;
+            return await _readSuccess.Task;
         }
 
         /// <summary>
@@ -171,8 +165,11 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _audioGraph.Stop();
             _audioGraph.Dispose();
             _audioGraph = null;
-            _finished = true;
+
             _ioProgress?.Report(0);
+            _ioStatus.Report("");
+
+            _readSuccess.TrySetResult(true);
         }
 
         /// <summary>

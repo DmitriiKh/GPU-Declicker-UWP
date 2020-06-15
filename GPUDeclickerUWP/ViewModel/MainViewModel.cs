@@ -162,12 +162,12 @@ namespace GPUDeclickerUWP.ViewModel
                 // file not picked
                 return;
 
-            var loadAudioResult = await LoadAudioAsync();
+            var success = await LoadAudioAsync();
 
-            if (loadAudioResult.Status != AudioFileNodeCreationStatus.Success)
+            if (!success)
             {
                 // creation of audio file Node failed
-                await ShowErrorMessageAsync(loadAudioResult.Status.ToString());
+                await ShowErrorMessageAsync("Can not load audio");
                 return;
             }
 
@@ -236,13 +236,13 @@ namespace GPUDeclickerUWP.ViewModel
         /// Loads audio from file
         /// </summary>
         /// <returns></returns>
-        private async Task<CreateAudioFileInputNodeResult> LoadAudioAsync()
+        private async Task<bool> LoadAudioAsync()
         {
-            CreateAudioFileInputNodeResult loadAudioResult = null;
+            var success = false;
 
             try
             {
-                loadAudioResult =
+                success =
                     await _audioInputOutput.LoadAudioFromFile(_audioInputFile);
             }
             catch (Exception ex)
@@ -252,7 +252,7 @@ namespace GPUDeclickerUWP.ViewModel
                     ex);
             }
 
-            return loadAudioResult;
+            return success;
         }
 
         /// <summary>
