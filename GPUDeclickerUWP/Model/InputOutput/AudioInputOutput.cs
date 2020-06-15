@@ -338,8 +338,12 @@ namespace GPUDeclickerUWP.Model.InputOutput
         {
             if (_audioCurrentPosition == 0) _fileOutputNode.Start();
 
-            // doesn't matter how many samples requested
-            var frame = ProcessOutputFrame(_audioGraph.SamplesPerQuantum);
+            var numSamplesNeeded = args.RequiredSamples;
+
+            if (numSamplesNeeded == 0)
+                return;
+
+            var frame = ProcessOutputFrame(numSamplesNeeded);
             _frameInputNode.AddFrame(frame);
 
             if (_finished)
