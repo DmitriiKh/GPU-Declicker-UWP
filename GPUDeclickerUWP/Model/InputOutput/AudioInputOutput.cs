@@ -224,8 +224,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
                     out var dataInBytes,
                     out var capacityInBytes
                 );
-                // Discard first frame; it's full of zeros because of latency
-                if (_audioGraph.CompletedQuantumCount == 1) return;
 
                 var dataInFloat = (float*) dataInBytes;
                 var capacityInFloat = capacityInBytes / sizeof(float);
