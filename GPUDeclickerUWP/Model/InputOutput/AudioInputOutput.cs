@@ -136,10 +136,9 @@ namespace GPUDeclickerUWP.Model.InputOutput
             // Add a handler which will transfer every audio frame into audioData 
             _audioGraph.QuantumStarted += FileInput_QuantumStarted;
 
-            // Initialize audioData
+            // Initialize audio arrays
             var numOfSamples = (int) Math.Ceiling(
-                (decimal) 0.0000001
-                * _fileInputNode.Duration.Ticks
+                _fileInputNode.Duration.TotalSeconds
                 * _fileInputNode.EncodingProperties.SampleRate
             );
 
