@@ -47,7 +47,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         /// <summary>
         ///     Creates an instance of AudioGraph and sets io_progress
         /// </summary>
-        private async Task<CreateAudioGraphResult> Init(
+        private async Task<bool> Init(
             Progress<double> progress,
             IProgress<string> status)
         {
@@ -72,9 +72,14 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 await AudioGraph.CreateAsync(settings);
 
             if (result.Status == AudioGraphCreationStatus.Success)
+            {
                 _audioGraph = result.Graph;
-
-            return result;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -87,7 +92,12 @@ namespace GPUDeclickerUWP.Model.InputOutput
             Progress<double> progress,
             IProgress<string> status)
         {
-            await this.Init(progress, status);
+            var initSucces = await this.Init(progress, status);
+
+            if (!initSucces)
+            {
+                return (false, null);
+            }
 
             _ioStatus.Report("Reading audio file");
 
@@ -240,7 +250,12 @@ namespace GPUDeclickerUWP.Model.InputOutput
             Progress<double> progress,
             IProgress<string> status)
         {
-            await this.Init(progress, status);
+            var initSucces = await this.Init(progress, status);
+
+            if (!initSucces)
+            {
+                return (false);
+            }
 
             _ioStatus.Report("Saving audio to file");
 
