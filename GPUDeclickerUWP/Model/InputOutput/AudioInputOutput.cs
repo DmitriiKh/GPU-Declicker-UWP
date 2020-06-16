@@ -7,6 +7,7 @@ using Windows.Media;
 using Windows.Media.Audio;
 using Windows.Media.MediaProperties;
 using Windows.Media.Render;
+using Windows.Media.Transcoding;
 using Windows.Storage;
 
 namespace GPUDeclickerUWP.Model.InputOutput
@@ -32,6 +33,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private float[] _rightChannel = null;
 
         private int _audioCurrentPosition;
+        private TaskCompletionSource<bool> _writeSuccess;
         private AudioGraph _audioGraph;
         private AudioFileInputNode _fileInputNode;
         private AudioFileOutputNode _fileOutputNode;
@@ -238,8 +240,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             }
         }
 
-        public async Task<CreateAudioFileOutputNodeResult>
-            SaveAudioToFile(StorageFile file, IAudio audio)
+        public async Task<bool> SaveAudioToFile(StorageFile file, IAudio audio)
         {
             _finished = false;
             _ioStatus.Report("Saving audio to file");
@@ -267,7 +268,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 await _audioGraph.CreateFileOutputNodeAsync(file, mediaEncodingProfile);
 
             if (result.Status != AudioFileNodeCreationStatus.Success)
-                return result;
+                return false;
 
             _fileOutputNode = result.FileOutputNode;
 
@@ -291,11 +292,13 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             _audioCurrentPosition = 0;
 
+            _writeSuccess = new TaskCompletionSource<bool>();
+
             // Start process which will write audio file frame by frame
             // and will generated events QuantumStarted 
             _audioGraph.Start();            
 
-            return result;
+            return await _writeSuccess.Task;
         }
 
 
@@ -316,6 +319,8 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 _audioGraph?.Stop();
                 _fileOutputNode.Stop();
                 var result = _fileOutputNode.FinalizeAsync().GetResults();
+
+                _writeSuccess.TrySetResult(result == TranscodeFailureReason.None);
 
                 // clean status and progress 
                 _ioStatus.Report("");

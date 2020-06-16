@@ -362,14 +362,11 @@ namespace GPUDeclickerUWP.ViewModel
                 // output file not picked
                 return;
 
-            var saveAudioResult =
-                await SaveAudioAsync(audioOutputFile);
-            if (saveAudioResult.Status == AudioFileNodeCreationStatus.Success)
-                return;
+            var saveSuccess = await SaveAudioAsync(audioOutputFile);
+            //if (!saveSuccess)
 
-            // failed to create audio file node
-            await ShowErrorMessageAsync(
-                saveAudioResult.Status.ToString());
+
+            return;
         }
 
         /// <summary>
@@ -377,9 +374,9 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         /// <param name="audioOutputFile"></param>
         /// <returns></returns>
-        private async Task<CreateAudioFileOutputNodeResult> SaveAudioAsync(StorageFile audioOutputFile)
+        private async Task<bool> SaveAudioAsync(StorageFile audioOutputFile)
         {
-            CreateAudioFileOutputNodeResult saveAudioResult = null;
+            var saveAudioResult = false;
             
             try
             {
