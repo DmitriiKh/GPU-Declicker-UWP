@@ -151,12 +151,6 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         private async void OpenAudioFile()
         {
-            var initResult =
-                await InitAudioInputOutputAsync();
-            if (initResult == null)
-                // creation of AudioGraph failed
-                return;
-
             _audioInputFile = await PickInputFileAsync();
             if (_audioInputFile == null)
                 // file not picked
@@ -178,25 +172,6 @@ namespace GPUDeclickerUWP.ViewModel
             IsReadyToOpenFile = true;
             IsReadyToScan = true;
             IsReadyToSaveFile = false;
-        }
-
-        /// <summary>
-        /// Initializes AudioInputOutput instance
-        /// </summary>
-        /// <returns></returns>
-        private async Task<CreateAudioGraphResult> InitAudioInputOutputAsync()
-        {
-            var initResult =
-                await _audioInputOutput.Init(_progress, _status);
-
-            if (initResult.Status == AudioGraphCreationStatus.Success)
-                return initResult;
-
-            await ShowErrorMessageAsync(
-                "AudioGraph creation error: "
-                + initResult.Status
-            );
-            return null;
         }
 
         /// <summary>
@@ -240,7 +215,7 @@ namespace GPUDeclickerUWP.ViewModel
             try
             {
                 (success, Audio) =
-                    await _audioInputOutput.LoadAudioFromFile(_audioInputFile);
+                    await _audioInputOutput.LoadAudioFromFile(_audioInputFile, _progress, _status);
             }
             catch (Exception ex)
             {
@@ -348,12 +323,6 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         private async void SaveAudioFileAsync()
         {
-            var initResult =
-                await InitAudioInputOutputAsync();
-            if (initResult == null)
-                // failed to create AudioGraph
-                return;
-
             var audioOutputFile = await PickOutputFileAsync();
             if (audioOutputFile == null)
                 // output file not picked
@@ -382,7 +351,7 @@ namespace GPUDeclickerUWP.ViewModel
             try
             {
                 saveAudioResult =
-                    await _audioInputOutput.SaveAudioToFile(audioOutputFile, _audio);
+                    await _audioInputOutput.SaveAudioToFile(audioOutputFile, _audio, _progress, _status);
             }
             catch (Exception exception)
             {

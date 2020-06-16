@@ -47,7 +47,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         /// <summary>
         ///     Creates an instance of AudioGraph and sets io_progress
         /// </summary>
-        public async Task<CreateAudioGraphResult> Init(
+        private async Task<CreateAudioGraphResult> Init(
             Progress<double> progress,
             IProgress<string> status)
         {
@@ -82,8 +82,13 @@ namespace GPUDeclickerUWP.Model.InputOutput
         ///     starts AudioGraph, waits till loading of samples is finished
         /// </summary>
         /// <param name="file"> Input audio file</param>
-        public async Task<(bool, IAudio)> LoadAudioFromFile(StorageFile file)
+        public async Task<(bool, IAudio)> LoadAudioFromFile(
+            StorageFile file,
+            Progress<double> progress,
+            IProgress<string> status)
         {
+            await this.Init(progress, status);
+
             _ioStatus.Report("Reading audio file");
 
             // Initialize FileInputNode
@@ -229,8 +234,14 @@ namespace GPUDeclickerUWP.Model.InputOutput
                     settings);
         }
 
-        public async Task<bool> SaveAudioToFile(StorageFile file, IAudio audio)
+        public async Task<bool> SaveAudioToFile(
+            StorageFile file,
+            IAudio audio,
+            Progress<double> progress,
+            IProgress<string> status)
         {
+            await this.Init(progress, status);
+
             _ioStatus.Report("Saving audio to file");
 
             var mediaEncodingProfile =
