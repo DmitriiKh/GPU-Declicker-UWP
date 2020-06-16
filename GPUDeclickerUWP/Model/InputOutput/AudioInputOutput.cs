@@ -293,18 +293,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             // Start process which will write audio file frame by frame
             // and will generated events QuantumStarted 
-            _audioGraph.Start();
-
-            // didn't find a better way to wait for writing to file
-            while (!_finished)
-                await Task.Delay(50);
-
-            // when audioData samples ended and audioGraph already stopped
-            await _fileOutputNode.FinalizeAsync();
-
-            // clean status and progress 
-            _ioStatus.Report("");
-            _ioProgress.Report(0);
+            _audioGraph.Start();            
 
             return result;
         }
@@ -325,6 +314,14 @@ namespace GPUDeclickerUWP.Model.InputOutput
             if (_finished)
             {
                 _audioGraph?.Stop();
+                _fileOutputNode.Stop();
+                var result = _fileOutputNode.FinalizeAsync().GetResults();
+
+                // clean status and progress 
+                _ioStatus.Report("");
+                _ioProgress.Report(0);
+
+                return;
             }
 
             // to not report too many times
