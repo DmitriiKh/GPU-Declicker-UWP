@@ -242,16 +242,19 @@ namespace GPUDeclickerUWP.View
             out double maxValue)
         {
             minValue = Audio.GetInputSample(channelType, begining);
-            maxValue = Audio.GetInputSample(channelType, begining);
+            maxValue = minValue;
 
             for (var index = 0;
                 index < length && begining + index < Audio.LengthSamples;
                 index++)
             {
-                if (Audio.GetInputSample(channelType, begining + index) < minValue)
-                    minValue = Audio.GetInputSample(channelType, begining + index);
-                if (Audio.GetInputSample(channelType, begining + index) > maxValue)
-                    maxValue = Audio.GetInputSample(channelType, begining + index);
+                var sample = Audio.GetInputSample(channelType, begining + index);
+
+                if (sample < minValue)
+                    minValue = sample;
+
+                if (sample > maxValue)
+                    maxValue = sample;
             }
         }
 
