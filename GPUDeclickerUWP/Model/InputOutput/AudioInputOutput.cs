@@ -41,15 +41,15 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private int _audioToSaveChannelCount;
         private int _audioToReadSampleRate;
         private int _audioToReadChannelCount;
-        private TaskCompletionSource<bool> _readFileSuccess;
+        private TaskCompletionSource<(bool, IAudio)> _readFileSuccess;
         private TaskCompletionSource<bool> _writeFileSuccess;
 
-        public IAudio GetAudio()
+        private IAudio GetAudio()
         {
             var settings = new AudioProcessingSettings()
-                {
-                    SampleRate = _audioToReadSampleRate
-                };
+            {
+                SampleRate = _audioToReadSampleRate
+            };
 
             if (_rightChannel is null)
                 return new Mono(
@@ -100,7 +100,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         ///     starts AudioGraph, waits till loading of samples is finished
         /// </summary>
         /// <param name="file"> Input audio file</param>
-        public async Task<bool> LoadAudioFromFile(StorageFile file)
+        public async Task<(bool, IAudio)> LoadAudioFromFile(StorageFile file)
         {
             _ioStatus.Report("Reading audio file");
 
@@ -109,7 +109,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 await _audioGraph.CreateFileInputNodeAsync(file);
 
             if (inputNodeCreationResult.Status != AudioFileNodeCreationStatus.Success)
-                return false;
+                return (false, null);
 
             var fileInputNode = inputNodeCreationResult.FileInputNode;
 
@@ -148,7 +148,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             _audioCurrentPosition = 0;
 
-            _readFileSuccess = new TaskCompletionSource<bool>();
+            _readFileSuccess = new TaskCompletionSource<(bool, IAudio)>();
 
             // Start process which will read audio file frame by frame
             // and will generated events QuantumStarted when a frame is in memory
@@ -169,7 +169,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _ioProgress?.Report(0);
             _ioStatus.Report("");
 
-            _readFileSuccess.TrySetResult(true);
+            _readFileSuccess.TrySetResult((true, this.GetAudio()));
         }
 
         /// <summary>

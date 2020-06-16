@@ -166,12 +166,9 @@ namespace GPUDeclickerUWP.ViewModel
 
             if (!success)
             {
-                // creation of audio file Node failed
                 await ShowErrorMessageAsync("Can not load audio");
                 return;
             }
-
-            Audio = _audioInputOutput.GetAudio();
             
             // remove all clicks from display
             LeftChannelClickWindowsCollection.Clear();
@@ -242,7 +239,7 @@ namespace GPUDeclickerUWP.ViewModel
 
             try
             {
-                success =
+                (success, Audio) =
                     await _audioInputOutput.LoadAudioFromFile(_audioInputFile);
             }
             catch (Exception ex)
