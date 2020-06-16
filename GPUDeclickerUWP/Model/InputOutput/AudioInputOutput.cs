@@ -45,44 +45,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private TaskCompletionSource<bool> _writeFileSuccess;
 
         /// <summary>
-        ///     Creates an instance of AudioGraph and sets io_progress
-        /// </summary>
-        private async Task<bool> Init(
-            Progress<double> progress,
-            IProgress<string> status)
-        {
-            // set io_progress var to show progress of input-output
-            _ioProgress = progress;
-            _ioStatus = status;
-
-            // initialize settings for AudioGraph
-            var settings =
-                new AudioGraphSettings(
-                    AudioRenderCategory.Media
-                );
-
-            // if audioGraph was previously created
-            if (_audioGraph != null)
-            {
-                _audioGraph.Dispose();
-                _audioGraph = null;
-            }
-
-            var result =
-                await AudioGraph.CreateAsync(settings);
-
-            if (result.Status == AudioGraphCreationStatus.Success)
-            {
-                _audioGraph = result.Graph;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
         ///     Creates instances of FileInputNode, FrameOutputNode, AudioData
         ///     starts AudioGraph, waits till loading of samples is finished
         /// </summary>
@@ -421,6 +383,44 @@ namespace GPUDeclickerUWP.Model.InputOutput
             }
 
             return (frame, false);
+        }
+
+        /// <summary>
+        ///     Creates an instance of AudioGraph and sets io_progress
+        /// </summary>
+        private async Task<bool> Init(
+            Progress<double> progress,
+            IProgress<string> status)
+        {
+            // set io_progress var to show progress of input-output
+            _ioProgress = progress;
+            _ioStatus = status;
+
+            // initialize settings for AudioGraph
+            var settings =
+                new AudioGraphSettings(
+                    AudioRenderCategory.Media
+                );
+
+            // if audioGraph was previously created
+            if (_audioGraph != null)
+            {
+                _audioGraph.Dispose();
+                _audioGraph = null;
+            }
+
+            var result =
+                await AudioGraph.CreateAsync(settings);
+
+            if (result.Status == AudioGraphCreationStatus.Success)
+            {
+                _audioGraph = result.Graph;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
