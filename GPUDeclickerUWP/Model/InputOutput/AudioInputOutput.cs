@@ -38,7 +38,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private AudioFrameOutputNode _frameOutputNode;
         private IProgress<double> _ioProgress;
         private IProgress<string> _ioStatus;
-        private bool _audioToSaveIsStereo;
+        private int _audioToSaveChannelCount;
         private int _audioToReadSampleRate;
         private int _audioToReadChannelCount;
         private TaskCompletionSource<bool> _readSuccess;
@@ -236,7 +236,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             var mediaEncodingProfile =
                 CreateMediaEncodingProfile(file);
 
-            _audioToSaveIsStereo = audio.IsStereo;
+            _audioToSaveChannelCount = audio.IsStereo ? 2 : 1;
 
             _leftChannel = Enumerable.Range(0, audio.LengthSamples)
                 .Select(i => (float) audio.GetOutputSample(ChannelType.Left, i))
@@ -248,8 +248,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             mediaEncodingProfile.Audio.SampleRate = (uint) audio.Settings.SampleRate;
 
-            if (!_audioToSaveIsStereo && mediaEncodingProfile.Audio != null)
-                    mediaEncodingProfile.Audio.ChannelCount = 1;
+            mediaEncodingProfile.Audio.ChannelCount = (uint)_audioToSaveChannelCount;
 
             // Initialize FileOutputNode
             var result =
@@ -264,8 +263,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             frameInputNodeProperties.SampleRate = (uint)audio.Settings.SampleRate;
 
-            if (!_audioToSaveIsStereo && _fileOutputNode != null)
-                frameInputNodeProperties.ChannelCount = 1;
+            frameInputNodeProperties.ChannelCount = (uint)_audioToSaveChannelCount;
 
             // Initialize FrameInputNode and connect it to fileOutputNode
             var frameInputNode = _audioGraph.CreateFrameInputNode(
@@ -347,7 +345,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private unsafe (AudioFrame frame, bool finished)
             ProcessOutputFrame(int requiredSamples)
         {
-            var channelCount = (uint)(_audioToSaveIsStereo ? 2 : 1);
+            var channelCount = (uint)_audioToSaveChannelCount;
 
             var bufferSize = (uint)(requiredSamples * sizeof(float) * channelCount);
 
@@ -376,7 +374,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                     if (channelCount == 2)
                     {
                         // if processed audio is stereo
-                        if (_audioToSaveIsStereo)
+                        if (_audioToSaveChannelCount == 2)
                         {
                             dataInFloat[index + 1] = _rightChannel[_audioCurrentPosition];
                         }
