@@ -44,17 +44,24 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private TaskCompletionSource<(bool, IAudio)> _readFileSuccess;
         private TaskCompletionSource<bool> _writeFileSuccess;
 
+        public AudioInputOutput(
+            Progress<double> progress,
+            IProgress<string> status)
+        {
+            // set io_progress var to show progress of input-output
+            _ioProgress = progress;
+            _ioStatus = status;
+        }
+
         /// <summary>
         ///     Creates instances of FileInputNode, FrameOutputNode, AudioData
         ///     starts AudioGraph, waits till loading of samples is finished
         /// </summary>
         /// <param name="file"> Input audio file</param>
         public async Task<(bool, IAudio)> LoadAudioFromFile(
-            StorageFile file,
-            Progress<double> progress,
-            IProgress<string> status)
+            StorageFile file)
         {
-            var initSucces = await this.Init(progress, status);
+            var initSucces = await this.Init();
 
             if (!initSucces)
             {
@@ -208,11 +215,9 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
         public async Task<bool> SaveAudioToFile(
             StorageFile file,
-            IAudio audio,
-            Progress<double> progress,
-            IProgress<string> status)
+            IAudio audio)
         {
-            var initSucces = await this.Init(progress, status);
+            var initSucces = await this.Init();
 
             if (!initSucces)
             {
@@ -388,14 +393,8 @@ namespace GPUDeclickerUWP.Model.InputOutput
         /// <summary>
         ///     Creates an instance of AudioGraph and sets io_progress
         /// </summary>
-        private async Task<bool> Init(
-            Progress<double> progress,
-            IProgress<string> status)
+        private async Task<bool> Init()
         {
-            // set io_progress var to show progress of input-output
-            _ioProgress = progress;
-            _ioStatus = status;
-
             // initialize settings for AudioGraph
             var settings =
                 new AudioGraphSettings(

@@ -135,12 +135,11 @@ namespace GPUDeclickerUWP.ViewModel
             RightChannelClickWindowsCollection =
                 new ObservableCollection<ClickWindow>();
 
-            _audioInputOutput = new AudioInputOutput();
-
             // initialize variables for subclasses to report progress and status
             _progress = new Progress<double>(ProgressValueChanged);
             _status = new Progress<string>(StatusValueChanged);
-           
+
+            _audioInputOutput = new AudioInputOutput(_progress, _status);
         }
 
         public ICommand OpenAudioFileClicked => new DeligateCommand(OpenAudioFile);
@@ -215,7 +214,7 @@ namespace GPUDeclickerUWP.ViewModel
             try
             {
                 (success, Audio) =
-                    await _audioInputOutput.LoadAudioFromFile(_audioInputFile, _progress, _status);
+                    await _audioInputOutput.LoadAudioFromFile(_audioInputFile);
             }
             catch (Exception ex)
             {
@@ -351,7 +350,7 @@ namespace GPUDeclickerUWP.ViewModel
             try
             {
                 saveAudioResult =
-                    await _audioInputOutput.SaveAudioToFile(audioOutputFile, _audio, _progress, _status);
+                    await _audioInputOutput.SaveAudioToFile(audioOutputFile, _audio);
             }
             catch (Exception exception)
             {
