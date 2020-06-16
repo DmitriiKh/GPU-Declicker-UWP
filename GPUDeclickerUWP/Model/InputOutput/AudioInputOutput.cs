@@ -35,7 +35,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private int _audioCurrentPosition;
         private AudioGraph _audioGraph;
         private AudioFileOutputNode _fileOutputNode;
-        private AudioFrameInputNode _frameInputNode;
         private AudioFrameOutputNode _frameOutputNode;
         private IProgress<double> _ioProgress;
         private IProgress<string> _ioStatus;
@@ -269,15 +268,15 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 frameInputNodeProperties.ChannelCount = 1;
 
             // Initialize FrameInputNode and connect it to fileOutputNode
-            _frameInputNode = _audioGraph.CreateFrameInputNode(
+            var frameInputNode = _audioGraph.CreateFrameInputNode(
                 // EncodingProprties are different than for input file
                 frameInputNodeProperties
             );
 
-            _frameInputNode.AddOutgoingConnection(_fileOutputNode);
+            frameInputNode.AddOutgoingConnection(_fileOutputNode);
 
             // Add a handler which will transfer every audioData sample to audio frame
-            _frameInputNode.QuantumStarted += FrameInputNode_QuantumStarted;
+            frameInputNode.QuantumStarted += FrameInputNode_QuantumStarted;
 
             _audioCurrentPosition = 0;
 
@@ -301,7 +300,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 return;
 
             (var frame, var finished) = ProcessOutputFrame(numSamplesNeeded);
-            _frameInputNode.AddFrame(frame);
+            sender.AddFrame(frame);
 
             if (finished)
             {
@@ -348,8 +347,9 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private unsafe (AudioFrame frame, bool finished)
             ProcessOutputFrame(int requiredSamples)
         {
-            var bufferSize = (uint) requiredSamples * sizeof(float) *
-                             _frameInputNode.EncodingProperties.ChannelCount;
+            var channelCount = (uint)(_audioToSaveIsStereo ? 2 : 1);
+
+            var bufferSize = (uint)(requiredSamples * sizeof(float) * channelCount);
 
             var frame = new AudioFrame(bufferSize);
 
@@ -364,9 +364,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 // Cast to float since the data we are generating is float
                 var dataInFloat = (float*) dataInBytes;
                 var capacityInFloat = capacityInBytes / sizeof(float);
-
-                // Number of channels defines step between samples in buffer
-                var channelCount = _frameInputNode.EncodingProperties.ChannelCount;
 
                 for (uint index = 0; index < capacityInFloat; index += channelCount)
                 {
