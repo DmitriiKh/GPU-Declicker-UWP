@@ -362,9 +362,13 @@ namespace GPUDeclickerUWP.ViewModel
                 // output file not picked
                 return;
 
-            var saveSuccess = await SaveAudioAsync(audioOutputFile);
-            //if (!saveSuccess)
+            var success = await SaveAudioAsync(audioOutputFile);
 
+            if (!success)
+            {
+                await ShowErrorMessageAsync("Can not save audio");
+                return;
+            }
 
             return;
         }
