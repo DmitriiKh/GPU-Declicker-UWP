@@ -41,8 +41,8 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private int _audioToSaveChannelCount;
         private int _audioToReadSampleRate;
         private int _audioToReadChannelCount;
-        private TaskCompletionSource<bool> _readSuccess;
-        private TaskCompletionSource<bool> _writeSuccess;
+        private TaskCompletionSource<bool> _readFileSuccess;
+        private TaskCompletionSource<bool> _writeFileSuccess;
 
         public IAudio GetAudio()
         {
@@ -148,13 +148,13 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             _audioCurrentPosition = 0;
 
-            _readSuccess = new TaskCompletionSource<bool>();
+            _readFileSuccess = new TaskCompletionSource<bool>();
 
             // Start process which will read audio file frame by frame
             // and will generated events QuantumStarted when a frame is in memory
             _audioGraph.Start();
 
-            return await _readSuccess.Task;
+            return await _readFileSuccess.Task;
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _ioProgress?.Report(0);
             _ioStatus.Report("");
 
-            _readSuccess.TrySetResult(true);
+            _readFileSuccess.TrySetResult(true);
         }
 
         /// <summary>
@@ -278,13 +278,13 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             _audioCurrentPosition = 0;
 
-            _writeSuccess = new TaskCompletionSource<bool>();
+            _writeFileSuccess = new TaskCompletionSource<bool>();
 
             // Start process which will write audio file frame by frame
             // and will generated events QuantumStarted 
             _audioGraph.Start();            
 
-            return await _writeSuccess.Task;
+            return await _writeFileSuccess.Task;
         }
 
 
@@ -306,7 +306,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 _fileOutputNode.Stop();
                 var result = _fileOutputNode.FinalizeAsync().GetResults();
 
-                _writeSuccess.TrySetResult(result == TranscodeFailureReason.None);
+                _writeFileSuccess.TrySetResult(result == TranscodeFailureReason.None);
 
                 // clean status and progress 
                 _ioStatus.Report("");
