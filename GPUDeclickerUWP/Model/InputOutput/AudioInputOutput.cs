@@ -35,13 +35,16 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private float[] _leftChannel = null;
         private float[] _rightChannel = null;
 
-        private int _audioCurrentPosition;
         private AudioGraph _audioGraph;
         private AudioFileOutputNode _fileOutputNode;
         private AudioFrameOutputNode _frameOutputNode;
+
+        private int _audioCurrentPosition;
+
         private int _audioToSaveChannelCount;
         private int _audioToReadSampleRate;
         private int _audioToReadChannelCount;
+
         private TaskCompletionSource<(bool, IAudio)> _readFileSuccess;
         private TaskCompletionSource<bool> _writeFileSuccess;
 
@@ -49,7 +52,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
             Progress<double> progress,
             IProgress<string> status)
         {
-            // set io_progress var to show progress of input-output
             _ioProgress = progress;
             _ioStatus = status;
         }
@@ -59,9 +61,10 @@ namespace GPUDeclickerUWP.Model.InputOutput
         ///     starts AudioGraph, waits till loading of samples is finished
         /// </summary>
         /// <param name="file"> Input audio file</param>
-        public async Task<(bool, IAudio)> LoadAudioFromFile(
-            StorageFile file)
+        public async Task<(bool, IAudio)> LoadAudioFromFile(StorageFile file)
         {
+            _ioStatus.Report("Reading audio file");
+
             var initSucces = await this.Init();
 
             if (!initSucces)
@@ -69,52 +72,39 @@ namespace GPUDeclickerUWP.Model.InputOutput
                 return (false, null);
             }
 
-            _ioStatus.Report("Reading audio file");
-
-            // Initialize FileInputNode
+            // Initialize fileInputNode
             var inputNodeCreationResult =
                 await _audioGraph.CreateFileInputNodeAsync(file);
 
             if (inputNodeCreationResult.Status != AudioFileNodeCreationStatus.Success)
+            {
                 return (false, null);
+            }
 
             var fileInputNode = inputNodeCreationResult.FileInputNode;
 
+            // Save audio info
+            _audioToReadSampleRate = (int)fileInputNode.EncodingProperties.SampleRate;
+            _audioToReadChannelCount = (int)fileInputNode.EncodingProperties.ChannelCount;
 
-            // Read audio file encoding properties to pass them 
-            //to FrameOutputNode creator
-
-            var audioEncodingProperties =
-                fileInputNode.EncodingProperties;
-
-            _audioToReadSampleRate = (int)audioEncodingProperties.SampleRate;
-            _audioToReadChannelCount = (int)audioEncodingProperties.ChannelCount;
-
-            // Initialize FrameOutputNode and connect it to fileInputNode
+            // Initialize _frameOutputNode
             _frameOutputNode = _audioGraph.CreateFrameOutputNode(
-                audioEncodingProperties
+                fileInputNode.EncodingProperties
             );
 
+            // Connect nodes
             fileInputNode.AddOutgoingConnection(_frameOutputNode);
 
-            // Add a handler for achieving the end of a file
+            // Set handlers
             fileInputNode.FileCompleted += FileInput_FileCompleted;
-            // Add a handler which will transfer every audio frame into audioData 
             _audioGraph.QuantumStarted += FileInput_QuantumStarted;
 
-            // Initialize audio arrays
-            var numOfSamples = (int) Math.Ceiling(
-                fileInputNode.Duration.TotalSeconds
-                * fileInputNode.EncodingProperties.SampleRate
-            );
+            InitArrays(fileInputNode);
 
-            _leftChannel = new float[numOfSamples];
-
-            if (audioEncodingProperties.ChannelCount == 2)
-                _rightChannel = new float[numOfSamples];
-
+            // Reset position
             _audioCurrentPosition = 0;
 
+            // Prepare return results async
             _readFileSuccess = new TaskCompletionSource<(bool, IAudio)>();
 
             // Start process which will read audio file frame by frame
@@ -122,6 +112,21 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _audioGraph.Start();
 
             return await _readFileSuccess.Task;
+        }
+
+        private void InitArrays(AudioFileInputNode fileInputNode)
+        {
+            var numOfSamples = (int)Math.Ceiling(
+                fileInputNode.Duration.TotalSeconds
+                * fileInputNode.EncodingProperties.SampleRate
+            );
+
+            _leftChannel = new float[numOfSamples];
+
+            if (fileInputNode.EncodingProperties.ChannelCount == 2)
+            {
+                _rightChannel = new float[numOfSamples];
+            }
         }
 
         /// <summary>
@@ -136,7 +141,7 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _ioProgress?.Report(0);
             _ioStatus.Report("");
 
-            _readFileSuccess.TrySetResult((true, this.GetAudio()));
+            _readFileSuccess.TrySetResult((true, GetAudio()));
         }
 
         /// <summary>
@@ -144,19 +149,20 @@ namespace GPUDeclickerUWP.Model.InputOutput
         /// </summary>
         private void FileInput_QuantumStarted(AudioGraph sender, object args)
         {
+            var frame = _frameOutputNode.GetFrame();
+            ProcessInputFrame(frame);
+
             // to not report too many times
             if (sender.CompletedQuantumCount % 100 == 0)
             {
                 var dProgress =
                     100 *
-                    (int) sender.CompletedQuantumCount
+                    (int)sender.CompletedQuantumCount
                     * sender.SamplesPerQuantum /
                     _leftChannel.Length;
+
                 _ioProgress?.Report(dProgress);
             }
-
-            var frame = _frameOutputNode.GetFrame();
-            ProcessInputFrame(frame);
         }
 
         /// <summary>
@@ -218,14 +224,14 @@ namespace GPUDeclickerUWP.Model.InputOutput
             StorageFile file,
             IAudio audio)
         {
+            _ioStatus.Report("Saving audio to file");
+
             var initSucces = await this.Init();
 
             if (!initSucces)
             {
                 return (false);
             }
-
-            _ioStatus.Report("Saving audio to file");
 
             var mediaEncodingProfile =
                 CreateMediaEncodingProfile(file);
