@@ -29,6 +29,9 @@ namespace GPUDeclickerUWP.Model.InputOutput
     /// </summary>
     public class AudioInputOutput
     {
+        private readonly IProgress<double> _ioProgress;
+        private readonly IProgress<string> _ioStatus;
+
         private float[] _leftChannel = null;
         private float[] _rightChannel = null;
 
@@ -36,8 +39,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private AudioGraph _audioGraph;
         private AudioFileOutputNode _fileOutputNode;
         private AudioFrameOutputNode _frameOutputNode;
-        private IProgress<double> _ioProgress;
-        private IProgress<string> _ioStatus;
         private int _audioToSaveChannelCount;
         private int _audioToReadSampleRate;
         private int _audioToReadChannelCount;
