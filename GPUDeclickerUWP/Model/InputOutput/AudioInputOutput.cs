@@ -44,24 +44,6 @@ namespace GPUDeclickerUWP.Model.InputOutput
         private TaskCompletionSource<(bool, IAudio)> _readFileSuccess;
         private TaskCompletionSource<bool> _writeFileSuccess;
 
-        private IAudio GetAudio()
-        {
-            var settings = new AudioProcessingSettings()
-            {
-                SampleRate = _audioToReadSampleRate
-            };
-
-            if (_rightChannel is null)
-                return new Mono(
-                    _leftChannel.Select(s => (double) s).ToArray(), 
-                    settings);
-            else
-                return new Stereo(
-                    _leftChannel.Select(s => (double)s).ToArray(),
-                    _rightChannel.Select(s => (double)s).ToArray(),
-                    settings);
-        }
-
         /// <summary>
         ///     Creates an instance of AudioGraph and sets io_progress
         /// </summary>
@@ -227,6 +209,24 @@ namespace GPUDeclickerUWP.Model.InputOutput
                         _audioCurrentPosition++;
                     }
             }
+        }
+
+        private IAudio GetAudio()
+        {
+            var settings = new AudioProcessingSettings()
+            {
+                SampleRate = _audioToReadSampleRate
+            };
+
+            if (_rightChannel is null)
+                return new Mono(
+                    _leftChannel.Select(s => (double)s).ToArray(),
+                    settings);
+            else
+                return new Stereo(
+                    _leftChannel.Select(s => (double)s).ToArray(),
+                    _rightChannel.Select(s => (double)s).ToArray(),
+                    settings);
         }
 
         public async Task<bool> SaveAudioToFile(StorageFile file, IAudio audio)
