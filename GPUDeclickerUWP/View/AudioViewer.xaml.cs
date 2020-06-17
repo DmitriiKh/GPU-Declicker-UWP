@@ -31,6 +31,15 @@ namespace GPUDeclickerUWP.View
         private static void AudioPropertyCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var audioViewer = d as AudioViewer;
+
+            var audio = audioViewer.Audio;
+            _leftCnannelSamples = audio.GetInputRange(ChannelType.Left, 0, audio.LengthSamples - 1);
+
+            if (audio.IsStereo)
+            {
+                _rightCnannelSamples = audio.GetInputRange(ChannelType.Right, 0, audio.LengthSamples - 1);
+            }
+
             audioViewer?.Fill();
         }
 
@@ -41,6 +50,8 @@ namespace GPUDeclickerUWP.View
 
         // offset from beginning of audioData to beginning waveForm
         private int _offsetPosition;
+        private static double[] _leftCnannelSamples;
+        private static double[] _rightCnannelSamples;
 
         public AudioViewer()
         {
@@ -191,19 +202,19 @@ namespace GPUDeclickerUWP.View
             // for every x-axis position of waveForm
             for (var x = 0; x < WaveFormWidth; x++)
             {
-                AddPointToWaveform(ChannelType.Left, LeftChannelWaveFormPoints, x);
+                AddPointToWaveform(_leftCnannelSamples, LeftChannelWaveFormPoints, x);
 
-                if (!Audio.IsStereo)
-                    continue;
-
-                AddPointToWaveform(ChannelType.Right, RightChannelWaveFormPoints, x);
+                if (Audio.IsStereo)
+                {
+                    AddPointToWaveform(_rightCnannelSamples, RightChannelWaveFormPoints, x);
+                }
             }
         }
 
         /// <summary>
         ///     Adds a point representing one or many samples to wave form
         /// </summary>
-        private void AddPointToWaveform(ChannelType channelType, PointCollection waveFormPoints, int x)
+        private void AddPointToWaveform(double[] samples, PointCollection waveFormPoints, int x)
         {
             var offsetY = (int) WaveFormHeight / 2;
             var start = _offsetPosition + (int) (x * _audioToWaveFormRatio);
@@ -213,7 +224,7 @@ namespace GPUDeclickerUWP.View
                 return;
 
             // looks for max and min among many samples represented by a point on wave form
-            FindMinMax(channelType, start, length, out var min, out var max);
+            FindMinMax(samples, start, length, out var min, out var max);
 
             // connect previous point to a new point
             var y = (int) (-0.5 * WaveFormHeight * max) + offsetY;
@@ -235,20 +246,20 @@ namespace GPUDeclickerUWP.View
         /// <param name="minValue">min value</param>
         /// <param name="maxValue">max value</param>
         private void FindMinMax(
-            ChannelType channelType,
+            double[] samples,
             int begining,
             int length,
             out double minValue,
             out double maxValue)
         {
-            minValue = Audio.GetInputSample(channelType, begining);
+            minValue = samples[begining];
             maxValue = minValue;
 
             for (var index = 0;
-                index < length && begining + index < Audio.LengthSamples;
+                index < length && begining + index < samples.Length;
                 index++)
             {
-                var sample = Audio.GetInputSample(channelType, begining + index);
+                var sample = samples[begining + index];
 
                 if (sample < minValue)
                     minValue = sample;
