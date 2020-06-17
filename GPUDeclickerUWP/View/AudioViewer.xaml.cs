@@ -229,6 +229,8 @@ namespace GPUDeclickerUWP.View
             // connect previous point to a new point
             var y = (int) (-0.5 * WaveFormHeight * max) + offsetY;
             waveFormPoints.Add(new Point(x, y));
+
+            // if min and max are close enough
             if (!(Math.Abs(min - max) > 0.01))
                 return;
 
