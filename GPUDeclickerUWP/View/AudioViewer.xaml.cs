@@ -302,15 +302,19 @@ namespace GPUDeclickerUWP.View
             if (_audioToWaveFormRatio > maxRatio)
                 _audioToWaveFormRatio = maxRatio;
 
-            // adjust _offsetPosition if needed
+            AdjustOffsetIfNeeded();
+
+            DrawWaveForm();
+        }
+
+        private void AdjustOffsetIfNeeded()
+        {
             var waveFormWidthSamples = (int)(WaveFormWidth * _audioToWaveFormRatio);
 
             var samplesAfterOffset = Audio.LengthSamples - _offsetPosition;
 
             if (waveFormWidthSamples > samplesAfterOffset)
                 _offsetPosition = Audio.LengthSamples - waveFormWidthSamples;
-
-            DrawWaveForm();
         }
 
         /// <summary>
