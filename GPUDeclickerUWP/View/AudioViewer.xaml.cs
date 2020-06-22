@@ -321,14 +321,19 @@ namespace GPUDeclickerUWP.View
             (int)(pointerPositionX * _audioToWaveFormRatio) + _offsetPosition;
 
         /// <summary>
-        ///     Adjusts OffsetPosition to make pointer point to Offset sample
+        ///     Adjusts _offsetPosition to make pointer stay on the same sample.
         /// </summary>
-        /// <param name="offset"> offset for pointer position</param>
-        /// <param name="pointerPosition"> X of pointer position on waveForm</param>
-        private void SetOffsetForPointer(int offset, double pointerPosition)
+        /// <param name="offsetAtPointer"> offset for pointer position</param>
+        /// <param name="pointerPositionX"> X of pointer position on waveForm</param>
+        private void SetOffsetForPointer(int offsetAtPointer, double pointerPositionX)
         {
-            _offsetPosition = offset - (int) (pointerPosition * _audioToWaveFormRatio);
-            if (_offsetPosition < 0) _offsetPosition = 0;
+            var samplesFromWaveFormBeginning = (int)(pointerPositionX * _audioToWaveFormRatio);
+
+            _offsetPosition = offsetAtPointer - samplesFromWaveFormBeginning;
+
+            if (_offsetPosition < 0)
+                _offsetPosition = 0;
+
             DrawWaveForm();
         }
 
