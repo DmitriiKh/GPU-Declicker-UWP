@@ -279,10 +279,10 @@ namespace GPUDeclickerUWP.View
             if (Audio == null)
                 return;
 
-            if (_audioToWaveFormRatio >= 2)
-                _audioToWaveFormRatio /= 2;
-            else
-                _audioToWaveFormRatio = 1;
+            _audioToWaveFormRatio /= 2;
+
+            if (_audioToWaveFormRatio < 1)
+                _audioToWaveFormRatio = 1d;
 
             DrawWaveForm();
         }
