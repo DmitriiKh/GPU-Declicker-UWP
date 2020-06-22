@@ -309,6 +309,9 @@ namespace GPUDeclickerUWP.View
 
         private void AdjustOffsetIfNeeded()
         {
+            if (_offsetPosition < 0)
+                _offsetPosition = 0;
+
             var waveFormWidthSamples = (int)(WaveFormWidth * _audioToWaveFormRatio);
 
             var samplesAfterOffset = Audio.LengthSamples - _offsetPosition;
