@@ -343,12 +343,13 @@ namespace GPUDeclickerUWP.View
 
             var pointer = e.GetCurrentPoint(WaveFormsGroup);
 
+            // calculates offset for samples at pointer
+            var offsetAtPointer = PointerOffsetPosition(pointer.Position.X);
+
             if (pointer.Properties.MouseWheelDelta > 0)
                 MagnifyMore();
             else
                 MagnifyLess();
-
-            var offsetAtPointer = PointerOffsetPosition(pointer.Position.X);
 
             // set pointer at the same position
             SetOffsetForPointer(offsetAtPointer, pointer.Position.X);
