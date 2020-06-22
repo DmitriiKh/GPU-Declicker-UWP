@@ -340,10 +340,8 @@ namespace GPUDeclickerUWP.View
         {
             var pointer = e.GetCurrentPoint(this);
 
-            var pointerPositionX = pointer.Position.X;
-
             // calculates offset for samples at pointer
-            var offsetAtPointer = PointerOffsetPosition(pointerPositionX);
+            var offsetAtPointer = PointerOffsetPosition(pointer.Position.X);
 
             var delta = pointer.Properties.MouseWheelDelta;
 
@@ -353,7 +351,7 @@ namespace GPUDeclickerUWP.View
                 MagnifyLess();
 
             // set pointer at the same position
-            SetOffsetForPointer(offsetAtPointer, pointerPositionX);
+            SetOffsetForPointer(offsetAtPointer, pointer.Position.X);
         }
 
         /// <summary>
