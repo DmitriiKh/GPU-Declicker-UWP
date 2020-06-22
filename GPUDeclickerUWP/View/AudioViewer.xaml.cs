@@ -338,7 +338,10 @@ namespace GPUDeclickerUWP.View
         /// </summary>
         private void WaveFormsGroupPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
-            var pointer = e.GetCurrentPoint(this);
+            // Prevent most handlers along the event route from handling the same event again.
+            e.Handled = true;
+
+            var pointer = e.GetCurrentPoint(WaveFormsGroup);
 
             // calculates offset for samples at pointer
             var offsetAtPointer = PointerOffsetPosition(pointer.Position.X);
