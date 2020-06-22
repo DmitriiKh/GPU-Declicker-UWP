@@ -339,17 +339,21 @@ namespace GPUDeclickerUWP.View
         private void WaveFormsGroupPointerWheelChanged(object sender, PointerRoutedEventArgs e)
         {
             var pointer = e.GetCurrentPoint(this);
-            var pointerPosition = pointer.Position;
+
+            var pointerPositionX = pointer.Position.X;
+
             // calculates offset for samples at pointer
-            var offsetAtPointer = PointerOffsetPosition(pointerPosition.X);
-            var pointerProperties = pointer.Properties;
-            var delta = pointerProperties.MouseWheelDelta;
+            var offsetAtPointer = PointerOffsetPosition(pointerPositionX);
+
+            var delta = pointer.Properties.MouseWheelDelta;
+
             if (delta > 0)
                 MagnifyMore();
             else
                 MagnifyLess();
+
             // set pointer at the same position
-            SetOffsetForPointer(offsetAtPointer, pointerPosition.X);
+            SetOffsetForPointer(offsetAtPointer, pointerPositionX);
         }
 
         /// <summary>
