@@ -10,7 +10,7 @@ namespace GPUDeclickerUWP.View
     public sealed partial class AudioViewer
     {
         // this timer creates a delay between WaveForm size changing and its redrawing
-        // to make resizing faster
+        // to throtle redrawing requests and make UI more reponsive
         private readonly DispatcherTimer _redrawingTimer;
 
         // audio samples to view
