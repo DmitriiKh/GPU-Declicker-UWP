@@ -46,7 +46,7 @@ namespace GPUDeclickerUWP.View
         // magnification ratio
         // when set to 1, waveForm is most detailed
         // when set to R, waveForm drops each R-1 from R audioData samples
-        private double _audioToWaveFormRatio = 1;
+        private double _audioToWaveFormRatio = 1d;
 
         // offset from beginning of audioData to beginning waveForm
         private int _offsetPosition;
@@ -295,12 +295,12 @@ namespace GPUDeclickerUWP.View
             if (Audio == null)
                 return;
 
-            if (WaveFormWidth * _audioToWaveFormRatio * 2
-                < Audio.LengthSamples)
-                _audioToWaveFormRatio *= 2;
-            else
-                _audioToWaveFormRatio =
-                    Audio.LengthSamples / WaveFormWidth;
+            _audioToWaveFormRatio *= 2;
+
+            var maxRatio = Audio.LengthSamples / WaveFormWidth;
+
+            if (_audioToWaveFormRatio > maxRatio)
+                _audioToWaveFormRatio = maxRatio;
 
             DrawWaveForm();
         }
