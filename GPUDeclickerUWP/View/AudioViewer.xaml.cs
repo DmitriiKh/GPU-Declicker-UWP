@@ -338,8 +338,7 @@ namespace GPUDeclickerUWP.View
 
             _offsetPosition = offsetAtPointer - samplesFromWaveFormBeginning;
 
-            if (_offsetPosition < 0)
-                _offsetPosition = 0;
+            AdjustOffsetIfNeeded();
 
             DrawWaveForm();
         }
