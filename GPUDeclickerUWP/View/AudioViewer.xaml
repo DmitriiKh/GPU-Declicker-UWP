@@ -7,20 +7,20 @@
     mc:Ignorable="d"
     d:DesignHeight="300"
     d:DesignWidth="400">
-    <Grid>
+    <Grid Background="#FF5733">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="12*" />
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+        <Grid Grid.Column="0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Viewbox Grid.Row="0" >
-                <Button Click="GoLeftBigStepClick" >
+                <Button Click="GoLeftBigStepClick" Background="Transparent" >
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="Back" />
                         <SymbolIcon Symbol="Stop" />
@@ -28,7 +28,7 @@
                 </Button>
             </Viewbox>
             <Viewbox Grid.Row="1" >
-                <Button Click="GoLeftSmallStepClick" >
+                <Button Click="GoLeftSmallStepClick" Background="Transparent" >
                     <StackPanel>
                         <SymbolIcon Symbol="Back" />
                     </StackPanel>
@@ -37,7 +37,7 @@
         </Grid>
         <Grid Grid.Column="1"
               Name="WaveFormsGroup"
-              Background="Transparent"
+              Background="White"
               PointerWheelChanged="WaveFormsGroupPointerWheelChanged"
               PointerPressed="WaveFormsGroupPointerPressed"
               PointerReleased="WaveFormsGroupPointerReleased"
@@ -65,7 +65,7 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Viewbox Grid.Row="0" >
-                <Button Click="GoRightBigStepClick" >
+                <Button Click="GoRightBigStepClick" Background="Transparent" >
                     <StackPanel Orientation="Horizontal">
                         <SymbolIcon Symbol="Stop" />
                         <SymbolIcon Symbol="Forward" />
@@ -73,7 +73,7 @@
                 </Button>
             </Viewbox>
             <Viewbox Grid.Row="1" >
-                <Button Click="GoRightSmallStepClick" >
+                <Button Click="GoRightSmallStepClick" Background="Transparent" >
                     <StackPanel>
                         <SymbolIcon Symbol="Forward" />
                     </StackPanel>
@@ -86,14 +86,14 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Viewbox Grid.Row="0" >
-                <Button Click="MagnifyMoreClick" >
+                <Button Click="MagnifyMoreClick" Background="Transparent" >
                     <StackPanel>
                         <SymbolIcon Symbol="ZoomIn" />
                     </StackPanel>
                 </Button>
             </Viewbox>
             <Viewbox Grid.Row="1" >
-                <Button Click="MagnifyLessClick" >
+                <Button Click="MagnifyLessClick" Background="Transparent" >
                     <StackPanel>
                         <SymbolIcon Symbol="ZoomOut" />
                     </StackPanel>
