@@ -136,7 +136,7 @@
                 <TextBlock Visibility="{Binding IsReadyToSaveFile}"
                            Style="{StaticResource TitleTextBlockStyle}"
                            HorizontalAlignment="Center">
-                    Left channel clicks
+                    Left channel
                 </TextBlock>
                 <ItemsControl ItemsSource="{Binding LeftChannelClickWindowsCollection}">
                     <ItemsControl.ItemsPanel>
@@ -148,7 +148,7 @@
                 <TextBlock Visibility="{Binding IsReadyToSaveFile}"
                            Style="{StaticResource TitleTextBlockStyle}"
                            HorizontalAlignment="Center">
-                    Right channel clicks
+                    Right channel
                 </TextBlock>
                 <ItemsControl ItemsSource="{Binding RightChannelClickWindowsCollection}">
                     <ItemsControl.ItemsPanel>
