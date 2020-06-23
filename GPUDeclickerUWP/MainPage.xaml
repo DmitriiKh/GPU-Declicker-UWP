@@ -34,32 +34,26 @@
                     <TextBlock Text="Open File" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <Grid Grid.Column="1"
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal"
                     Visibility="{Binding IsReadyToScan, Mode=OneWay}">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0"
-                           Text="Detection level"
-                           VerticalAlignment="Top"
-                           HorizontalAlignment="Left" />
-                <Slider Grid.Row="1"
-                        Name="ThresholdSlider"
+                <TextBlock Text="Detection level"
+                           VerticalAlignment="Center" />
+                <Slider Name="ThresholdSlider"
                         Value="{Binding ThresholdForDetection, Mode=TwoWay}"
                         IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
+                        Width="200"
                         Minimum="1"
                         Maximum="50"
                         StepFrequency="0.1"
                         SmallChange="0.1"
-                        VerticalAlignment="Bottom" />
-                <TextBlock Grid.Row="0"
-                           Text="{Binding ElementName=ThresholdSlider,
+                        VerticalAlignment="Bottom"
+                        Margin="5,0,5,0"/>
+                <TextBlock Text="{Binding ElementName=ThresholdSlider,
                                Path=Value, 
                                Mode=TwoWay}"
-                           VerticalAlignment="Top"
-                           HorizontalAlignment="Right" />
-            </Grid>
+                           VerticalAlignment="Center"/>
+            </StackPanel>
             <Grid Grid.Column="3"
                     Visibility="{Binding IsReadyToScan, Mode=OneWay}">
                 <Grid.RowDefinitions>
