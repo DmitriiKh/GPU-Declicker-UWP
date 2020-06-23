@@ -58,7 +58,7 @@
                         Maximum="50"
                         StepFrequency="0.1"
                         SmallChange="0.1"
-                        VerticalAlignment="Bottom"
+                        VerticalAlignment="Center"
                         Margin="5,0,5,0"/>
                 <TextBlock Text="{Binding ElementName=ThresholdSlider,
                                Path=Value, 
@@ -79,7 +79,7 @@
                         Maximum="500"
                         StepFrequency="1"
                         SmallChange="1"
-                        VerticalAlignment="Bottom"
+                        VerticalAlignment="Center"
                         Margin="5,0,5,0"/>
                 <TextBlock Text="{Binding ElementName=MaxLengthSlider, 
                                 Path=Value,
