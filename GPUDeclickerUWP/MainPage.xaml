@@ -22,7 +22,10 @@
         </Grid.RowDefinitions>
         <!-- Buttons and sliders section -->
         <StackPanel Grid.Row="0" 
-                    Orientation="Horizontal">
+                    Orientation="Horizontal"
+                    Background="#3F6699"
+                    CornerRadius="12"
+                    Margin="5">
             <Button Background="Transparent"
                     IsEnabled="{Binding IsReadyToOpenFile,
                                         Mode=OneWay}"
