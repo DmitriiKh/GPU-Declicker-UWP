@@ -116,9 +116,12 @@
                       VerticalScrollBarVisibility="Auto"
                       Background="#F3ECC8"
                       CornerRadius="12"
-                      Padding="12">
+                      Padding="12"
+                      Margin="5">
             <StackPanel>
-                <TextBlock Visibility="{Binding IsReadyToSaveFile}">
+                <TextBlock Visibility="{Binding IsReadyToSaveFile}"
+                           Style="{StaticResource TitleTextBlockStyle}"
+                           HorizontalAlignment="Center">
                     Left channel clicks
                 </TextBlock>
                 <ItemsControl ItemsSource="{Binding LeftChannelClickWindowsCollection}">
@@ -128,7 +131,9 @@
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                 </ItemsControl>
-                <TextBlock Visibility="{Binding IsReadyToSaveFile}">
+                <TextBlock Visibility="{Binding IsReadyToSaveFile}"
+                           Style="{StaticResource TitleTextBlockStyle}"
+                           HorizontalAlignment="Center">
                     Right channel clicks
                 </TextBlock>
                 <ItemsControl ItemsSource="{Binding RightChannelClickWindowsCollection}">
