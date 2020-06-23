@@ -14,7 +14,7 @@
         Width="200"
         VerticalAlignment="Top"
         HorizontalAlignment="Left"
-        Background="Transparent"
+        Background="White"
         PointerPressed="GridPointerPressed"
         PointerReleased="GridPointerReleased"
         PointerMoved="GridPointerMoved"
