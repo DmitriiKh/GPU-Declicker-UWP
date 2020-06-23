@@ -19,8 +19,13 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Viewbox Grid.Row="0" Stretch="Fill">
-                <Button Click="GoLeftBigStepClick" Content="&lt;&lt;" />
+            <Viewbox Grid.Row="0" >
+                <Button Click="GoLeftBigStepClick" >
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Back" />
+                        <SymbolIcon Symbol="Stop" />
+                    </StackPanel>
+                </Button>
             </Viewbox>
             <Viewbox Grid.Row="1" >
                 <Button Click="GoLeftSmallStepClick" >
@@ -59,8 +64,13 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Viewbox Grid.Row="0" Stretch="Fill">
-                <Button Click="GoRightBigStepClick" Content="&gt;&gt;" />
+            <Viewbox Grid.Row="0" >
+                <Button Click="GoRightBigStepClick" >
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Stop" />
+                        <SymbolIcon Symbol="Forward" />
+                    </StackPanel>
+                </Button>
             </Viewbox>
             <Viewbox Grid.Row="1" >
                 <Button Click="GoRightSmallStepClick" >
