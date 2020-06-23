@@ -161,7 +161,8 @@
         </ScrollViewer>
         <!-- Status and progress bar section -->
         <Grid Grid.Row="3"
-              VerticalAlignment="Bottom">
+              VerticalAlignment="Bottom"
+              Visibility="{Binding IsInProcess}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />

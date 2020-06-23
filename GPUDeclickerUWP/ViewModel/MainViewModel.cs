@@ -36,9 +36,11 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         private readonly Progress<string> _status;
+
         private void StatusValueChanged(string d)
         {
             TaskStatus = d;
+            IsInProcess = !string.IsNullOrEmpty(d);
         }
 
         private string _taskStatus;
@@ -86,6 +88,17 @@ namespace GPUDeclickerUWP.ViewModel
             {
                 _rightChannelClickWindowsCollection = value;
                 OnPropertyChanged(nameof(RightChannelClickWindowsCollection));
+            }
+        }
+
+        private bool _isInProcess;
+        public bool IsInProcess
+        {
+            get => _isInProcess;
+            private set
+            {
+                _isInProcess = value;
+                OnPropertyChanged(nameof(IsInProcess));
             }
         }
 
