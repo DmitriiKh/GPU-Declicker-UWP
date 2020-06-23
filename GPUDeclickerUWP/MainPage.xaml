@@ -106,16 +106,21 @@
                 </StackPanel>
             </Button>
             <Button Grid.Column="5"
-                    Content="Save audio file"
+                    Background="Transparent"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     IsEnabled="{Binding IsReadyToSaveFile, Mode=OneWay}"
                     Command="{Binding SaveAudioFileClicked}" />
             <Button Grid.Column="6"
-                    Content="About app"
+                    Background="Transparent"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
-                    Command="{Binding AboutClicked}" />
+                    Command="{Binding AboutClicked}">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Help" />
+                    <TextBlock Text="About" />
+                </StackPanel>
+            </Button>
         </Grid>
         <!-- AudioViewer section -->
         <Grid Grid.Row="1">
