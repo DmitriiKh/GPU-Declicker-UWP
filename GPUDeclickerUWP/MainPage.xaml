@@ -110,7 +110,12 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     IsEnabled="{Binding IsReadyToSaveFile, Mode=OneWay}"
-                    Command="{Binding SaveAudioFileClicked}" />
+                    Command="{Binding SaveAudioFileClicked}">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="Save" />
+                    <TextBlock Text="Save Audio File" />
+                </StackPanel>
+            </Button>
             <Button Grid.Column="6"
                     Background="Transparent"
                     VerticalAlignment="Center"
