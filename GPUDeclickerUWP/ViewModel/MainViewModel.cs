@@ -102,6 +102,11 @@ namespace GPUDeclickerUWP.ViewModel
             }
         }
 
+        public bool IsNotInProcess
+        {
+            get => !_isInProcess;
+        }
+
         private bool _isReadyToOpenFile;
         public bool IsReadyToOpenFile
         {

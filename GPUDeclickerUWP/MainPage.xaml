@@ -35,7 +35,7 @@
                 </StackPanel>
             </Button>
             <Button Visibility="{Binding IsReadyToScan, Mode=OneWay}"
-                    IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
+                    IsEnabled="{Binding IsNotInProcess, Mode=OneWay}"
                     Command="{Binding ScanClicked}"
                     Background="#3F6699"
                     CornerRadius="12"
@@ -59,7 +59,7 @@
                                VerticalAlignment="Center" />
                     <Slider Name="ThresholdSlider"
                             Value="{Binding ThresholdForDetection, Mode=TwoWay}"
-                            IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
+                            IsEnabled="{Binding IsNotInProcess, Mode=OneWay}"
                             Width="200"
                             Minimum="1"
                             Maximum="50"
@@ -80,7 +80,7 @@
                                VerticalAlignment="Center" />
                     <Slider Name="MaxLengthSlider"
                             Value="{Binding MaxLengthCorrection, Mode=TwoWay}"
-                            IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
+                            IsEnabled="{Binding IsNotInProcess, Mode=OneWay}"
                             Width="200"
                             Minimum="1"
                             Maximum="500"
@@ -96,7 +96,7 @@
             </StackPanel>
             <Button VerticalAlignment="Center"
                     Visibility="{Binding IsReadyToSaveFile, Mode=OneWay}"
-                    IsEnabled="{Binding IsReadyToSaveFile, Mode=OneWay}"
+                    IsEnabled="{Binding IsNotInProcess, Mode=OneWay}"
                     Command="{Binding SaveAudioFileClicked}"
                     Background="#3F6699"
                     CornerRadius="12"
