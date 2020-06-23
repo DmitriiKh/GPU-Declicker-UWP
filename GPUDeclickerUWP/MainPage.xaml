@@ -40,7 +40,7 @@
                     HorizontalAlignment="Center" >
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="OpenFile" />
-                    <TextBlock Text="Open Audio File" />
+                    <TextBlock Text="Open File" />
                 </StackPanel>
             </Button>
             <Grid Grid.Column="1">
@@ -113,7 +113,7 @@
                     Command="{Binding SaveAudioFileClicked}">
                 <StackPanel Orientation="Horizontal">
                     <SymbolIcon Symbol="Save" />
-                    <TextBlock Text="Save Audio File" />
+                    <TextBlock Text="Save File" />
                 </StackPanel>
             </Button>
             <Button Grid.Column="6"
