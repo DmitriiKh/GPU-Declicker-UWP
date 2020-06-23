@@ -21,9 +21,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <!-- Buttons and sliders section -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal">
-            <Button Grid.Column="0"
-                    Background="Transparent"
+        <StackPanel Grid.Row="0" 
+                    Orientation="Horizontal">
+            <Button Background="Transparent"
                     IsEnabled="{Binding IsReadyToOpenFile,
                                         Mode=OneWay}"
                     Command="{Binding OpenAudioFileClicked}"
@@ -34,8 +34,18 @@
                     <TextBlock Text="Open File" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <StackPanel Grid.Column="1"
-                        Orientation="Horizontal"
+            <Button Background="Transparent"
+                    Visibility="{Binding IsReadyToScan, Mode=OneWay}"
+                    IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
+                    Command="{Binding ScanClicked}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol= "Audio" Margin="0,0,5,0" />
+                    <TextBlock Text="Scan Audio" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <StackPanel Orientation="Horizontal"
                         Visibility="{Binding IsReadyToScan, Mode=OneWay}">
                 <TextBlock Text="Detection level"
                            VerticalAlignment="Center" />
@@ -54,8 +64,7 @@
                                Mode=TwoWay}"
                            VerticalAlignment="Center"/>
             </StackPanel>
-            <StackPanel Grid.Column="3"
-                        Orientation="Horizontal"
+            <StackPanel Orientation="Horizontal"
                         Visibility="{Binding IsReadyToScan, Mode=OneWay}">
                 <TextBlock Grid.Row="0"
                            Text="Max length of restoration"
@@ -75,20 +84,7 @@
                                 Mode=TwoWay}"
                            VerticalAlignment="Center" />
             </StackPanel>
-            <Button Grid.Column="4"
-                    Background="Transparent"
-                    Visibility="{Binding IsReadyToScan, Mode=OneWay}"
-                    IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
-                    Command="{Binding ScanClicked}"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Center">
-                <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol= "Audio" Margin="0,0,5,0" />
-                    <TextBlock Text="Scan Audio" VerticalAlignment="Center" />
-                </StackPanel>
-            </Button>
-            <Button Grid.Column="5"
-                    Background="Transparent"
+            <Button Background="Transparent"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Visibility="{Binding IsReadyToSaveFile, Mode=OneWay}"
@@ -99,8 +95,7 @@
                     <TextBlock Text="Save File" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <Button Grid.Column="6"
-                    Background="Transparent"
+            <Button Background="Transparent"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Command="{Binding AboutClicked}">
