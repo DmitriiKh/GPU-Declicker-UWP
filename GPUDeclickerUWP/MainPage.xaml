@@ -46,6 +46,7 @@
                 </StackPanel>
             </Button>
             <StackPanel Orientation="Horizontal"
+                        Margin="10,0,10,0"
                         Visibility="{Binding IsReadyToScan, Mode=OneWay}">
                 <TextBlock Text="Detection level"
                            VerticalAlignment="Center" />
@@ -65,6 +66,7 @@
                            VerticalAlignment="Center"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal"
+                        Margin="10,0,10,0"
                         Visibility="{Binding IsReadyToScan, Mode=OneWay}">
                 <TextBlock Grid.Row="0"
                            Text="Max length of restoration"
