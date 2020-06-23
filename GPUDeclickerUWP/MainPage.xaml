@@ -43,7 +43,8 @@
                     <TextBlock Text="Open File" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <Grid Grid.Column="1">
+            <Grid Grid.Column="1"
+                    Visibility="{Binding IsReadyToScan, Mode=OneWay}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -68,7 +69,8 @@
                            VerticalAlignment="Top"
                            HorizontalAlignment="Right" />
             </Grid>
-            <Grid Grid.Column="3">
+            <Grid Grid.Column="3"
+                    Visibility="{Binding IsReadyToScan, Mode=OneWay}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
@@ -95,8 +97,8 @@
             </Grid>
             <Button Grid.Column="4"
                     Background="Transparent"
-                    IsEnabled="{Binding IsReadyToScan,
-                                        Mode=OneWay}"
+                    Visibility="{Binding IsReadyToScan, Mode=OneWay}"
+                    IsEnabled="{Binding IsReadyToScan, Mode=OneWay}"
                     Command="{Binding ScanClicked}"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
@@ -109,6 +111,7 @@
                     Background="Transparent"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
+                    Visibility="{Binding IsReadyToSaveFile, Mode=OneWay}"
                     IsEnabled="{Binding IsReadyToSaveFile, Mode=OneWay}"
                     Command="{Binding SaveAudioFileClicked}">
                 <StackPanel Orientation="Horizontal">
