@@ -13,10 +13,10 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="3*" />
             <RowDefinition Height="15*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!-- Buttons and sliders section -->
         <StackPanel Grid.Row="0"
