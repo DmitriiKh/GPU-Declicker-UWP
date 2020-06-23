@@ -94,12 +94,17 @@
                            HorizontalAlignment="Right" />
             </Grid>
             <Button Grid.Column="4"
-                    Content="Scan"
+                    Background="Transparent"
                     IsEnabled="{Binding IsReadyToScan,
                                         Mode=OneWay}"
                     Command="{Binding ScanClicked}"
                     VerticalAlignment="Center"
-                    HorizontalAlignment="Center"/>
+                    HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol= "Audio" />
+                    <TextBlock Text="Scan Audio" />
+                </StackPanel>
+            </Button>
             <Button Grid.Column="5"
                     Content="Save audio file"
                     VerticalAlignment="Center"
