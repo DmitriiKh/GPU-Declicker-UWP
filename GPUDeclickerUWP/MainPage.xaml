@@ -21,7 +21,8 @@
         <!-- Buttons and sliders section -->
         <StackPanel Grid.Row="0"
                     Orientation="Horizontal">
-            <Button IsEnabled="{Binding IsReadyToOpenFile, Mode=OneWay}"
+            <Button Visibility="{Binding IsReadyToOpenFile, Mode=OneWay}"
+                    IsEnabled="{Binding IsNotInProcess, Mode=OneWay}"
                     Command="{Binding OpenAudioFileClicked}"
                     VerticalAlignment="Center"
                     Background="#3F6699"
@@ -48,52 +49,51 @@
                                VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-            <StackPanel Orientation="Horizontal"
-                        Background="#3F6699"
-                        CornerRadius="12"
-                        Margin="5">
+            <ContentControl IsEnabled="{Binding IsNotInProcess, Mode=OneWay}">
                 <StackPanel Orientation="Horizontal"
-                            Margin="10,0,10,0"
+                            BorderBrush="#3F6699"
+                            BorderThickness="1"
+                            CornerRadius="12"
+                            Margin="5"
                             Visibility="{Binding IsReadyToScan, Mode=OneWay}">
-                    <TextBlock Text="Detection level"
-                               VerticalAlignment="Center" />
-                    <Slider Name="ThresholdSlider"
-                            Value="{Binding ThresholdForDetection, Mode=TwoWay}"
-                            IsEnabled="{Binding IsNotInProcess, Mode=OneWay}"
-                            Width="200"
-                            Minimum="1"
-                            Maximum="50"
-                            StepFrequency="0.1"
-                            SmallChange="0.1"
-                            VerticalAlignment="Center"
-                            Margin="5,0,5,0" />
-                    <TextBlock Text="{Binding ElementName=ThresholdSlider,
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0,10,0">
+                        <TextBlock Text="Detection level"
+                                   VerticalAlignment="Center" />
+                        <Slider Name="ThresholdSlider"
+                                Value="{Binding ThresholdForDetection, Mode=TwoWay}"
+                                Width="200"
+                                Minimum="1"
+                                Maximum="50"
+                                StepFrequency="0.1"
+                                SmallChange="0.1"
+                                VerticalAlignment="Center"
+                                Margin="5,0,5,0" />
+                        <TextBlock Text="{Binding ElementName=ThresholdSlider,
                                Path=Value, 
                                Mode=TwoWay}"
-                               VerticalAlignment="Center" />
-                </StackPanel>
-                <StackPanel Orientation="Horizontal"
-                            Margin="10,0,10,0"
-                            Visibility="{Binding IsReadyToScan, Mode=OneWay}">
-                    <TextBlock Grid.Row="0"
-                               Text="Max length of restoration"
-                               VerticalAlignment="Center" />
-                    <Slider Name="MaxLengthSlider"
-                            Value="{Binding MaxLengthCorrection, Mode=TwoWay}"
-                            IsEnabled="{Binding IsNotInProcess, Mode=OneWay}"
-                            Width="200"
-                            Minimum="1"
-                            Maximum="500"
-                            StepFrequency="1"
-                            SmallChange="1"
-                            VerticalAlignment="Center"
-                            Margin="5,0,5,0" />
-                    <TextBlock Text="{Binding ElementName=MaxLengthSlider, 
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10,0,10,0">
+                        <TextBlock Text="Max length of restoration"
+                                   VerticalAlignment="Center" />
+                        <Slider Name="MaxLengthSlider"
+                                Value="{Binding MaxLengthCorrection, Mode=TwoWay}"
+                                Width="200"
+                                Minimum="1"
+                                Maximum="500"
+                                StepFrequency="1"
+                                SmallChange="1"
+                                VerticalAlignment="Center"
+                                Margin="5,0,5,0" />
+                        <TextBlock Text="{Binding ElementName=MaxLengthSlider, 
                                 Path=Value,
                                 Mode=TwoWay}"
-                               VerticalAlignment="Center" />
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
                 </StackPanel>
-            </StackPanel>
+            </ContentControl>
             <Button VerticalAlignment="Center"
                     Visibility="{Binding IsReadyToSaveFile, Mode=OneWay}"
                     IsEnabled="{Binding IsNotInProcess, Mode=OneWay}"

@@ -99,6 +99,7 @@ namespace GPUDeclickerUWP.ViewModel
             {
                 _isInProcess = value;
                 OnPropertyChanged(nameof(IsInProcess));
+                OnPropertyChanged(nameof(IsNotInProcess));
             }
         }
 
@@ -269,8 +270,8 @@ namespace GPUDeclickerUWP.ViewModel
         private async void ScanAsync()
         {
             // disable all buttons
-            IsReadyToOpenFile = false;
-            IsReadyToScan = false;
+            IsReadyToOpenFile = true;
+            IsReadyToScan = true;
             IsReadyToSaveFile = false;
 
             // clear ClickWindowsGrid before adding new ClickWindows
