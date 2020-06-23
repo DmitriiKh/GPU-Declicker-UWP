@@ -32,12 +32,17 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
-                    Content="Open audio file"
+                    Background="Transparent"
                     IsEnabled="{Binding IsReadyToOpenFile,
                                         Mode=OneWay}"
                     Command="{Binding OpenAudioFileClicked}"
                     VerticalAlignment="Center"
-                    HorizontalAlignment="Center" />
+                    HorizontalAlignment="Center" >
+                <StackPanel Orientation="Horizontal">
+                    <SymbolIcon Symbol="OpenFile" />
+                    <TextBlock Text="Open Audio File" />
+                </StackPanel>
+            </Button>
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
