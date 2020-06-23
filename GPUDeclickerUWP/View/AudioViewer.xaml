@@ -22,8 +22,12 @@
             <Viewbox Grid.Row="0" Stretch="Fill">
                 <Button Click="GoLeftBigStepClick" Content="&lt;&lt;" />
             </Viewbox>
-            <Viewbox Grid.Row="1" Stretch="Fill">
-                <Button Click="GoLeftSmallStepClick" Content="&lt;" />
+            <Viewbox Grid.Row="1" >
+                <Button Click="GoLeftSmallStepClick" >
+                    <StackPanel>
+                        <SymbolIcon Symbol="Back" />
+                    </StackPanel>
+                </Button>
             </Viewbox>
         </Grid>
         <Grid Grid.Column="1"
@@ -58,8 +62,12 @@
             <Viewbox Grid.Row="0" Stretch="Fill">
                 <Button Click="GoRightBigStepClick" Content="&gt;&gt;" />
             </Viewbox>
-            <Viewbox Grid.Row="1" Stretch="Fill">
-                <Button Click="GoRightSmallStepClick" Content="&gt;" />
+            <Viewbox Grid.Row="1" >
+                <Button Click="GoRightSmallStepClick" >
+                    <StackPanel>
+                        <SymbolIcon Symbol="Forward" />
+                    </StackPanel>
+                </Button>
             </Viewbox>
         </Grid>
         <Grid Grid.Column="3">
