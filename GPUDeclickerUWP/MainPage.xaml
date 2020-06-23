@@ -21,16 +21,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <!-- Buttons and sliders section -->
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="100" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
             <Button Grid.Column="0"
                     Background="Transparent"
                     IsEnabled="{Binding IsReadyToOpenFile,
@@ -129,7 +120,7 @@
                     <TextBlock Text="About" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
-        </Grid>
+        </StackPanel>
         <!-- AudioViewer section -->
         <Grid Grid.Row="1">
             <view:AudioViewer Audio ="{Binding Audio, Mode=OneWay}"/>
