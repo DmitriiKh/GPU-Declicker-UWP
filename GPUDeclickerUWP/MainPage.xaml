@@ -30,7 +30,7 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center" >
                 <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="OpenFile" Margin="5" />
+                    <SymbolIcon Symbol="OpenFile" Margin="0,0,5,0" />
                     <TextBlock Text="Open File" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
@@ -94,7 +94,7 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol= "Audio" Margin="5" />
+                    <SymbolIcon Symbol= "Audio" Margin="0,0,5,0" />
                     <TextBlock Text="Scan Audio" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
@@ -106,7 +106,7 @@
                     IsEnabled="{Binding IsReadyToSaveFile, Mode=OneWay}"
                     Command="{Binding SaveAudioFileClicked}">
                 <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="Save" Margin="5"/>
+                    <SymbolIcon Symbol="Save" Margin="0,0,5,0"/>
                     <TextBlock Text="Save File" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
@@ -116,7 +116,7 @@
                     HorizontalAlignment="Center"
                     Command="{Binding AboutClicked}">
                 <StackPanel Orientation="Horizontal">
-                    <SymbolIcon Symbol="Help" Margin="5"/>
+                    <SymbolIcon Symbol="Help" Margin="0,0,5,0"/>
                     <TextBlock Text="About" VerticalAlignment="Center" />
                 </StackPanel>
             </Button>
