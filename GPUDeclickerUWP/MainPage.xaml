@@ -15,17 +15,13 @@
     <Grid
         Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="3*" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="3*" />
             <RowDefinition Height="15*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <!-- AudioViewer section -->
-        <Grid Grid.Row="0">
-            <view:AudioViewer Audio ="{Binding Audio, Mode=OneWay}"/>
-        </Grid>
         <!-- Buttons and sliders section -->
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
@@ -110,6 +106,10 @@
                     VerticalAlignment="Center"
                     HorizontalAlignment="Center"
                     Command="{Binding AboutClicked}" />
+        </Grid>
+        <!-- AudioViewer section -->
+        <Grid Grid.Row="1">
+            <view:AudioViewer Audio ="{Binding Audio, Mode=OneWay}"/>
         </Grid>
         <!-- Clicks display section -->
         <ScrollViewer Grid.Row="2" 
