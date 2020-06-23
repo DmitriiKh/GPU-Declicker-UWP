@@ -67,11 +67,19 @@
                 <RowDefinition Height="*" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            <Viewbox Grid.Row="0" Stretch="Fill">
-                <Button Content="Mag+" Click="MagnifyMoreClick" />
+            <Viewbox Grid.Row="0" >
+                <Button Click="MagnifyMoreClick" >
+                    <StackPanel>
+                        <SymbolIcon Symbol="ZoomIn" />
+                    </StackPanel>
+                </Button>
             </Viewbox>
-            <Viewbox Grid.Row="1" Stretch="Fill">
-                <Button Content="Mag-" Click="MagnifyLessClick" />
+            <Viewbox Grid.Row="1" >
+                <Button Click="MagnifyLessClick" >
+                    <StackPanel>
+                        <SymbolIcon Symbol="ZoomOut" />
+                    </StackPanel>
+                </Button>
             </Viewbox>
         </Grid>
     </Grid>
