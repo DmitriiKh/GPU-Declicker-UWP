@@ -113,7 +113,8 @@
         </Grid>
         <!-- Clicks display section -->
         <ScrollViewer Grid.Row="2" 
-                      VerticalScrollBarVisibility="Auto" >
+                      VerticalScrollBarVisibility="Auto"
+                      Background="#F3ECC8">
             <StackPanel>
                 <TextBlock Visibility="{Binding IsReadyToSaveFile}">
                     Left channel clicks
