@@ -1,6 +1,6 @@
 # GPU-Declicker-UWP
 The app automatically finds and repairs damaged samples (clicks, pops, bit rots) in audio files. 
-![Alt text](/2017-11-25.png?raw=true "GPU-Declicker-UWP")
+![Alt text](/2020-06-24.png?raw=true "GPU-Declicker-UWP")
 
 <b>Basic Using</b>
 
