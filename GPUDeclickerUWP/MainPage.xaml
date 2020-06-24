@@ -61,7 +61,8 @@
                     <StackPanel Orientation="Horizontal"
                                 Margin="10,0,10,0">
                         <TextBlock Text="Detection level"
-                                   VerticalAlignment="Center" />
+                                   VerticalAlignment="Center"
+                                   Foreground="#3F6699"/>
                         <Slider Name="ThresholdSlider"
                                 Value="{Binding ThresholdForDetection, Mode=TwoWay}"
                                 Foreground="#3F6699"
@@ -75,13 +76,15 @@
                         <TextBlock Text="{Binding ElementName=ThresholdSlider,
                                Path=Value, 
                                Mode=OneWay}"
-                                   VerticalAlignment="Center" 
+                                   VerticalAlignment="Center"
+                                   Foreground="#3F6699"
                                    MinWidth="30"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Margin="10,0,10,0">
                         <TextBlock Text="Max length of restoration"
-                                   VerticalAlignment="Center" />
+                                   VerticalAlignment="Center"
+                                   Foreground="#3F6699"/>
                         <Slider Name="MaxLengthSlider"
                                 Value="{Binding MaxLengthCorrection, Mode=TwoWay}"
                                 Foreground="#3F6699"
@@ -95,7 +98,8 @@
                         <TextBlock Text="{Binding ElementName=MaxLengthSlider, 
                                 Path=Value,
                                 Mode=OneWay}"
-                                   VerticalAlignment="Center" />
+                                   VerticalAlignment="Center"
+                                   Foreground="#3F6699"/>
                     </StackPanel>
                 </StackPanel>
             </ContentControl>
@@ -115,6 +119,7 @@
                 </StackPanel>
             </Button>
             <Button Background="Transparent"
+                    Foreground="#3F6699"
                     VerticalAlignment="Center"
                     Command="{Binding AboutClicked}">
                 <StackPanel Orientation="Horizontal">
