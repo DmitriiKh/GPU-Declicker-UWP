@@ -72,8 +72,9 @@
                                 Margin="5,0,5,0" />
                         <TextBlock Text="{Binding ElementName=ThresholdSlider,
                                Path=Value, 
-                               Mode=TwoWay}"
-                                   VerticalAlignment="Center" />
+                               Mode=OneWay}"
+                                   VerticalAlignment="Center" 
+                                   MinWidth="30"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Margin="10,0,10,0">
@@ -91,7 +92,7 @@
                                 Margin="5,0,5,0" />
                         <TextBlock Text="{Binding ElementName=MaxLengthSlider, 
                                 Path=Value,
-                                Mode=TwoWay}"
+                                Mode=OneWay}"
                                    VerticalAlignment="Center" />
                     </StackPanel>
                 </StackPanel>
