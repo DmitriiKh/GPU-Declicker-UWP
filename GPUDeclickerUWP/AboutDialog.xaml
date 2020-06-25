@@ -5,25 +5,23 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="About this app">
+    Title="About this app"
+    CloseButtonText="OK">
 
     <Grid>
         <TextBlock TextWrapping="Wrap">
-            This app is freeware that automaticaly repair damaged samples
+            This app is freeware that automaticaly repairs damaged samples
             (clicks) in audio files. <LineBreak />
             Here is a short tutorial on how to
-            <Hyperlink
-                NavigateUri="https://youtu.be/x4GdLuM7mfA">
+            <Hyperlink NavigateUri="https://youtu.be/x4GdLuM7mfA">
                 use this app
             </Hyperlink>
             <LineBreak />
-            You can find Privacy policy
-            <Hyperlink
-                NavigateUri="https://drive.google.com/file/d/1e_lXbDBJrIcif7X79OS5pfGpEO-HBU_H/view?usp=sharing">
+            You can find the Privacy policy
+            <Hyperlink NavigateUri="https://drive.google.com/file/d/1e_lXbDBJrIcif7X79OS5pfGpEO-HBU_H/view?usp=sharing">
                 here
             </Hyperlink>
             <LineBreak />
-            Press Ecs to exit
         </TextBlock>
     </Grid>
 </ContentDialog>
