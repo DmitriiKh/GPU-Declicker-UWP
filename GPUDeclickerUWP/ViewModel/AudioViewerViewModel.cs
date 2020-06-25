@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarefulAudioRepair.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,11 @@ using System.Threading.Tasks;
 
 namespace GPUDeclickerUWP.ViewModel
 {
-    class AudioViewerViewModel : ViewModelBase
+    public class AudioViewerViewModel : ViewModelBase
     {
+        public void UpdateAudio(IAudio audio)
+        {
+
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CarefulAudioRepair.Data;
+using GPUDeclickerUWP.ViewModel;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
@@ -42,6 +43,19 @@ namespace GPUDeclickerUWP.View
 
             audioViewer?.Fill();
         }
+
+        public AudioViewerViewModel ViewModel
+        {
+            get { return (AudioViewerViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register(
+                "ViewModel",
+                typeof(AudioViewerViewModel),
+                typeof(AudioViewer),
+                new PropertyMetadata(null));
 
         // magnification ratio
         // when set to 1, waveForm is most detailed

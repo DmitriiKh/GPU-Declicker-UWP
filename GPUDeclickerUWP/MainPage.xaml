@@ -62,7 +62,7 @@
                                 Margin="10,0,10,0">
                         <TextBlock Text="Detection level"
                                    VerticalAlignment="Center"
-                                   Foreground="#3F6699"/>
+                                   Foreground="#3F6699" />
                         <Slider Name="ThresholdSlider"
                                 Value="{Binding ThresholdForDetection, Mode=TwoWay}"
                                 Foreground="#3F6699"
@@ -78,13 +78,13 @@
                                Mode=OneWay}"
                                    VerticalAlignment="Center"
                                    Foreground="#3F6699"
-                                   MinWidth="30"/>
+                                   MinWidth="30" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal"
                                 Margin="10,0,10,0">
                         <TextBlock Text="Max length of restoration"
                                    VerticalAlignment="Center"
-                                   Foreground="#3F6699"/>
+                                   Foreground="#3F6699" />
                         <Slider Name="MaxLengthSlider"
                                 Value="{Binding MaxLengthCorrection, Mode=TwoWay}"
                                 Foreground="#3F6699"
@@ -99,7 +99,7 @@
                                 Path=Value,
                                 Mode=OneWay}"
                                    VerticalAlignment="Center"
-                                   Foreground="#3F6699"/>
+                                   Foreground="#3F6699" />
                     </StackPanel>
                 </StackPanel>
             </ContentControl>
@@ -133,7 +133,8 @@
         <!-- AudioViewer section -->
         <Grid Grid.Row="1"
               Visibility="{Binding IsReadyToScan}">
-            <view:AudioViewer Audio="{Binding Audio, Mode=OneWay}" />
+            <view:AudioViewer Audio="{Binding Audio, Mode=OneWay}"
+                              ViewModel="{Binding AudioViewerViewModelInstance, Mode=OneWay}" />
         </Grid>
         <!-- Clicks display section -->
         <ScrollViewer Grid.Row="2"
@@ -181,7 +182,7 @@
             <TextBlock Grid.Column="0"
                        HorizontalAlignment="Left"
                        Text="{Binding TaskStatus}"
-                       Padding="5,0,5,0"/>
+                       Padding="5,0,5,0" />
             <ProgressBar Grid.Column="1"
                          Value="{Binding TaskProgress}"
                          Maximum="100"

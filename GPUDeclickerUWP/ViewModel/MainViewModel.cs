@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.Media.Audio;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.UI.Popups;
@@ -16,6 +15,18 @@ namespace GPUDeclickerUWP.ViewModel
     public class MainViewModel : ViewModelBase
     {
         private StorageFile _audioInputFile;
+
+        private AudioViewerViewModel audioViewerViewModel = new AudioViewerViewModel();
+
+        public AudioViewerViewModel AudioViewerViewModelInstance
+        {
+            get { return audioViewerViewModel; }
+            set 
+            {
+                audioViewerViewModel = value;
+                OnPropertyChanged(nameof(AudioViewerViewModelInstance));
+            }
+        }
         
         // variables for subclasses to report progress and status
         private readonly Progress<double> _progress;
@@ -66,6 +77,8 @@ namespace GPUDeclickerUWP.ViewModel
             {
                 _audio = value;
                 OnPropertyChanged(nameof(Audio));
+
+                AudioViewerViewModelInstance.UpdateAudio(_audio);
             }
         }
 
