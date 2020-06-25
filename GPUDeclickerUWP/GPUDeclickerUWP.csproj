@@ -118,6 +118,7 @@
     </Compile>
     <Compile Include="Model\InputOutput\AudioInputOutput.cs" />
     <Compile Include="Properties\Annotations.cs" />
+    <Compile Include="ViewModel\AudioViewerViewModel.cs" />
     <Compile Include="ViewModel\DeligateCommand.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
