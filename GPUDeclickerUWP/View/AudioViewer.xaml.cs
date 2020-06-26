@@ -14,25 +14,6 @@ namespace GPUDeclickerUWP.View
         // to throtle redrawing requests and make UI more reponsive
         private readonly DispatcherTimer _redrawingTimer;
 
-        // audio samples to view
-        public IAudio Audio
-        {
-            private get { return (IAudio) GetValue(AudioProperty); }
-
-            set => SetValue(AudioProperty, value);
-        }
-
-        public static readonly DependencyProperty AudioProperty =
-            DependencyProperty.Register(
-                "Audio",
-                typeof(IAudio),
-                typeof(AudioViewer),
-                new PropertyMetadata(null, AudioPropertyCallBack));
-
-        private static void AudioPropertyCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-        }
-
         public AudioViewerViewModel ViewModel
         {
             get { return (AudioViewerViewModel)GetValue(ViewModelProperty); }
@@ -77,57 +58,6 @@ namespace GPUDeclickerUWP.View
         private void _redrawingTimer_Tick(object sender, object e)
         {
             _redrawingTimer.Stop();
-            ViewModel.UpdatePointsCollections();
-        }
-
-        /// <summary>
-        ///     move OffsetPositionX to the right for one waveForm length
-        /// </summary>
-        private void GoNextBigStep()
-        {
-            if (Audio == null)
-                return;
-
-            var deltaX = (int) WaveFormWidth;
-            GoNextX(deltaX);
-        }
-
-        // move OffsetPositionX to the right for one tenth of waveForm length
-        private void GoNextSmalStep()
-        {
-            if (Audio == null)
-                return;
-
-            var deltaX = (int) WaveFormWidth / 10;
-            GoNextX(deltaX);
-        }
-
-        // move OffsetPositionX to the right for shiftX samples
-        private void GoNextX(int deltaX)
-        {
-            if (Audio == null)
-                return;
-
-            // Calculate number of samples to shift
-            var shift = (int) (deltaX * _audioToWaveFormRatio);
-            // Calculate number of samples that waveForms show
-            var samplesOnScrean = (int) (
-                WaveFormWidth
-                * _audioToWaveFormRatio
-            );
-            // if there is enough room on the right than shift offsetPosition
-            if (_offsetPosition + shift + samplesOnScrean < Audio.LengthSamples)
-            {
-                _offsetPosition += shift;
-            }
-            else
-            {
-                // set OffsetPosition to show the end of audioData
-                _offsetPosition = Audio.LengthSamples - samplesOnScrean;
-                if (_offsetPosition < 0)
-                    _offsetPosition = 0;
-            }
-
             ViewModel.UpdatePointsCollections();
         }
 
