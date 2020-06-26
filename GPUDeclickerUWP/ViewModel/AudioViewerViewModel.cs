@@ -207,23 +207,10 @@ namespace GPUDeclickerUWP.ViewModel
 
             // Calculate number of samples to shift
             var shift = (int)(deltaX * this.audioToWaveFormRatio);
-            // Calculate number of samples that waveForms show
-            var samplesOnScrean = (int)(
-                this.waveFormWidth
-                * this.audioToWaveFormRatio
-            );
-            // if there is enough room on the right than shift offsetPosition
-            if (this.offsetPosition + shift + samplesOnScrean < this.leftCnannelSamples.Length)
-            {
-                this.offsetPosition += shift;
-            }
-            else
-            {
-                // set OffsetPosition to show the end of audioData
-                this.offsetPosition = this.leftCnannelSamples.Length - samplesOnScrean;
-                if (this.offsetPosition < 0)
-                    this.offsetPosition = 0;
-            }
+
+            this.offsetPosition += shift;
+
+            this.AdjustOffsetIfNeeded();
 
             this.UpdatePointsCollections();
         }
@@ -253,7 +240,7 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         // move OffsetPositionX to the right for shiftX samples 
-        internal void GoPrevX(int x)
+        internal void GoPrevX(int deltaX)
         {
             if (this.leftCnannelSamples is null)
             {
@@ -261,13 +248,11 @@ namespace GPUDeclickerUWP.ViewModel
             }
 
             // Calculate number of samples to shift
-            var shift = (int)(x * this.audioToWaveFormRatio);
-            // if there is enough room on the left than shift offsetPositionX
-            if (this.offsetPosition > shift) 
-                this.offsetPosition -= shift;
-            else
-                // set OffsetPositionX to show the beginning of audioData
-                this.offsetPosition = 0;
+            var shift = (int)(deltaX * this.audioToWaveFormRatio);
+
+            this.offsetPosition -= shift;
+
+            this.AdjustOffsetIfNeeded();
 
             this.UpdatePointsCollections();
         }
