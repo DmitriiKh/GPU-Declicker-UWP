@@ -189,11 +189,11 @@ namespace GPUDeclickerUWP.View
             // for every x-axis position of waveForm
             for (var x = 0; x < WaveFormWidth; x++)
             {
-                AddPointToWaveform(ViewModel._leftCnannelSamples, LeftChannelWaveFormPoints, x);
+                AddPointToWaveform(ViewModel.leftCnannelSamples, LeftChannelWaveFormPoints, x);
 
                 if (Audio.IsStereo)
                 {
-                    AddPointToWaveform(ViewModel._rightCnannelSamples, RightChannelWaveFormPoints, x);
+                    AddPointToWaveform(ViewModel.rightCnannelSamples, RightChannelWaveFormPoints, x);
                 }
             }
         }

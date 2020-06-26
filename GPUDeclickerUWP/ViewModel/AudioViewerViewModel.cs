@@ -1,51 +1,52 @@
 ﻿using CarefulAudioRepair.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GPUDeclickerUWP.ViewModel
 {
     public class AudioViewerViewModel : ViewModelBase
     {
-
-        public double[] _leftCnannelSamples;
-        public double[] _rightCnannelSamples;
+        public double[] leftCnannelSamples;
+        public double[] rightCnannelSamples;
 
         // magnification ratio
         // when set to 1, waveForm is most detailed
         // when set to R, waveForm drops each R-1 from R audioData samples
-        private double _audioToWaveFormRatio = 1d;
+        private double audioToWaveFormRatio = 1d;
 
         // offset from beginning of audioData to beginning waveForm
-        private int _offsetPosition;
+        private int offsetPosition;
 
         private int waveFormWidth;
         private int waveFormHeight;
 
-        public void UpdateAudio(IAudio audio)
+        internal void UpdateAudio(IAudio audio)
         {
             if (audio is null)
             {
                 return;
             }
 
-            _leftCnannelSamples = audio.GetInputRange(ChannelType.Left, 0, audio.LengthSamples - 1);
+            this.leftCnannelSamples = audio.GetInputRange(ChannelType.Left, 0, audio.LengthSamples - 1);
 
             if (audio.IsStereo)
             {
-                _rightCnannelSamples = audio.GetInputRange(ChannelType.Right, 0, audio.LengthSamples - 1);
+                this.rightCnannelSamples = audio.GetInputRange(ChannelType.Right, 0, audio.LengthSamples - 1);
             }
 
-            _offsetPosition = 0;
+            this.InitializeState();
 
-            // Sets Ratio to show whole audio track
-            _audioToWaveFormRatio =
-                _leftCnannelSamples.Length / waveFormWidth;
-
-            DrawWaveForm();
+            this.DrawWaveForm();
         }
+
+        private void InitializeState()
+        {
+            this.offsetPosition = 0;
+
+            this.audioToWaveFormRatio = this.MinDetailsRatio();
+        }
+
+        private double MinDetailsRatio() =>
+            this.leftCnannelSamples.Length / this.waveFormWidth;
 
         private void DrawWaveForm()
         {
@@ -56,6 +57,8 @@ namespace GPUDeclickerUWP.ViewModel
         {
             this.waveFormWidth = waveFormWidth;
             this.waveFormHeight = waveFormHeight;
+
+            InitializeState();
         }
     }
 }

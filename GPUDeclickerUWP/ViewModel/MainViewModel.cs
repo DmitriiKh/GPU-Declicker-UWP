@@ -18,7 +18,7 @@ namespace GPUDeclickerUWP.ViewModel
 
         private AudioViewerViewModel audioViewerViewModel = new AudioViewerViewModel();
 
-        public AudioViewerViewModel AudioViewerViewModelInstance
+        internal AudioViewerViewModel AudioViewerViewModelInstance
         {
             get { return audioViewerViewModel; }
             set 
