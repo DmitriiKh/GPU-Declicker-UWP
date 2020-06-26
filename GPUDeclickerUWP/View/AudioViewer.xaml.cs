@@ -27,14 +27,6 @@ namespace GPUDeclickerUWP.View
                 typeof(AudioViewer),
                 new PropertyMetadata(null));
 
-        // magnification ratio
-        // when set to 1, waveForm is most detailed
-        // when set to R, waveForm drops each R-1 from R audioData samples
-        private double _audioToWaveFormRatio = 1d;
-
-        // offset from beginning of audioData to beginning waveForm
-        private int _offsetPosition;
-
         public AudioViewer()
         {
             InitializeComponent();
