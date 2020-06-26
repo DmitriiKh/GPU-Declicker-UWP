@@ -16,9 +16,10 @@ namespace GPUDeclickerUWP.ViewModel
     {
         private StorageFile _audioInputFile;
 
-        private AudioViewerViewModel audioViewerViewModel = new AudioViewerViewModel();
+        private AudioViewerViewModel audioViewerViewModel =
+            new AudioViewerViewModel();
 
-        internal AudioViewerViewModel AudioViewerViewModelInstance
+        public AudioViewerViewModel AudioViewerViewModelInstance
         {
             get { return audioViewerViewModel; }
             set 
@@ -79,6 +80,7 @@ namespace GPUDeclickerUWP.ViewModel
                 OnPropertyChanged(nameof(Audio));
 
                 AudioViewerViewModelInstance.UpdateAudio(_audio);
+                
             }
         }
 

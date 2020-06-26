@@ -56,12 +56,12 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Polyline Grid.Row="0"
-                      Points="{x:Bind LeftChannelWaveFormPoints, Mode=OneWay}"
+                      Points="{x:Bind ViewModel.LeftChannelWaveFormPoints, Mode=OneTime}"
                       Name="WaveFormLeftChannel"
                       Stroke="{StaticResource ApplicationForegroundThemeBrush}"
                       StrokeThickness="1" />
             <Polyline Grid.Row="1"
-                      Points="{x:Bind RightChannelWaveFormPoints, Mode=OneWay}"
+                      Points="{x:Bind ViewModel.RightChannelWaveFormPoints, Mode=OneTime}"
                       Stroke="{Binding ElementName=WaveFormLeftChannel, Path=Stroke}"
                       StrokeThickness="{Binding ElementName=WaveFormLeftChannel, Path=StrokeThickness}" />
         </Grid>

@@ -57,17 +57,10 @@ namespace GPUDeclickerUWP.View
         public AudioViewer()
         {
             InitializeComponent();
-            LeftChannelWaveFormPoints = new PointCollection();
-            RightChannelWaveFormPoints = new PointCollection();
             _redrawingTimer = new DispatcherTimer();
             _redrawingTimer.Tick += _redrawingTimer_Tick;
             _redrawingTimer.Interval = TimeSpan.FromSeconds(0.1); 
         }
-
-        // These two collections of points are Binded to Polylines 
-        // in XAML that represent WaveForms on screen
-        public PointCollection LeftChannelWaveFormPoints { get; }
-        public PointCollection RightChannelWaveFormPoints { get; }
 
         // These are updated every time when WaveForm's size changed
         // by event handler WaveFormLeftChannel_SizeChanged
@@ -84,7 +77,7 @@ namespace GPUDeclickerUWP.View
         private void _redrawingTimer_Tick(object sender, object e)
         {
             _redrawingTimer.Stop();
-            DrawWaveForm();
+            ViewModel.UpdatePointsCollections();
         }
 
         /// <summary>
@@ -135,7 +128,7 @@ namespace GPUDeclickerUWP.View
                     _offsetPosition = 0;
             }
 
-            DrawWaveForm();
+            ViewModel.UpdatePointsCollections();
         }
 
         // move OffsetPositionX to the right for one waveForm length 
@@ -172,90 +165,7 @@ namespace GPUDeclickerUWP.View
                 // set OffsetPositionX to show the beginning of audioData
                 _offsetPosition = 0;
 
-            DrawWaveForm();
-        }
-
-        /// <summary>
-        ///     sets points for PolyLine showing wave form
-        /// </summary>
-        private void DrawWaveForm()
-        {
-            if (Audio == null)
-                return;
-
-            LeftChannelWaveFormPoints.Clear();
-            RightChannelWaveFormPoints.Clear();
-
-            // for every x-axis position of waveForm
-            for (var x = 0; x < WaveFormWidth; x++)
-            {
-                AddPointToWaveform(ViewModel.leftCnannelSamples, LeftChannelWaveFormPoints, x);
-
-                if (Audio.IsStereo)
-                {
-                    AddPointToWaveform(ViewModel.rightCnannelSamples, RightChannelWaveFormPoints, x);
-                }
-            }
-        }
-
-        /// <summary>
-        ///     Adds a point representing one or many samples to wave form
-        /// </summary>
-        private void AddPointToWaveform(double[] samples, PointCollection waveFormPoints, int x)
-        {
-            var offsetY = (int) WaveFormHeight / 2;
-            var start = _offsetPosition + (int) (x * _audioToWaveFormRatio);
-            var length = (int) _audioToWaveFormRatio;
-
-            if (start < 0 || start + length >= Audio.LengthSamples)
-                return;
-
-            // looks for max and min among many samples represented by a point on wave form
-            FindMinMax(samples, start, length, out var min, out var max);
-
-            // connect previous point to a new point
-            var y = (int) (-0.5 * WaveFormHeight * max) + offsetY;
-            waveFormPoints.Add(new Point(x, y));
-
-            // if min and max are close enough
-            if (!(Math.Abs(min - max) > 0.01))
-                return;
-
-            // form vertical line connecting max and min
-            y = (int) (-0.5 * WaveFormHeight * min) + offsetY;
-            waveFormPoints.Add(new Point(x, y));
-        }
-
-        /// <summary>
-        ///     Looks for max and min values among many samples represented
-        ///     by a point on wave form
-        /// </summary>
-        /// <param name="begining">first sample position</param>
-        /// <param name="length">number of samples</param>
-        /// <param name="minValue">min value</param>
-        /// <param name="maxValue">max value</param>
-        private void FindMinMax(
-            double[] samples,
-            int begining,
-            int length,
-            out double minValue,
-            out double maxValue)
-        {
-            minValue = samples[begining];
-            maxValue = minValue;
-
-            for (var index = 0;
-                index < length && begining + index < samples.Length;
-                index++)
-            {
-                var sample = samples[begining + index];
-
-                if (sample < minValue)
-                    minValue = sample;
-
-                if (sample > maxValue)
-                    maxValue = sample;
-            }
+            ViewModel.UpdatePointsCollections();
         }
 
         /// <summary>
@@ -271,7 +181,7 @@ namespace GPUDeclickerUWP.View
             if (_audioToWaveFormRatio < 1)
                 _audioToWaveFormRatio = 1d;
 
-            DrawWaveForm();
+            ViewModel.UpdatePointsCollections();
         }
 
         /// <summary>
@@ -291,7 +201,7 @@ namespace GPUDeclickerUWP.View
 
             AdjustOffsetIfNeeded();
 
-            DrawWaveForm();
+            ViewModel.UpdatePointsCollections();
         }
 
         private void AdjustOffsetIfNeeded()
@@ -330,7 +240,7 @@ namespace GPUDeclickerUWP.View
 
             AdjustOffsetIfNeeded();
 
-            DrawWaveForm();
+            ViewModel.UpdatePointsCollections();
         }
 
         /// <summary>
