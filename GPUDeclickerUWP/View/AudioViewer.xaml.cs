@@ -62,32 +62,6 @@ namespace GPUDeclickerUWP.View
         }
 
         /// <summary>
-        ///     Returns offset in samples for pointer position
-        /// </summary>
-        /// <param name="pointerPosition"> pointer position on waveForm</param>
-        private int PointerOffsetPosition(double pointerPositionX) =>
-            (int)(pointerPositionX * _audioToWaveFormRatio) + _offsetPosition;
-
-        /// <summary>
-        ///     Adjusts _offsetPosition to make pointer stay on the same sample.
-        /// </summary>
-        /// <param name="offsetAtPointer"> offset for pointer position</param>
-        /// <param name="pointerPositionX"> X of pointer position on waveForm</param>
-        private void SetOffsetForPointer(int offsetAtPointer, double pointerPositionX)
-        {
-            if (Audio == null)
-                return;
-
-            var samplesFromWaveFormBeginning = (int)(pointerPositionX * _audioToWaveFormRatio);
-
-            _offsetPosition = offsetAtPointer - samplesFromWaveFormBeginning;
-
-            AdjustOffsetIfNeeded();
-
-            ViewModel.UpdatePointsCollections();
-        }
-
-        /// <summary>
         ///     MouseWheel events handler for wave forms
         ///     Magnification adjustment
         /// </summary>
@@ -99,15 +73,15 @@ namespace GPUDeclickerUWP.View
             var pointer = e.GetCurrentPoint(WaveFormsGroup);
 
             // calculates offset for samples at pointer
-            var offsetAtPointer = PointerOffsetPosition(pointer.Position.X);
+            var offsetAtPointer = ViewModel.PointerOffsetPosition(pointer.Position.X);
 
             if (pointer.Properties.MouseWheelDelta > 0)
-                MagnifyMore();
+                ViewModel.MagnifyMore();
             else
-                MagnifyLess();
+                ViewModel.MagnifyLess();
 
             // set pointer at the same position
-            SetOffsetForPointer(offsetAtPointer, pointer.Position.X);
+            ViewModel.SetOffsetForPointer(offsetAtPointer, pointer.Position.X);
         }
 
         /// <summary>
@@ -146,9 +120,9 @@ namespace GPUDeclickerUWP.View
             var pointer = e.GetCurrentPoint(this);
             var shiftX = (int) (PointerLastPosition.X - pointer.Position.X);
             if (shiftX > 0)
-                GoNextX(Math.Abs(shiftX));
+                ViewModel.GoNextX(Math.Abs(shiftX));
             else
-                GoPrevX(Math.Abs(shiftX));
+                ViewModel.GoPrevX(Math.Abs(shiftX));
 
             PointerLastPosition = pointer.Position;
         }
@@ -175,8 +149,11 @@ namespace GPUDeclickerUWP.View
         {
             var pointer = e.GetCurrentPoint(this);
             var pointerProperties = pointer.Properties;
+
             if (pointerProperties.IsLeftButtonPressed)
+            {
                 WaveFormsGroupPointerPressed(sender, e);
+            }
         }
 
         /// <summary>
@@ -199,32 +176,32 @@ namespace GPUDeclickerUWP.View
 
         private void GoLeftBigStepClick(object sender, RoutedEventArgs e)
         {
-            GoPrevBigStep();
+            ViewModel.GoPrevBigStep();
         }
 
         private void GoLeftSmallStepClick(object sender, RoutedEventArgs e)
         {
-            GoPrevSmalStep();
+            ViewModel.GoPrevSmalStep();
         }
 
         private void GoRightBigStepClick(object sender, RoutedEventArgs e)
         {
-            GoNextBigStep();
+            ViewModel.GoNextBigStep();
         }
 
         private void GoRightSmallStepClick(object sender, RoutedEventArgs e)
         {
-            GoNextSmalStep();
+            ViewModel.GoNextSmalStep();
         }
 
         private void MagnifyLessClick(object sender, RoutedEventArgs e)
         {
-            MagnifyLess();
+            ViewModel.MagnifyLess();
         }
 
         private void MagnifyMoreClick(object sender, RoutedEventArgs e)
         {
-            MagnifyMore();
+            ViewModel.MagnifyMore();
         }
     }
 }

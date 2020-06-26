@@ -174,7 +174,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// <summary>
         ///     move OffsetPositionX to the right for one waveForm length
         /// </summary>
-        private void GoNextBigStep()
+        internal void GoNextBigStep()
         {
             if (this.leftCnannelSamples is null)
             {
@@ -186,7 +186,7 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         // move OffsetPositionX to the right for one tenth of waveForm length
-        private void GoNextSmalStep()
+        internal void GoNextSmalStep()
         {
             if (this.leftCnannelSamples is null)
                 return;
@@ -196,7 +196,7 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         // move OffsetPositionX to the right for shiftX samples
-        private void GoNextX(int deltaX)
+        internal void GoNextX(int deltaX)
         {
             if (this.leftCnannelSamples is null)
             {
@@ -227,7 +227,7 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         // move OffsetPositionX to the right for one waveForm length 
-        private void GoPrevBigStep()
+        internal void GoPrevBigStep()
         {
             if (this.leftCnannelSamples is null)
             {
@@ -239,7 +239,7 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         // move OffsetPositionX to the right for one tenth of waveForm length 
-        private void GoPrevSmalStep()
+        internal void GoPrevSmalStep()
         {
             if (this.leftCnannelSamples is null)
             {
@@ -251,7 +251,7 @@ namespace GPUDeclickerUWP.ViewModel
         }
 
         // move OffsetPositionX to the right for shiftX samples 
-        private void GoPrevX(int x)
+        internal void GoPrevX(int x)
         {
             if (this.leftCnannelSamples is null)
             {
@@ -273,7 +273,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// <summary>
         ///     Increases detalization on waveForm
         /// </summary>
-        private void MagnifyMore()
+        internal void MagnifyMore()
         {
             if (this.leftCnannelSamples is null)
             {
@@ -291,7 +291,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// <summary>
         ///     Decreases detalization on waveForm
         /// </summary>
-        private void MagnifyLess()
+        internal void MagnifyLess()
         {
             if (this.leftCnannelSamples is null)
             {
@@ -313,14 +313,46 @@ namespace GPUDeclickerUWP.ViewModel
         private void AdjustOffsetIfNeeded()
         {
             if (this.offsetPosition < 0)
+            {
                 this.offsetPosition = 0;
+            }
 
             var waveFormWidthSamples = (int)(this.waveFormWidth * this.audioToWaveFormRatio);
 
             var samplesAfterOffset = this.leftCnannelSamples.Length - this.offsetPosition;
 
             if (waveFormWidthSamples > samplesAfterOffset)
+            {
                 this.offsetPosition = this.leftCnannelSamples.Length - waveFormWidthSamples;
+            }
         }
+
+        /// <summary>
+        ///     Adjusts _offsetPosition to make pointer stay on the same sample.
+        /// </summary>
+        /// <param name="offsetAtPointer"> offset for pointer position</param>
+        /// <param name="pointerPositionX"> X of pointer position on waveForm</param>
+        internal void SetOffsetForPointer(int offsetAtPointer, double pointerPositionX)
+        {
+            if (this.leftCnannelSamples is null)
+            {
+                return;
+            }
+
+            var samplesFromWaveFormBeginning = (int)(pointerPositionX * this.audioToWaveFormRatio);
+
+            this.offsetPosition = offsetAtPointer - samplesFromWaveFormBeginning;
+
+            AdjustOffsetIfNeeded();
+
+            this.UpdatePointsCollections();
+        }
+
+        /// <summary>
+        ///     Returns offset in samples for pointer position
+        /// </summary>
+        /// <param name="pointerPosition"> pointer position on waveForm</param>
+        internal int PointerOffsetPosition(double pointerPositionX) =>
+            (int)(pointerPositionX * this.audioToWaveFormRatio) + this.offsetPosition;
     }
 }
