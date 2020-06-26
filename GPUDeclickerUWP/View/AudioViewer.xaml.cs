@@ -149,8 +149,8 @@ namespace GPUDeclickerUWP.View
         /// <param name="e"></param>
         private void WaveFormSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            var width = (int)WaveFormsGroup.ActualWidth;
-            var height = (int)WaveFormLeftChannel.ActualHeight;
+            var width = (int)Math.Ceiling(WaveFormsGroup.ActualWidth);
+            var height = (int)Math.Ceiling(WaveFormLeftChannel.ActualHeight);
 
             ViewModel.UpdateWaveFormSize(width, height);
 
