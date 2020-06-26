@@ -31,17 +31,6 @@ namespace GPUDeclickerUWP.View
 
         private static void AudioPropertyCallBack(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var audioViewer = d as AudioViewer;
-
-            var audio = audioViewer.Audio;
-            _leftCnannelSamples = audio.GetInputRange(ChannelType.Left, 0, audio.LengthSamples - 1);
-
-            if (audio.IsStereo)
-            {
-                _rightCnannelSamples = audio.GetInputRange(ChannelType.Right, 0, audio.LengthSamples - 1);
-            }
-
-            audioViewer?.Fill();
         }
 
         public AudioViewerViewModel ViewModel
@@ -64,8 +53,6 @@ namespace GPUDeclickerUWP.View
 
         // offset from beginning of audioData to beginning waveForm
         private int _offsetPosition;
-        private static double[] _leftCnannelSamples;
-        private static double[] _rightCnannelSamples;
 
         public AudioViewer()
         {
@@ -97,20 +84,6 @@ namespace GPUDeclickerUWP.View
         private void _redrawingTimer_Tick(object sender, object e)
         {
             _redrawingTimer.Stop();
-            DrawWaveForm();
-        }
-
-        /// <summary>
-        /// sets Ratio and OffsetPosition
-        /// </summary>
-        private void Fill() 
-        {
-            _offsetPosition = 0;
-
-            // Sets Ratio to show whole audio track
-            _audioToWaveFormRatio =
-                Audio.LengthSamples / WaveFormWidth;
-
             DrawWaveForm();
         }
 
@@ -216,11 +189,11 @@ namespace GPUDeclickerUWP.View
             // for every x-axis position of waveForm
             for (var x = 0; x < WaveFormWidth; x++)
             {
-                AddPointToWaveform(_leftCnannelSamples, LeftChannelWaveFormPoints, x);
+                AddPointToWaveform(ViewModel._leftCnannelSamples, LeftChannelWaveFormPoints, x);
 
                 if (Audio.IsStereo)
                 {
-                    AddPointToWaveform(_rightCnannelSamples, RightChannelWaveFormPoints, x);
+                    AddPointToWaveform(ViewModel._rightCnannelSamples, RightChannelWaveFormPoints, x);
                 }
             }
         }
