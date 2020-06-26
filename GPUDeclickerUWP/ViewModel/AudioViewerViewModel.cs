@@ -43,6 +43,10 @@ namespace GPUDeclickerUWP.ViewModel
             {
                 this.rightCnannelSamples = audio.GetInputRange(ChannelType.Right, 0, audio.LengthSamples - 1);
             }
+            else
+            {
+                this.rightCnannelSamples = null;
+            }
 
             this.InitializeState();
 
