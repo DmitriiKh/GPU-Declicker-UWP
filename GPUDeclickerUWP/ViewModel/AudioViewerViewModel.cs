@@ -171,8 +171,6 @@ namespace GPUDeclickerUWP.ViewModel
             this.waveFormHeight = waveFormHeight;
 
             InitializeState();
-
-            this.UpdatePointsCollections();
         }
 
         /// <summary>
