@@ -269,5 +269,58 @@ namespace GPUDeclickerUWP.ViewModel
 
             this.UpdatePointsCollections();
         }
+
+        /// <summary>
+        ///     Increases detalization on waveForm
+        /// </summary>
+        private void MagnifyMore()
+        {
+            if (this.leftCnannelSamples is null)
+            {
+                return;
+            }
+
+            this.audioToWaveFormRatio /= 2;
+
+            if (this.audioToWaveFormRatio < 1)
+                this.audioToWaveFormRatio = 1d;
+
+            this.UpdatePointsCollections();
+        }
+
+        /// <summary>
+        ///     Decreases detalization on waveForm
+        /// </summary>
+        private void MagnifyLess()
+        {
+            if (this.leftCnannelSamples is null)
+            {
+                return;
+            }
+
+            this.audioToWaveFormRatio *= 2;
+
+            var maxRatio = this.leftCnannelSamples.Length / this.waveFormWidth;
+
+            if (this.audioToWaveFormRatio > maxRatio)
+                this.audioToWaveFormRatio = maxRatio;
+
+            AdjustOffsetIfNeeded();
+
+            this.UpdatePointsCollections();
+        }
+
+        private void AdjustOffsetIfNeeded()
+        {
+            if (this.offsetPosition < 0)
+                this.offsetPosition = 0;
+
+            var waveFormWidthSamples = (int)(this.waveFormWidth * this.audioToWaveFormRatio);
+
+            var samplesAfterOffset = this.leftCnannelSamples.Length - this.offsetPosition;
+
+            if (waveFormWidthSamples > samplesAfterOffset)
+                this.offsetPosition = this.leftCnannelSamples.Length - waveFormWidthSamples;
+        }
     }
 }

@@ -62,55 +62,6 @@ namespace GPUDeclickerUWP.View
         }
 
         /// <summary>
-        ///     Increases detalization on waveForm
-        /// </summary>
-        private void MagnifyMore()
-        {
-            if (Audio == null)
-                return;
-
-            _audioToWaveFormRatio /= 2;
-
-            if (_audioToWaveFormRatio < 1)
-                _audioToWaveFormRatio = 1d;
-
-            ViewModel.UpdatePointsCollections();
-        }
-
-        /// <summary>
-        ///     Decreases detalization on waveForm
-        /// </summary>
-        private void MagnifyLess()
-        {
-            if (Audio == null)
-                return;
-
-            _audioToWaveFormRatio *= 2;
-
-            var maxRatio = Audio.LengthSamples / WaveFormWidth;
-
-            if (_audioToWaveFormRatio > maxRatio)
-                _audioToWaveFormRatio = maxRatio;
-
-            AdjustOffsetIfNeeded();
-
-            ViewModel.UpdatePointsCollections();
-        }
-
-        private void AdjustOffsetIfNeeded()
-        {
-            if (_offsetPosition < 0)
-                _offsetPosition = 0;
-
-            var waveFormWidthSamples = (int)(WaveFormWidth * _audioToWaveFormRatio);
-
-            var samplesAfterOffset = Audio.LengthSamples - _offsetPosition;
-
-            if (waveFormWidthSamples > samplesAfterOffset)
-                _offsetPosition = Audio.LengthSamples - waveFormWidthSamples;
-        }
-
-        /// <summary>
         ///     Returns offset in samples for pointer position
         /// </summary>
         /// <param name="pointerPosition"> pointer position on waveForm</param>
