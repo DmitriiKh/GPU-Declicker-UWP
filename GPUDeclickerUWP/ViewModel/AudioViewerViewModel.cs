@@ -225,5 +225,49 @@ namespace GPUDeclickerUWP.ViewModel
 
             this.UpdatePointsCollections();
         }
+
+        // move OffsetPositionX to the right for one waveForm length 
+        private void GoPrevBigStep()
+        {
+            if (this.leftCnannelSamples is null)
+            {
+                return;
+            }
+
+            var deltaX = (int)this.waveFormWidth;
+            GoPrevX(deltaX);
+        }
+
+        // move OffsetPositionX to the right for one tenth of waveForm length 
+        private void GoPrevSmalStep()
+        {
+            if (this.leftCnannelSamples is null)
+            {
+                return;
+            }
+
+            var deltaX = (int)this.waveFormWidth / 10;
+            GoPrevX(deltaX);
+        }
+
+        // move OffsetPositionX to the right for shiftX samples 
+        private void GoPrevX(int x)
+        {
+            if (this.leftCnannelSamples is null)
+            {
+                return;
+            }
+
+            // Calculate number of samples to shift
+            var shift = (int)(x * this.audioToWaveFormRatio);
+            // if there is enough room on the left than shift offsetPositionX
+            if (this.offsetPosition > shift) 
+                this.offsetPosition -= shift;
+            else
+                // set OffsetPositionX to show the beginning of audioData
+                this.offsetPosition = 0;
+
+            this.UpdatePointsCollections();
+        }
     }
 }
