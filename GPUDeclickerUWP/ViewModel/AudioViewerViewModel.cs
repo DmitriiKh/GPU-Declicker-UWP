@@ -21,7 +21,8 @@ namespace GPUDeclickerUWP.ViewModel
         // offset from beginning of audioData to beginning waveForm
         private int _offsetPosition;
 
-        public int WaveFormWidth { get; private set; }
+        private int waveFormWidth;
+        private int waveFormHeight;
 
         public void UpdateAudio(IAudio audio)
         {
@@ -41,7 +42,7 @@ namespace GPUDeclickerUWP.ViewModel
 
             // Sets Ratio to show whole audio track
             _audioToWaveFormRatio =
-                _leftCnannelSamples.Length / WaveFormWidth;
+                _leftCnannelSamples.Length / waveFormWidth;
 
             DrawWaveForm();
         }
@@ -49,6 +50,12 @@ namespace GPUDeclickerUWP.ViewModel
         private void DrawWaveForm()
         {
             throw new NotImplementedException();
+        }
+
+        internal void UpdateWaveFormSize(int waveFormWidth, int waveFormHeight)
+        {
+            this.waveFormWidth = waveFormWidth;
+            this.waveFormHeight = waveFormHeight;
         }
     }
 }

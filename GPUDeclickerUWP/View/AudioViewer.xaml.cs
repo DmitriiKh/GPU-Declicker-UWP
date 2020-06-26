@@ -436,11 +436,7 @@ namespace GPUDeclickerUWP.View
             WaveFormHeight = WaveFormLeftChannel.ActualHeight;
             WaveFormWidth = WaveFormsGroup.ActualWidth;
 
-            _offsetPosition = 0;
-            // Sets Ratio to show whole audio track
-            if (Audio != null)
-                _audioToWaveFormRatio =
-                    Audio.LengthSamples / WaveFormWidth;
+            ViewModel.UpdateWaveFormSize((int)WaveFormWidth, (int)WaveFormHeight);
 
             // DrawWaveForm function not called directly because it slows down 
             // It will start after a delay
