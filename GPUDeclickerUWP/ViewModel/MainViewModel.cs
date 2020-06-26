@@ -16,19 +16,9 @@ namespace GPUDeclickerUWP.ViewModel
     {
         private StorageFile _audioInputFile;
 
-        private AudioViewerViewModel audioViewerViewModel =
+        public AudioViewerViewModel AudioViewerViewModelInstance { get; } =
             new AudioViewerViewModel();
 
-        public AudioViewerViewModel AudioViewerViewModelInstance
-        {
-            get { return audioViewerViewModel; }
-            set 
-            {
-                audioViewerViewModel = value;
-                OnPropertyChanged(nameof(AudioViewerViewModelInstance));
-            }
-        }
-        
         // variables for subclasses to report progress and status
         private readonly Progress<double> _progress;
         private void ProgressValueChanged(double d)
@@ -80,7 +70,6 @@ namespace GPUDeclickerUWP.ViewModel
                 OnPropertyChanged(nameof(Audio));
 
                 AudioViewerViewModelInstance.UpdateAudio(_audio);
-                
             }
         }
 
