@@ -1,10 +1,8 @@
-﻿using CarefulAudioRepair.Data;
-using GPUDeclickerUWP.ViewModel;
+﻿using GPUDeclickerUWP.ViewModel;
 using System;
 using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 
 namespace GPUDeclickerUWP.View
 {
@@ -34,11 +32,6 @@ namespace GPUDeclickerUWP.View
             _redrawingTimer.Tick += _redrawingTimer_Tick;
             _redrawingTimer.Interval = TimeSpan.FromSeconds(0.1); 
         }
-
-        // These are updated every time when WaveForm's size changed
-        // by event handler WaveFormLeftChannel_SizeChanged
-        public double WaveFormWidth { get; set; }
-        public double WaveFormHeight { get; set; }
 
         // Last mouse pointer position touching waveForms
         // Used to calculate new OffsetPosition when user slides waveForms
@@ -156,10 +149,10 @@ namespace GPUDeclickerUWP.View
         /// <param name="e"></param>
         private void WaveFormSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            WaveFormHeight = WaveFormLeftChannel.ActualHeight;
-            WaveFormWidth = WaveFormsGroup.ActualWidth;
+            var width = (int)WaveFormsGroup.ActualWidth;
+            var height = (int)WaveFormLeftChannel.ActualHeight;
 
-            ViewModel.UpdateWaveFormSize((int)WaveFormWidth, (int)WaveFormHeight);
+            ViewModel.UpdateWaveFormSize(width, height);
 
             // DrawWaveForm function not called directly because it slows down 
             // It will start after a delay
