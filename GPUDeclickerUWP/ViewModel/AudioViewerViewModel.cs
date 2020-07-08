@@ -15,9 +15,9 @@ namespace GPUDeclickerUWP.ViewModel
         public PointCollection RightChannelWaveFormPoints { get; } =
             new PointCollection();
 
-        public double[] leftCnannelSamples;
+        private double[] leftCnannelSamples;
 
-        public double[] rightCnannelSamples;
+        private double[] rightCnannelSamples;
 
         // magnification ratio
         // when set to 1, waveForm is most detailed
