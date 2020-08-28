@@ -214,12 +214,12 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             if (_audioToReadChannelCount == 1)
                 return new Mono(
-                    _leftChannel.Select(s => (double)s).ToArray(),
+                    Array.ConvertAll(_leftChannel, s => (double)s),
                     settings);
             else
                 return new Stereo(
-                    _leftChannel.Select(s => (double)s).ToArray(),
-                    _rightChannel.Select(s => (double)s).ToArray(),
+                    Array.ConvertAll(_leftChannel, s => (double)s),
+                    Array.ConvertAll(_rightChannel, s => (double)s),
                     settings);
         }
 
