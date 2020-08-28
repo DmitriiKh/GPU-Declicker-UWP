@@ -287,8 +287,15 @@ namespace GPUDeclickerUWP.ViewModel
             Audio.Settings.MaxLengthOfCorrection = MaxLengthCorrection;
 
             // scan and repair
-            await Audio.ScanAsync(_status, _progress);
-
+            try
+            {
+                await Audio.ScanAsync(_status, _progress);
+            } catch (Exception e)
+            {
+                await ShowExeptionAsync(
+                    "An error occurred while trying to process file.",
+                    e);
+            }
 
             // enable Scan, Save and Open buttons
             IsReadyToOpenFile = true;
