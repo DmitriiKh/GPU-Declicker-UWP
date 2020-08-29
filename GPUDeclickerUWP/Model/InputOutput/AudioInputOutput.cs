@@ -141,7 +141,20 @@ namespace GPUDeclickerUWP.Model.InputOutput
             _ioProgress?.Report(0);
             _ioStatus.Report("");
 
-            _readFileSuccess.TrySetResult((true, GetAudio()));
+            IAudio audio = null;
+
+            try
+            {
+                audio = GetAudio();
+            }
+            catch (Exception e)
+            {
+                _readFileSuccess.SetException(e);
+
+                return;
+            }
+
+            _readFileSuccess.SetResult((true, audio));
         }
 
         /// <summary>
