@@ -1,5 +1,6 @@
 ﻿using CarefulAudioRepair.Data;
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -226,14 +227,22 @@ namespace GPUDeclickerUWP.Model.InputOutput
             };
 
             if (_audioToReadChannelCount == 1)
-                return new Mono(
-                    Array.ConvertAll(_leftChannel, s => (double)s),
-                    settings);
+            {
+                var left = Array.ConvertAll(_leftChannel, s => (double)s).ToImmutableArray();
+                _leftChannel = null;
+
+                return new Mono(left, settings);
+            }
             else
-                return new Stereo(
-                    Array.ConvertAll(_leftChannel, s => (double)s),
-                    Array.ConvertAll(_rightChannel, s => (double)s),
-                    settings);
+            {
+                var left = Array.ConvertAll(_leftChannel, s => (double)s).ToImmutableArray();
+                _leftChannel = null;
+
+                var right = Array.ConvertAll(_rightChannel, s => (double)s).ToImmutableArray();
+                _rightChannel = null;
+
+                return new Stereo(left, right, settings);
+            }
         }
 
         public async Task<bool> SaveAudioToFile(StorageFile file, IAudio audio)
