@@ -1,4 +1,5 @@
-﻿using CarefulAudioRepair.Data;
+﻿using AudioGraphExtensions;
+using CarefulAudioRepair.Data;
 using GPUDeclickerUWP.Model.InputOutput;
 using GPUDeclickerUWP.View;
 using System;
@@ -379,8 +380,13 @@ namespace GPUDeclickerUWP.ViewModel
             
             try
             {
+                var left = Array.ConvertAll(_audio.GetOutputArray(ChannelType.Left), s => (float)s);
+                var right = _audio.IsStereo ? Array.ConvertAll(_audio.GetOutputArray(ChannelType.Left), s => (float)s) : null;
+
                 saveAudioResult =
-                    await _audioInputOutput.SaveAudioToFile(audioOutputFile, _audio);
+                    await (await AudioGraphOutputStream.ToFile(audioOutputFile, _progress, _status, (uint)_audio.Settings.SampleRate, _audio.IsStereo ? 2u : 1u))
+                    .Transfer(left, right);
+                    //await _audioInputOutput.SaveAudioToFile(audioOutputFile, _audio);
             }
             catch (Exception exception)
             {

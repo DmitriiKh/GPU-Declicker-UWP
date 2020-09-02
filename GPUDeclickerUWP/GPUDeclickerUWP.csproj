@@ -235,6 +235,10 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\AudioGraphExtensions\AudioGraphExtensions\AudioGraphExtensions.csproj">
+      <Project>{dc8e9b48-1312-4df3-9be3-71bbc2d2e3bc}</Project>
+      <Name>AudioGraphExtensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\CarefulAudioRepair\CarefulAudioRepair\CarefulAudioRepair.csproj">
       <Project>{58421ad3-0f72-4083-b556-f0e78905a144}</Project>
       <Name>CarefulAudioRepair</Name>
