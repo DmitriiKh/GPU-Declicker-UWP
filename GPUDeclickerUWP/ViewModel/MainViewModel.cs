@@ -372,21 +372,25 @@ namespace GPUDeclickerUWP.ViewModel
         /// <summary>
         /// Saves AudioDada to file
         /// </summary>
-        /// <param name="audioOutputFile"></param>
+        /// <param name="file"></param>
         /// <returns></returns>
-        private async Task<bool> SaveAudioAsync(StorageFile audioOutputFile)
+        private async Task<bool> SaveAudioAsync(StorageFile file)
         {
             var saveAudioResult = false;
-            
+
             try
             {
                 var left = Array.ConvertAll(_audio.GetOutputArray(ChannelType.Left), s => (float)s);
                 var right = _audio.IsStereo ? Array.ConvertAll(_audio.GetOutputArray(ChannelType.Left), s => (float)s) : null;
 
-                saveAudioResult =
-                    await (await AudioGraphOutputStream.ToFile(audioOutputFile, _progress, _status, (uint)_audio.Settings.SampleRate, _audio.IsStereo ? 2u : 1u))
-                    .Transfer(left, right);
-                    //await _audioInputOutput.SaveAudioToFile(audioOutputFile, _audio);
+                uint sampleRate = (uint)_audio.Settings.SampleRate;
+                uint channelCount = _audio.IsStereo ? 2u : 1u;
+
+                var builder = AudioSystem.Builder(sampleRate, channelCount, _progress, _status);
+
+                var audioSystem = await builder.From(left, right).To(file).BuildAsync();
+
+                saveAudioResult = await audioSystem.StartAsync();
             }
             catch (Exception exception)
             {
