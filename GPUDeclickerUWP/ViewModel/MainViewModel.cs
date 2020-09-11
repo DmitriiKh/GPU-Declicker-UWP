@@ -250,19 +250,16 @@ namespace GPUDeclickerUWP.ViewModel
                     success = true;
 
                     var settings = new AudioProcessingSettings() { SampleRate = (int)result.SampleRate };
+                    const int maxChannelSizeSamples = 30000000; // Thirty million samples
+                    var memoryEfficient = result.Left.Length > maxChannelSizeSamples;
 
                     if (audioSystem.IsStereo)
                     {
-                        //var left = Array.ConvertAll(result.Left, s => (double)s);
-                        //var right = Array.ConvertAll(result.Right, s => (double)s);
-
-                        Audio = new Stereo(result.Left, result.Right, settings);
+                        Audio = new Stereo(result.Left, result.Right, settings, memoryEfficient);
                     }
                     else
                     {
-                        var left = Array.ConvertAll(result.Left, s => (double)s);
-
-                        Audio = new Mono(result.Left, settings);
+                        Audio = new Mono(result.Left, settings, memoryEfficient);
                     }
                 }
             }
