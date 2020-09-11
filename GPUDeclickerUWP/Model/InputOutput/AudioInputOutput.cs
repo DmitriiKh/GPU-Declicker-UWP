@@ -228,20 +228,20 @@ namespace GPUDeclickerUWP.Model.InputOutput
 
             if (_audioToReadChannelCount == 1)
             {
-                var left = Array.ConvertAll(_leftChannel, s => (double)s).ToImmutableArray();
-                _leftChannel = null;
+                //var left = Array.ConvertAll(_leftChannel, s => (double)s).ToImmutableArray();
+                //_leftChannel = null;
 
-                return new Mono(left, settings);
+                return new Mono(_leftChannel, settings);
             }
             else
             {
-                var left = Array.ConvertAll(_leftChannel, s => (double)s).ToImmutableArray();
-                _leftChannel = null;
+                //var left = Array.ConvertAll(_leftChannel, s => (double)s).ToImmutableArray();
+                //_leftChannel = null;
 
-                var right = Array.ConvertAll(_rightChannel, s => (double)s).ToImmutableArray();
-                _rightChannel = null;
+                //var right = Array.ConvertAll(_rightChannel, s => (double)s).ToImmutableArray();
+                //_rightChannel = null;
 
-                return new Stereo(left, right, settings);
+                return new Stereo(_leftChannel, _rightChannel, settings);
             }
         }
 

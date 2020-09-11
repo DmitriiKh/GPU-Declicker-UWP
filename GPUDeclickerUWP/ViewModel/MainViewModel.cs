@@ -253,16 +253,16 @@ namespace GPUDeclickerUWP.ViewModel
 
                     if (audioSystem.IsStereo)
                     {
-                        var left = Array.ConvertAll(result.Left, s => (double)s);
-                        var right = Array.ConvertAll(result.Right, s => (double)s);
+                        //var left = Array.ConvertAll(result.Left, s => (double)s);
+                        //var right = Array.ConvertAll(result.Right, s => (double)s);
 
-                        Audio = new Stereo(left, right, settings);
+                        Audio = new Stereo(result.Left, result.Right, settings);
                     }
                     else
                     {
                         var left = Array.ConvertAll(result.Left, s => (double)s);
 
-                        Audio = new Mono(left, settings);
+                        Audio = new Mono(result.Left, settings);
                     }
                 }
             }
@@ -406,8 +406,8 @@ namespace GPUDeclickerUWP.ViewModel
 
             try
             {
-                var left = Array.ConvertAll(_audio.GetOutputArray(ChannelType.Left), s => (float)s);
-                var right = _audio.IsStereo ? Array.ConvertAll(_audio.GetOutputArray(ChannelType.Left), s => (float)s) : null;
+                var left = _audio.GetOutputArray(ChannelType.Left);
+                var right = _audio.IsStereo ? _audio.GetOutputArray(ChannelType.Left) : null;
 
                 uint sampleRate = (uint)_audio.Settings.SampleRate;
                 uint channelCount = _audio.IsStereo ? 2u : 1u;

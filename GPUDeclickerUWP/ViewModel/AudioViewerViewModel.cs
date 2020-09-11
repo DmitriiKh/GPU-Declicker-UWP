@@ -16,9 +16,9 @@ namespace GPUDeclickerUWP.ViewModel
         public PointCollection RightChannelWaveFormPoints { get; } =
             new PointCollection();
 
-        private ImmutableArray<double> leftCnannelSamples = ImmutableArray<double>.Empty;
+        private ImmutableArray<float> leftCnannelSamples = ImmutableArray<float>.Empty;
 
-        private ImmutableArray<double> rightCnannelSamples = ImmutableArray<double>.Empty;
+        private ImmutableArray<float> rightCnannelSamples = ImmutableArray<float>.Empty;
 
         // magnification ratio
         // when set to 1, waveForm is most detailed
@@ -46,7 +46,7 @@ namespace GPUDeclickerUWP.ViewModel
             }
             else
             {
-                this.rightCnannelSamples = ImmutableArray<double>.Empty;
+                this.rightCnannelSamples = ImmutableArray<float>.Empty;
             }
 
             this.InitializeState();
@@ -105,7 +105,7 @@ namespace GPUDeclickerUWP.ViewModel
         ///     Adds a point representing one or many samples to wave form
         /// </summary>
         private void AddPointToWaveform(
-            ImmutableArray<double> samples,
+            ImmutableArray<float> samples,
             PointCollection waveFormPoints,
             int xPosition)
         {
@@ -143,7 +143,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// <param name="minValue">min value</param>
         /// <param name="maxValue">max value</param>
         private void FindMinMax(
-            ImmutableArray<double> samples,
+            ImmutableArray<float> samples,
             int begining,
             int length,
             out double minValue,
