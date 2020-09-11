@@ -237,8 +237,34 @@ namespace GPUDeclickerUWP.ViewModel
 
             try
             {
-                (success, Audio) =
-                    await _audioInputOutput.LoadAudioFromFile(_audioInputFile);
+                var builder = AudioSystem.Builder();
+
+                builder.From(_audioInputFile);
+                builder.Report(_status, _progress);
+
+                var audioSystem = await builder.BuildAsync();
+                var result = await audioSystem.RunAsync();
+
+                if (result.Success)
+                {
+                    success = true;
+
+                    var settings = new AudioProcessingSettings() { SampleRate = (int)result.SampleRate };
+
+                    if (audioSystem.IsStereo)
+                    {
+                        var left = Array.ConvertAll(result.Left, s => (double)s);
+                        var right = Array.ConvertAll(result.Right, s => (double)s);
+
+                        Audio = new Stereo(left, right, settings);
+                    }
+                    else
+                    {
+                        var left = Array.ConvertAll(result.Left, s => (double)s);
+
+                        Audio = new Mono(left, settings);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -376,7 +402,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// <returns></returns>
         private async Task<bool> SaveAudioAsync(StorageFile file)
         {
-            var saveAudioResult = false;
+            var success = false;
 
             try
             {
@@ -386,11 +412,16 @@ namespace GPUDeclickerUWP.ViewModel
                 uint sampleRate = (uint)_audio.Settings.SampleRate;
                 uint channelCount = _audio.IsStereo ? 2u : 1u;
 
-                var builder = AudioSystem.Builder(sampleRate, channelCount, _progress, _status);
+                var builder = AudioSystem.Builder();
+                builder.SampleRate(sampleRate).Channels(channelCount);
+                builder.Report(_status, _progress);
+                builder.From(left, right).To(file);
 
-                var audioSystem = await builder.From(left, right).To(file).BuildAsync();
+                var audioSystem = await builder.BuildAsync();
 
-                saveAudioResult = await audioSystem.StartAsync();
+                var result = await audioSystem.RunAsync();
+
+                success = result.Success;
             }
             catch (Exception exception)
             {
@@ -399,7 +430,7 @@ namespace GPUDeclickerUWP.ViewModel
                     exception);
             }
 
-            return saveAudioResult;
+            return success;
         }
 
         /// <summary>

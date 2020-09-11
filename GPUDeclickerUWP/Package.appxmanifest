@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="14220DmitriiKhrustalev.GPUDeclicker" Publisher="CN=C8BBD50F-6C1B-4F6A-90E2-4AC347E86AB8" Version="2.0.9.0" />
+  <Identity Name="14220DmitriiKhrustalev.GPUDeclicker" Publisher="CN=C8BBD50F-6C1B-4F6A-90E2-4AC347E86AB8" Version="2.0.10.0" />
   <mp:PhoneIdentity PhoneProductId="f7f0f9a5-af78-4305-9df8-10122f1875c6" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>GPU Declicker</DisplayName>
