@@ -1,5 +1,6 @@
 ﻿using CarefulAudioRepair.Data;
 using System;
+using System.Collections.Immutable;
 using Windows.Foundation;
 using Windows.UI.Xaml.Media;
 
@@ -15,9 +16,9 @@ namespace GPUDeclickerUWP.ViewModel
         public PointCollection RightChannelWaveFormPoints { get; } =
             new PointCollection();
 
-        private double[] leftCnannelSamples;
+        private ImmutableArray<double> leftCnannelSamples = ImmutableArray<double>.Empty;
 
-        private double[] rightCnannelSamples;
+        private ImmutableArray<double> rightCnannelSamples = ImmutableArray<double>.Empty;
 
         // magnification ratio
         // when set to 1, waveForm is most detailed
@@ -37,15 +38,15 @@ namespace GPUDeclickerUWP.ViewModel
                 return;
             }
 
-            this.leftCnannelSamples = audio.GetInputRange(ChannelType.Left, 0, audio.LengthSamples - 1);
+            this.leftCnannelSamples = audio.GetInputArray(ChannelType.Left);
 
             if (audio.IsStereo)
             {
-                this.rightCnannelSamples = audio.GetInputRange(ChannelType.Right, 0, audio.LengthSamples - 1);
+                this.rightCnannelSamples = audio.GetInputArray(ChannelType.Right);
             }
             else
             {
-                this.rightCnannelSamples = null;
+                this.rightCnannelSamples = ImmutableArray<double>.Empty;
             }
 
             this.InitializeState();
@@ -74,7 +75,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         internal void UpdatePointsCollections()
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
@@ -104,7 +105,7 @@ namespace GPUDeclickerUWP.ViewModel
         ///     Adds a point representing one or many samples to wave form
         /// </summary>
         private void AddPointToWaveform(
-            double[] samples,
+            ImmutableArray<double> samples,
             PointCollection waveFormPoints,
             int xPosition)
         {
@@ -142,7 +143,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// <param name="minValue">min value</param>
         /// <param name="maxValue">max value</param>
         private void FindMinMax(
-            double[] samples,
+            ImmutableArray<double> samples,
             int begining,
             int length,
             out double minValue,
@@ -178,7 +179,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         internal void GoNextBigStep()
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
@@ -190,7 +191,7 @@ namespace GPUDeclickerUWP.ViewModel
         // move OffsetPositionX to the right for one tenth of waveForm length
         internal void GoNextSmalStep()
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
                 return;
 
             var deltaX = (int)this.waveFormWidth / 10;
@@ -200,7 +201,7 @@ namespace GPUDeclickerUWP.ViewModel
         // move OffsetPositionX to the right for shiftX samples
         internal void GoNextX(int deltaX)
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
@@ -218,7 +219,7 @@ namespace GPUDeclickerUWP.ViewModel
         // move OffsetPositionX to the right for one waveForm length 
         internal void GoPrevBigStep()
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
@@ -230,7 +231,7 @@ namespace GPUDeclickerUWP.ViewModel
         // move OffsetPositionX to the right for one tenth of waveForm length 
         internal void GoPrevSmalStep()
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
@@ -242,7 +243,7 @@ namespace GPUDeclickerUWP.ViewModel
         // move OffsetPositionX to the right for shiftX samples 
         internal void GoPrevX(int deltaX)
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
@@ -262,7 +263,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         internal void MagnifyMore()
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
@@ -280,7 +281,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// </summary>
         internal void MagnifyLess()
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
@@ -321,7 +322,7 @@ namespace GPUDeclickerUWP.ViewModel
         /// <param name="pointerPositionX"> X of pointer position on waveForm</param>
         internal void SetOffsetForPointer(int offsetAtPointer, double pointerPositionX)
         {
-            if (this.leftCnannelSamples is null)
+            if (this.leftCnannelSamples.IsEmpty)
             {
                 return;
             }
