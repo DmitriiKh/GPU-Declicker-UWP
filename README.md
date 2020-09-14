@@ -23,5 +23,6 @@ AudioGraph API used for reading and writing audio files.
 Lengths of input and output files are different by about 1000 samples.
 
 <b>This project was created with support from JetBrains</b>
-![JetBrains](/jetbrains.png?raw=true "")
+
+<img src="jetbrains.png" width="324">
 https://www.jetbrains.com/?from=GPU-Declicker-UWP
