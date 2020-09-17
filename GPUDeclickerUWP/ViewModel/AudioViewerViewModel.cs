@@ -63,7 +63,7 @@ namespace GPUDeclickerUWP.ViewModel
 
         private void SetRatioToMax()
         {
-            if (this.leftCnannelSamples != null && this.waveFormWidth > 0)
+            if (!this.leftCnannelSamples.IsEmpty && this.waveFormWidth > 0)
             {
                 this.audioToWaveFormRatio =
                         this.leftCnannelSamples.Length / this.waveFormWidth;
@@ -91,7 +91,7 @@ namespace GPUDeclickerUWP.ViewModel
                     this.LeftChannelWaveFormPoints,
                     xPosition);
 
-                if (this.rightCnannelSamples != null)
+                if (!this.rightCnannelSamples.IsEmpty)
                 {
                     this.AddPointToWaveform(
                         this.rightCnannelSamples,
