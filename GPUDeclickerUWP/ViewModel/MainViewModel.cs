@@ -253,13 +253,13 @@ namespace GPUDeclickerUWP.ViewModel
                     const int maxChannelSizeSamples = 30000000; // Thirty million samples
                     var memoryEfficient = result.Left.Length > maxChannelSizeSamples;
 
-                    if (audioSystem.IsStereo)
+                    if (result.Right == null)
                     {
-                        Audio = new Stereo(result.Left, result.Right, settings, memoryEfficient);
+                        Audio = new Mono(result.Left, settings, memoryEfficient);
                     }
                     else
                     {
-                        Audio = new Mono(result.Left, settings, memoryEfficient);
+                        Audio = new Stereo(result.Left, result.Right, settings, memoryEfficient);
                     }
                 }
             }
@@ -406,11 +406,8 @@ namespace GPUDeclickerUWP.ViewModel
                 var left = _audio.GetOutputArray(ChannelType.Left);
                 var right = _audio.IsStereo ? _audio.GetOutputArray(ChannelType.Left) : null;
 
-                uint sampleRate = (uint)_audio.Settings.SampleRate;
-                uint channelCount = _audio.IsStereo ? 2u : 1u;
-
                 var builder = AudioSystem.Builder();
-                builder.SampleRate(sampleRate).Channels(channelCount);
+                builder.SampleRate((uint)_audio.Settings.SampleRate);
                 builder.Report(_status, _progress);
                 builder.From(left, right).To(file);
 
