@@ -75,6 +75,6 @@ steps:
                   /p:AppxBundle=Always
                   /p:UapAppxPackageBuildMode=StoreUpload
                   /p:AppxPackageSigningEnabled=true
-                  /p:PackageCertificateThumbprint="$(signingCert.Thumbprint)" 
+                  /p:PackageCertificateThumbprint="" 
                   /p:PackageCertificateKeyFile="$(mySecureFile.secureFilePath)"
                   /p:PackageCertificatePassword="$(signingCert.Password)"'
