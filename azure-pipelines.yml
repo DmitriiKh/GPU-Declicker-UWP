@@ -3,6 +3,15 @@
 # Add steps that test and distribute an app, save build artifacts, and more:
 # https://aka.ms/yaml
 
+resources:
+  repositories:
+  - repository: AudioGraphExtensions
+    type: github
+    name: DmitriiKh/AudioGraphExtensions
+  - repository: CarefulAudioRepair
+    type: github
+    name: DmitriiKh/CarefulAudioRepair
+
 trigger:
 - master
 
@@ -16,6 +25,10 @@ variables:
   appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
 steps:
+- checkout: self
+- checkout: AudioGraphExtensions
+- checkout: CarefulAudioRepair
+
 - task: NuGetToolInstaller@1
 
 - task: NuGetCommand@2
