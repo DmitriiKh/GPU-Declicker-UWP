@@ -43,7 +43,6 @@ steps:
     secureFile: '$(signingCert.File)'
 
 - task: PowerShell@2
-  displayName: 'Register the publisher's certificate'
   inputs:
     targetType: 'inline'
     script: |
