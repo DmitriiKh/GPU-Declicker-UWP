@@ -7,11 +7,11 @@ resources:
   repositories:
   - repository: AudioGraphExtensions
     type: github
-    endpoint: DmitriiKh_GitHubConnection
+    endpoint: DmitriiKh
     name: DmitriiKh/AudioGraphExtensions
   - repository: CarefulAudioRepair
     type: github
-    endpoint: DmitriiKhGit_HubConnection
+    endpoint: DmitriiKh
     name: DmitriiKh/CarefulAudioRepair
 
 trigger:
