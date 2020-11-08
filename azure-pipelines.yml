@@ -21,10 +21,15 @@ pool:
   vmImage: 'windows-latest'
 
 variables:
-  solution: '**/*.sln'
-  buildPlatform: 'x86|x64|ARM'
-  buildConfiguration: 'Release'
-  appxPackageDir: '$(build.artifactStagingDirectory)\AppxPackages\\'
+- group: uwp-pipeline
+- name: solution
+  value: '**/*.sln'
+- name: buildPlatform
+  value: 'x86|x64|ARM'
+- name: buildConfiguration
+  value: 'Release'
+- name: appxPackageDir
+  value: '$(build.artifactStagingDirectory)\AppxPackages\\'
 
 steps:
 - checkout: self
