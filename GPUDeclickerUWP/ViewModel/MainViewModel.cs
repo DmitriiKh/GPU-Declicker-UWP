@@ -413,7 +413,7 @@ namespace GPUDeclickerUWP.ViewModel
                 uint channelCount = _audio.IsStereo ? 2u : 1u;
 
                 var builder = AudioSystem.Builder();
-                builder.SampleRate(sampleRate).Channels(channelCount);
+                builder.SampleRate(sampleRate);
                 builder.Report(_status, _progress);
                 builder.From(left, right).To(file);
 
