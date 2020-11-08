@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPUDeclickerUWP", "GPUDecli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarefulAudioRepair", "..\CarefulAudioRepair\CarefulAudioRepair\CarefulAudioRepair.csproj", "{58421AD3-0F72-4083-B556-F0E78905A144}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioGraphExtensions", "..\..\AudioGraphExtensions\AudioGraphExtensions\AudioGraphExtensions.csproj", "{DC8E9B48-1312-4DF3-9BE3-71BBC2D2E3BC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioGraphExtensions", "..\AudioGraphExtensions\AudioGraphExtensions\AudioGraphExtensions.csproj", "{DC8E9B48-1312-4DF3-9BE3-71BBC2D2E3BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
