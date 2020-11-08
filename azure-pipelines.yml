@@ -43,6 +43,7 @@ steps:
     secureFile: '$(signingCert.File)'
 
 - task: PowerShell@2
+  displayName: 'Register the publisher's certificate'
   inputs:
     targetType: 'inline'
     script: |
@@ -70,4 +71,11 @@ steps:
     platform: 'Any CPU'
     solution: '$(solution)'
     configuration: '$(buildConfiguration)'
-    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)" /p:AppxPackageDir="$(appxPackageDir)" /p:AppxBundle=Always /p:UapAppxPackageBuildMode=StoreUpload'
+    msbuildArgs: '/p:AppxBundlePlatforms="$(buildPlatform)"
+                  /p:AppxPackageDir="$(appxPackageDir)"
+                  /p:AppxBundle=Always
+                  /p:UapAppxPackageBuildMode=StoreUpload
+                  /p:AppxPackageSigningEnabled=true
+                  /p:PackageCertificateThumbprint="$(signingCert.Thumbprint)" 
+                  /p:PackageCertificateKeyFile="$(mySecureFile.secureFilePath)"
+                  /p:PackageCertificatePassword="$(signingCert.Password)"'
